@@ -962,7 +962,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1408084295}
   m_Layer: 5
-  m_Name: Menu_Png's_Container
+  m_Name: MainMenu_Png's_Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1236,7 +1236,7 @@ GameObject:
   - component: {fileID: 1467863771}
   - component: {fileID: 1467863772}
   m_Layer: 5
-  m_Name: Menu_Buttons_Container
+  m_Name: MainMenu_Buttons_Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1436,7 +1436,7 @@ GameObject:
   - component: {fileID: 1546706775}
   - component: {fileID: 1546706776}
   m_Layer: 0
-  m_Name: MainMenuManager
+  m_Name: MainMenu_Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
