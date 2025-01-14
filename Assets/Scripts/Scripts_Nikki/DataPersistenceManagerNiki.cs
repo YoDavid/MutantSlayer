@@ -5,9 +5,14 @@ using System.Linq;
 
 public class DataPersistenceManagerNiki : MonoBehaviour
 {
+    [Header("File Store Config")]
+    [SerializeField] private string fileName;
+
     private DataNiki DataNiki;
 
     private List<IDataPersistenceNiki> dataPersistenceObjects;
+
+    private FileDataHandlerNiki dataHandlerNiki;
 
     public static DataPersistenceManagerNiki Instance { get; private set; }
 
@@ -22,6 +27,7 @@ public class DataPersistenceManagerNiki : MonoBehaviour
 
     private void Start()
     {
+        this.dataHandlerNiki = new FileDataHandlerNiki(Application.persistentDataPath, fileName);
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
         LoadGame();
     }
@@ -33,6 +39,8 @@ public class DataPersistenceManagerNiki : MonoBehaviour
 
     public void LoadGame()
     {
+        this.DataNiki = dataHandlerNiki.Load();
+
         if(this.DataNiki == null)
         {
             Debug.Log("NO Data was Found");
@@ -44,7 +52,6 @@ public class DataPersistenceManagerNiki : MonoBehaviour
             dataPresistenceObj.LoadData(DataNiki);
         }
 
-        Debug.Log("Loaded deathCount = " + DataNiki.deathCount);
     }
 
     public void SaveGame()
@@ -53,7 +60,8 @@ public class DataPersistenceManagerNiki : MonoBehaviour
         {
             dataPresistenceObj.SaveData(ref DataNiki);
         }
-        Debug.Log("Saved death count = " + DataNiki.deathCount);
+
+        dataHandlerNiki.Save(DataNiki);
     }
 
     private void OnApplicationQuit()
