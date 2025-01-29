@@ -12,37 +12,32 @@ public class PlayerControllerNiki : MonoBehaviour, IDataPersistenceNiki
     {
         data.playerPosition = this.transform.position;
     }
+
     public float movementSpeed;
+    Rigidbody2D rb2d;
+    public float highJump;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        rb2d = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W))
-        {
-            transform.position += transform.TransformDirection(Vector3.forward) * Time.deltaTime * movementSpeed * 2.5f;
-        }
-        else if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.LeftShift))
-        {
-            transform.position += transform.TransformDirection(Vector3.forward) * Time.deltaTime * movementSpeed;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            transform.position -= transform.TransformDirection(Vector3.forward) * Time.deltaTime * movementSpeed;
-        }
-
-        if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.A))
         {
             transform.position += transform.TransformDirection(Vector3.left) * Time.deltaTime * movementSpeed;
         }
-        else if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+        else if (Input.GetKey(KeyCode.D))
         {
             transform.position -= transform.TransformDirection(Vector3.left) * Time.deltaTime * movementSpeed;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            rb2d.AddForce(Vector3.up * highJump);
         }
     }
 }
