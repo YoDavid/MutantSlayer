@@ -27,7 +27,7 @@ public class TestAddItemNiki : MonoBehaviour
         {
             print("Recive Item" + receivedItem);
         }
-        else { print("No Otem recived"); }
+        else { print("No Item recived"); }
     }
     public void UseGetSelectedItem()
     {

@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a774af96122a7ba4c8dfc8f989464d14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 8137979329666089041}
+  image: {fileID: 0}
   countText: {fileID: 7754761987409817543}
   itemNiki: {fileID: 0}
   count: 1

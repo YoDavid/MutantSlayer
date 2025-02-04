@@ -2,42 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerControllerNiki : MonoBehaviour, IDataPersistenceNiki
+public class PlayerControllerNiki : MonoBehaviour
 {
-    public void LoadData(DataNiki data)
-    {
-        this.transform.position = data.playerPosition;
-    }
-    public void SaveData(ref DataNiki data)
-    {
-        data.playerPosition = this.transform.position;
-    }
+    public float speed = 5f;
+    public float jumpForce = 10f;
 
-    public float movementSpeed;
-    Rigidbody2D rb2d;
-    public float highJump;
+    private Rigidbody2D rb;
+    private bool isGrounded;
 
-    // Start is called before the first frame update
     void Start()
     {
-        rb2d = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.position += transform.TransformDirection(Vector3.left) * Time.deltaTime * movementSpeed;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            transform.position -= transform.TransformDirection(Vector3.left) * Time.deltaTime * movementSpeed;
-        }
+        // תנועה אופקית
+        float moveInput = Input.GetAxis("Horizontal");
+        rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        // קפיצה
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            rb2d.AddForce(Vector3.up * highJump);
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            isGrounded = false;
+        }
+    }
+
+    // בדיקה אם השחקן נוגע בקרקע
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
         }
     }
 }

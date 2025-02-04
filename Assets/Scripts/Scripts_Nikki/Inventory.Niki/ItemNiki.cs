@@ -9,10 +9,11 @@ using UnityEngine.Tilemaps;
 public class ItemNiki : ScriptableObject
 {
     [Header("Only gameplay")]
-    public TileBase Tile;
+    public SpriteRenderer spriteRenderer;
+    public Collider2D col;
     public ItemType type;
     public ActionType actionType;
-    public Vector2Int range = new Vector2Int(5, 4);
+    //public Vector2Int range = new Vector2Int(5, 4);
 
     [Header("Only UI")]
     public bool stackable = true;
@@ -22,11 +23,13 @@ public class ItemNiki : ScriptableObject
 }
 public enum ItemType
 {
-    BuildingBlok,
-    Tool
+    HealStoneMini,
+    HealStoneMeduim,
+    HealStoneBig,
+    PowerUpStone,
 }
 public enum ActionType
 {
-    Dig,
-    Mine
+    Heal,
+    PowerUp,
 }
