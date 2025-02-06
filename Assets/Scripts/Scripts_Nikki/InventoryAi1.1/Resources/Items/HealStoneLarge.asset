@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fd1799e8b3e81c4981c131352b1c9d5, type: 3}
-  m_Name: PowerUp
+  m_Name: HealStoneLarge
   m_EditorClassIdentifier: 
-  type: 3
-  actionType: 1
+  type: 2
+  actionType: 0
   stackableAi: 1
-  image: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  itemName: 
-  description: 
+  image: {fileID: 1852712343, guid: ccd701fbef8e8ab498ceae6f3c33fda9, type: 3}
+  itemName: HealStoneLarge
+  description: +20 HP

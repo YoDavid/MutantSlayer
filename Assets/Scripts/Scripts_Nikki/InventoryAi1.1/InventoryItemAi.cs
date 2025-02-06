@@ -21,6 +21,7 @@ public class InventoryItemAi : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void InitializeItem(ItemNikiAi newItem) // אתחול הפריט
     {
+        Debug.Log("newItem: " + newItem);
         itemNiki = newItem; // שמירת ה-Scriptable Object
         image.sprite = newItem.image; // הגדרת תמונת הפריט
         RefreshCount(); // עדכון תצוגת הכמות

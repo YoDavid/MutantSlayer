@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fd1799e8b3e81c4981c131352b1c9d5, type: 3}
-  m_Name: HealStoneMedium
+  m_Name: HealStoneMini
   m_EditorClassIdentifier: 
-  type: 1
+  type: 0
   actionType: 0
   stackableAi: 1
-  image: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  itemName: 
-  description: 
+  image: {fileID: 2019797817, guid: ccd701fbef8e8ab498ceae6f3c33fda9, type: 3}
+  itemName: HealStoneMini
+  description: +5 HP

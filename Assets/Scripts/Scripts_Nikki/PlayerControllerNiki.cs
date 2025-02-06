@@ -37,4 +37,9 @@ public class PlayerControllerNiki : MonoBehaviour
             isGrounded = true;
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+    }
 }
