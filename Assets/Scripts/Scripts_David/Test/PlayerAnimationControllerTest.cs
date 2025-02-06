@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerAnimationController : MonoBehaviour
+public class PlayerAnimationControllerTest : MonoBehaviour
 {
     private Animator animator;
     private int attackCount = 0;
