@@ -10,7 +10,6 @@ public class SaveLoadManager : MonoBehaviour
     public Transform[] spawnPoints;
     public InventoryManagerAi inventoryManager;
     public GameObject player;
-    public float saveDistanceThreshold = 1f; // מרחק מינימלי לשמירה
 
     private int lastSaveSpawnIndex = -1; // אינדקס נקודת ההשרצה האחרונה שבה נשמר המשחק
 
@@ -21,15 +20,29 @@ public class SaveLoadManager : MonoBehaviour
 
     private void Update()
     {
-        // שמירה אוטומטית ובדיקה לפי מרחק
+        // שמירה אוטומטית רק כאשר השחקן מגיע *בדיוק* לנקודת שמירה
         int currentSpawnIndex = FindNearestSpawnPointIndex();
-        if (currentSpawnIndex != lastSaveSpawnIndex &&
-            Vector3.Distance(player.transform.position, spawnPoints[currentSpawnIndex].position) <= saveDistanceThreshold)
+
+        // בדיקה קפדנית של מיקום השחקן ונקודת ההשרצה
+        if (currentSpawnIndex != lastSaveSpawnIndex && IsPlayerAtSpawnPoint(currentSpawnIndex))
         {
             SaveGame();
             lastSaveSpawnIndex = currentSpawnIndex;
         }
     }
+
+    // פונקציה לבדיקה אם השחקן נמצא *בדיוק* בנקודת השרצה
+    private bool IsPlayerAtSpawnPoint(int spawnIndex)
+    {
+        if (spawnIndex < 0 || spawnIndex >= spawnPoints.Length) return false; // בדיקה לגבולות המערך
+
+        Vector3 spawnPointPosition = spawnPoints[spawnIndex].position;
+        Vector3 playerPosition = player.transform.position;
+
+        // השוואה עם טווח דיוק קטן מאוד (אפסילון)
+        return Vector3.SqrMagnitude(playerPosition - spawnPointPosition) < 0.0001f; // השוואת ריבוע המרחק
+    }
+
 
     public void SaveGame()
     {
@@ -66,7 +79,7 @@ public class SaveLoadManager : MonoBehaviour
             SaveData data = JsonUtility.FromJson<SaveData>(json);
 
             player.transform.position = spawnPoints[data.playerSpawnIndex].position;
-            lastSaveSpawnIndex = data.playerSpawnIndex; // עדכון אינדקס השמירה האחרונה
+            lastSaveSpawnIndex = data.playerSpawnIndex;
 
             foreach (InventorySlotAi slot in inventoryManager.inventorySlots)
             {
