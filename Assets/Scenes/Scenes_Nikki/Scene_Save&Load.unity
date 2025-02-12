@@ -5264,6 +5264,8 @@ Transform:
   - {fileID: 1797733330}
   - {fileID: 208501132}
   - {fileID: 1901124423}
+  - {fileID: 1048835674}
+  - {fileID: 764052845}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &373356601
@@ -5430,8 +5432,6 @@ Transform:
   - {fileID: 878572080}
   - {fileID: 1300610839}
   - {fileID: 1952045112}
-  - {fileID: 1048835674}
-  - {fileID: 764052845}
   - {fileID: 1006677175}
   - {fileID: 706478472}
   - {fileID: 2055023849}
@@ -8157,11 +8157,11 @@ Transform:
   m_GameObject: {fileID: 764052844}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 60, y: -25.3256, z: 0}
+  m_LocalPosition: {x: -20.400002, y: -2.1406002, z: 0.29753163}
   m_LocalScale: {x: 0.2153982, y: 50.46723, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 401661312}
+  m_Father: {fileID: 367911218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &764052846
 BoxCollider2D:
@@ -9706,7 +9706,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0.5235849, b: 0.5235849, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -11614,11 +11614,11 @@ Transform:
   m_GameObject: {fileID: 1048835673}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 87.9493, y: -18.5557, z: 0}
+  m_LocalPosition: {x: 7.549301, y: 4.629299, z: 0.29753163}
   m_LocalScale: {x: 0.2153982, y: 36.929092, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 401661312}
+  m_Father: {fileID: 367911218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1048835675
 BoxCollider2D:
@@ -23891,8 +23891,8 @@ SceneRoots:
   - {fileID: 1067035944}
   - {fileID: 350566788}
   - {fileID: 2086675485}
-  - {fileID: 647509675}
   - {fileID: 1424543224}
+  - {fileID: 647509675}
   - {fileID: 1589942880}
   - {fileID: 265971050}
   - {fileID: 1753032615}
