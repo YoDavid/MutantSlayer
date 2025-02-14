@@ -3,59 +3,91 @@ using UnityEngine;
 public class PlayerMovementController : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private GameObject playerParent; // Reference to the parent object
     private PlayerAnimationController playerAnimationController;
+    private PlayerAttackController playerAttackController;  // Reference to PlayerAttackController
 
-    private bool isGrounded = false;
-    private bool isDashing = false;
+    [Header("Debugging")]
+    public bool isGrounded = false;
+    public bool isDashing = false;
+    public bool isCollidingWithWall = false;
 
-    // Expose movement settings to the Inspector
     [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 5f; // Normal movement speed
-    [SerializeField] private float dashSpeed = 20f; // Dash movement speed
-    [SerializeField] private float dashDuration = 0.2f; // Duration of the dash
-    [SerializeField] private float dashCooldown = 1f; // Cooldown between dashes
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float dashSpeed = 20f;
+    [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private float dashCooldown = 1f;
 
     [Header("Jump Settings")]
-    [SerializeField] private float jumpForce = 10f; // Jump height
-    [SerializeField] private KeyCode dashKey = KeyCode.LeftShift; // Dash key
+    [SerializeField] private float jumpForce = 8f;  // Adjusted value
+    [SerializeField] private float maxJumpTime = 0.35f;  // Adjusted value
+    [SerializeField] private float jumpCancelRate = 0.5f;  // Adjusted value
+    [SerializeField] private KeyCode dashKey = KeyCode.LeftShift;
 
-    private float dashTime = 0f;
+    [Header("Ground Check")]
+    [SerializeField] private Transform groundCheckPoint;
+    [SerializeField] private float groundCheckDistance = 0.2f;
+    [SerializeField] private LayerMask groundLayer;
+
+    [Header("Wall Slide Settings")]
+    [SerializeField] private float wallSlideSpeed = 2f;
+    [SerializeField] private LayerMask wallLayer;
+
+    [Header("Gravity Settings")]  // New section
+    [SerializeField] private float gravityScale = 2.5f;  // Adjusted value
+
     private float lastDashTime = -999f;
+    private int facingDirection = 1;
+    private bool isJumping = false;
+    private float jumpTimeCounter;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = gravityScale;  // Set gravity scale from Inspector
         playerAnimationController = GetComponent<PlayerAnimationController>();
-      
+        playerAttackController = GetComponent<PlayerAttackController>();  // Get the PlayerAttackController attached to the player
     }
 
     private void Update()
     {
+        HandleInput();
+        CheckIfGrounded();
+        HandleWallSlide();
+        HandleJump();
+    }
+
+    private void HandleInput()
+    {
         bool isMovingLeft = Input.GetKey(KeyCode.A);
         bool isMovingRight = Input.GetKey(KeyCode.D);
+
         bool jumpPressed = Input.GetKeyDown(KeyCode.Space);
+        bool jumpHeld = Input.GetKey(KeyCode.Space);
+        bool jumpReleased = Input.GetKeyUp(KeyCode.Space);
         bool dashPressed = Input.GetKeyDown(dashKey);
 
         float move = 0f;
-        
-        if (isMovingLeft)
+        if (!playerAttackController.IsAttacking)  // Check if player is attacking
         {
-            move = -1f;
-        }
-        else if (isMovingRight)
-        {
-            move = 1f;
+            if (isMovingLeft) move = -1f;
+            else if (isMovingRight) move = 1f;
         }
 
-        if (!isDashing)
-        {
-            Move(move);
-        }
+        Move(move);
 
         if (jumpPressed && isGrounded)
         {
-            Jump();
+            StartJump();
+        }
+
+        if (jumpHeld && isJumping)
+        {
+            ContinueJump();
+        }
+
+        if (jumpReleased && isJumping)
+        {
+            CancelJump();
         }
 
         if (dashPressed && Time.time - lastDashTime > dashCooldown)
@@ -63,33 +95,71 @@ public class PlayerMovementController : MonoBehaviour
             Dash(move);
         }
 
-        playerAnimationController.UpdateAnimationStates(move, isGrounded, isDashing);
+        playerAnimationController.UpdateAnimationStates(move, isGrounded, isDashing);  // No longer passing attack state here
     }
 
     private void Move(float move)
     {
-        // Flip the player sprite when moving left or right
-        if (move < 0)
-           transform.localScale = new Vector3(-1, 1, 1);
-        else if (move > 0)
-            transform.localScale = new Vector3(1, 1, 1);
-
-        rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y); // Use moveSpeed for movement
+        HandleFlip(move);
+        rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y);
     }
 
-    private void Jump()
+    private void HandleFlip(float move)
     {
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Use jumpForce for jumping
+        if (move < 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+            facingDirection = -1;
+        }
+        else if (move > 0)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+            facingDirection = 1;
+        }
+    }
+
+    private void StartJump()
+    {
+        isJumping = true;
+        jumpTimeCounter = maxJumpTime;
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+    }
+
+    private void ContinueJump()
+    {
+        if (jumpTimeCounter > 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            jumpTimeCounter -= Time.deltaTime;
+        }
+        else
+        {
+            isJumping = false;
+        }
+    }
+
+    private void CancelJump()
+    {
+        if (rb.velocity.y > 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * jumpCancelRate);
+        }
+        isJumping = false;
+    }
+
+    private void HandleJump()
+    {
+        if (!isGrounded)
+        {
+            rb.gravityScale = gravityScale;  // Reset gravity scale when not grounded
+        }
     }
 
     private void Dash(float move)
     {
         isDashing = true;
         lastDashTime = Time.time;
-        dashTime = Time.time;
-
-        rb.velocity = new Vector2(dashSpeed * move, rb.velocity.y); // Use dashSpeed for dashing
-
+        rb.velocity = new Vector2(dashSpeed * move, rb.velocity.y);
         StartCoroutine(StopDash());
     }
 
@@ -99,21 +169,36 @@ public class PlayerMovementController : MonoBehaviour
         isDashing = false;
     }
 
+    private void CheckIfGrounded()
+    {
+        isGrounded = Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckDistance, groundLayer);
+    }
+
+    private void HandleWallSlide()
+    {
+        if (isCollidingWithWall)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+            if (rb.velocity.y < 0)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
+            }
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
-            isGrounded = true;
-            playerAnimationController.SetJumpState(false);
-            playerAnimationController.SetFallingState(false);
+            isCollidingWithWall = true;
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
-            isGrounded = false;
+            isCollidingWithWall = false;
         }
     }
 }

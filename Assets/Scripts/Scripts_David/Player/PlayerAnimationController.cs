@@ -34,36 +34,53 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetFallingState(bool isFalling)
     {
-        animator.SetBool("IsFalling", isFalling);  // This could be a new parameter for falling
+        animator.SetBool("IsFalling", isFalling);
     }
 
     public void SetDashingState(bool isDashing)
     {
-        animator.SetBool("IsDashing", isDashing);  // Add this line for dash animation
+        animator.SetBool("IsDashing", isDashing);
+    }
+
+    public void SetGroundedState(bool isGrounded)  // Set the IsGrounded flag
+    {
+        animator.SetBool("IsGrounded", isGrounded);
     }
 
     public void UpdateAnimationStates(float move, bool isGrounded, bool isDashing)
     {
-        // Transition to jump/fall or idle/run based on velocity
-        if (!isGrounded)
+        // Update grounded state
+        SetGroundedState(isGrounded);
+
+        // If not grounded and the player is falling (negative velocity in the Y direction)
+        bool isFalling = rb.velocity.y < 0 && !isGrounded; // Player is falling if they are not grounded and moving downward
+        bool isJumping = rb.velocity.y > 0 && !isGrounded; // Player is jumping if they are not grounded and moving upward
+
+        // Handle jumping state
+        if (isJumping)
         {
-            // Check if falling (negative vertical velocity)
-            bool isFalling = rb.velocity.y < 0;
-            SetFallingState(isFalling);
-            SetJumpState(!isFalling);
+            SetJumpState(true);
+            SetFallingState(false);  // Prevent falling animation if jumping
         }
-        else
+        // Handle falling state
+        else if (isFalling)
         {
-            // Player is grounded, transition to idle or running
+            SetJumpState(false);
+            SetFallingState(true);
+        }
+        else if (isGrounded)  // When grounded, we switch to idle or running
+        {
             SetJumpState(false);
             SetFallingState(false);
+
+            // Idle if not moving
             SetIdleState(move == 0);
         }
 
-        // Handle running/idle
+        // Set movement speed (idle or running animation)
         SetSpeed(move);
 
-        // Update dash animation state
+        // Set dashing state
         SetDashingState(isDashing);
     }
 }
