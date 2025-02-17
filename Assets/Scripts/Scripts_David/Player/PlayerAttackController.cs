@@ -3,10 +3,18 @@ using UnityEngine;
 public class PlayerAttackController : MonoBehaviour
 {
     private PlayerAnimationController animationController;
-    private int attackCount = 0;
-    private float lastAttackTime = 0f;
-    private float attackResetTime = 0.5f; // Reset combo after this time if no X press
-    public bool IsAttacking { get; private set; } = false;  // Expose attack state to other scripts
+
+    [Header("Attack Debugging")]
+    [SerializeField] private int attackCount = 0;
+    [SerializeField] private float lastAttackTime = 0f;
+    [SerializeField] private bool isAttacking = false;
+
+    [Header("Attack Settings")]
+    [SerializeField] private float attackResetTime = 0.8f; // Time before combo resets
+    [SerializeField] private float attackCooldownTime = 0.3f; // Minimum delay between attacks
+    [SerializeField] private float[] attackDurations = { 0.4f, 0.35f, 0.3f }; // Duration per attack
+
+    public bool IsAttacking => isAttacking;
 
     private void Awake()
     {
@@ -15,43 +23,53 @@ public class PlayerAttackController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.X) && CanAttack())
         {
             PerformAttack();
         }
 
-        // Reset the attack count if it's been long enough to reset
-        if (IsAttacking && Time.time - lastAttackTime > attackResetTime)
+        if (isAttacking && Time.time - lastAttackTime > attackResetTime)
         {
             ResetAttack();
         }
     }
 
+    private bool CanAttack()
+    {
+        return Time.time - lastAttackTime >= attackCooldownTime;
+    }
+
     private void PerformAttack()
     {
-        // If the attack count reaches 3, reset it to 1 (looping the attack combo)
-        if (attackCount >= 3)
+        if (attackCount >= attackDurations.Length)
         {
-            attackCount = 1; // Restart combo from attack 1
+            attackCount = 1; // Restart combo
         }
         else if (Time.time - lastAttackTime > attackResetTime)
         {
-            attackCount = 1;  // Start a new combo
+            attackCount = 1; // Start new combo
         }
         else
         {
-            attackCount++; // Continue combo if within reset time
+            attackCount++; // Continue combo
         }
 
         lastAttackTime = Time.time;
-        IsAttacking = true;
-        animationController.SetAttackState(attackCount); // Update animation based on attack count
+        isAttacking = true;
+
+        animationController.SetAttackState(attackCount);
+
+        // Only reset after last attack in the combo
+        if (attackCount == attackDurations.Length)
+        {
+            Invoke(nameof(ResetAttack), attackDurations[attackCount - 1]);
+        }
     }
 
     private void ResetAttack()
     {
-        attackCount = 0;  // Reset combo count after reset time has passed
-        IsAttacking = false;  // Reset attacking state
-        animationController.SetAttackState(0);  // Stop attack animation
+        attackCount = 0;
+        isAttacking = false;
+        animationController.SetAttackState(0);
     }
 }
