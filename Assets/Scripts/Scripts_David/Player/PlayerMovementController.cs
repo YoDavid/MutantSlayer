@@ -10,8 +10,6 @@ public class PlayerMovementController : MonoBehaviour
     public bool isGrounded = false;
     public bool isDashing = false;
     public bool isCollidingWithWall = false;
-    public bool isMovingRight = false;
-    public bool isMovingLeft = false;
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
@@ -63,23 +61,8 @@ public class PlayerMovementController : MonoBehaviour
         float move = 0f;
         if (!playerAttackController.IsAttacking)
         {
-            if (Input.GetKey(KeyCode.A))
-            {
-                move = -1f;
-                isMovingLeft = true;
-                isMovingRight = false;
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                move = 1f;
-                isMovingLeft = false;
-                isMovingRight = true;
-            }
-            else
-            {
-                isMovingLeft = false;
-                isMovingRight = false;
-            }
+            if (Input.GetKey(KeyCode.A)) move = -1f;
+            else if (Input.GetKey(KeyCode.D)) move = 1f;
         }
 
         Move(move);
@@ -96,7 +79,6 @@ public class PlayerMovementController : MonoBehaviour
 
         playerAnimationController.UpdateAnimationStates(move, isGrounded, isDashing);
     }
-
 
     private void Move(float move)
     {

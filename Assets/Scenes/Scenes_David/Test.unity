@@ -756,36 +756,12 @@ PrefabInstance:
       value: -10.558417
       objectReference: {fileID: 0}
     - target: {fileID: 8921160737333725451, guid: 4cae1df16abb680488f8b378d1e812b1, type: 3}
-      propertyPath: attackCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8921160737333725451, guid: 4cae1df16abb680488f8b378d1e812b1, type: 3}
-      propertyPath: isAttacking
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8921160737333725451, guid: 4cae1df16abb680488f8b378d1e812b1, type: 3}
-      propertyPath: lastAttackTime
-      value: 262.87738
-      objectReference: {fileID: 0}
-    - target: {fileID: 8921160737333725451, guid: 4cae1df16abb680488f8b378d1e812b1, type: 3}
       propertyPath: attackResetTime
-      value: 3
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 8921160737333725451, guid: 4cae1df16abb680488f8b378d1e812b1, type: 3}
       propertyPath: attackCooldownTime
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8921160737333725451, guid: 4cae1df16abb680488f8b378d1e812b1, type: 3}
-      propertyPath: attackDurations.Array.data[0]
-      value: 0.11
-      objectReference: {fileID: 0}
-    - target: {fileID: 8921160737333725451, guid: 4cae1df16abb680488f8b378d1e812b1, type: 3}
-      propertyPath: attackDurations.Array.data[1]
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 8921160737333725451, guid: 4cae1df16abb680488f8b378d1e812b1, type: 3}
-      propertyPath: attackDurations.Array.data[2]
-      value: 0.15
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8967861509066957550, guid: 4cae1df16abb680488f8b378d1e812b1, type: 3}
       propertyPath: m_LocalPosition.x
