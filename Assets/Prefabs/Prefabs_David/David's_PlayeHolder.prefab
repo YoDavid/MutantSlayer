@@ -32,6 +32,37 @@ Transform:
   - {fileID: 8699547000230633676}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2927189822008672531
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5356695867730382375}
+  m_Layer: 0
+  m_Name: WallCheckGizmo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5356695867730382375
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2927189822008672531}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8699547000230633676}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2976033409696535299
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,6 +89,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -16.56, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8699547000230633676}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4264530330604958091
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4835288726320064392}
+  m_Layer: 0
+  m_Name: wallCheckCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4835288726320064392
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4264530330604958091}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1, y: -8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -100,6 +162,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5595685045659387767}
+  - {fileID: 4835288726320064392}
+  - {fileID: 5356695867730382375}
   m_Father: {fileID: 8967861509066957550}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2769432161520537546
@@ -190,7 +254,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -234,7 +298,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.209095, y: -9.482826}
+  m_Offset: {x: 0.27024174, y: -10.558417}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -245,7 +309,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 10.119713, y: 14.655678}
+  m_Size: {x: 7.1842966, y: 10.958357}
   m_EdgeRadius: 0
 --- !u!114 &2276464744138826785
 MonoBehaviour:
@@ -271,6 +335,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2719a39845f576c4784b41e49344873d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackCount: 0
+  lastAttackTime: 0
+  isAttacking: 0
+  attackResetTime: 0.8
+  attackCooldownTime: 0.3
+  attackDurations:
+  - 0.4
+  - 0.35
+  - 0.3
 --- !u!114 &4522055283833947079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,14 +356,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4584d5596c2c8b48b5109577d728773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
-  dashSpeed: 20
+  isGrounded: 0
+  isDashing: 0
+  isCollidingWithWall: 0
+  moveSpeed: 12
+  dashDistance: 5
   dashDuration: 0.2
   dashCooldown: 1
-  jumpForce: 10
+  jumpForce: 12
+  maxJumpTime: 0.35
+  jumpCancelRate: 0.5
   dashKey: 304
   groundCheckPoint: {fileID: 5595685045659387767}
   groundCheckDistance: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  wallSlideSpeed: 9.8
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  gravityScale: 2.5
