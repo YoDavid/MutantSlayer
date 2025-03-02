@@ -21,9 +21,17 @@ public class InventoryManagerAi : MonoBehaviour
         ChangeSelectedSlot(0); // בחירת סלוט ראשון
         Debug.Log("inventorySlots Length: " + inventorySlots.Length); // הדפסת אורך המערך
 
+        // בדיקה נוספת לוודא שכל סלוט מאותחל
         for (int i = 0; i < inventorySlots.Length; i++)
         {
-            Debug.Log("inventorySlots[" + i + "]: " + inventorySlots[i]); // הדפסת כל אלמנט
+            if (inventorySlots[i] == null)
+            {
+                Debug.LogError("Inventory slot " + i + " is null!");
+            }
+            else
+            {
+                Debug.Log("inventorySlots[" + i + "]: " + inventorySlots[i]); // הדפסת כל אלמנט
+            }
         }
     }
 
@@ -62,38 +70,6 @@ public class InventoryManagerAi : MonoBehaviour
             selectedSlot = newValue; // עדכון אינדקס הסלוט הנבחר
         }
     }
-
-    /*public bool AddItemAi(ItemNikiAi itemNikiAi) // הוספת פריט למלאי
-    {
-        // בדיקה אם יש סלוט עם אותו פריט וכמות קטנה מהמקסימום
-        foreach (InventorySlotAi slot in inventorySlots)
-        {
-            InventoryItemAi itemInSlot = slot.GetComponentInChildren<InventoryItemAi>(); // רכיב InventoryItem בסלוט
-            if (itemInSlot != null &&
-                itemInSlot.itemNiki == itemNikiAi &&
-                itemInSlot.count < maxStackedItems &&
-                itemNikiAi.stackableAi)
-            {
-                itemInSlot.count++; // הגדלת כמות
-                itemInSlot.RefreshCount(); // עדכון תצוגה
-                return true; // הפריט נוסף
-            }
-        }
-
-        // חיפוש סלוט ריק
-        foreach (InventorySlotAi slot in inventorySlots)
-        {
-            InventoryItemAi itemInSlot = slot.GetComponentInChildren<InventoryItemAi>();
-            if (itemInSlot == null)
-            {
-                GameObject newItemGo = Instantiate(inventoryItemPrefab, slot.transform); // יצירת פריט חדש
-                InventoryItemAi inventoryItem = newItemGo.GetComponent<InventoryItemAi>(); // רכיב InventoryItem של הפריט החדש
-                inventoryItem.InitializeItem(itemNikiAi); // אתחול הפריט החדש
-                return true; // הפריט נוסף
-            }
-        }
-        return false; // לא נמצא מקום
-    }*/
 
     public bool AddItemAi(ItemNikiAi itemNikiAi)
     {
@@ -143,25 +119,28 @@ public class InventoryManagerAi : MonoBehaviour
         if (selectedSlot >= 0 && selectedSlot < inventorySlots.Length) // בדיקה בטווח
         {
             InventorySlotAi slot = inventorySlots[selectedSlot]; // הסלוט הנבחר
-            InventoryItemAi itemInSlot = slot.GetComponentInChildren<InventoryItemAi>(); // רכיב InventoryItem בסלוט
-
-            if (itemInSlot != null) // יש פריט בסלוט
+            if (slot != null)
             {
-                ItemNikiAi item = itemInSlot.itemNiki; // הפריט
-                if (use) // אם רוצים להשתמש בפריט
+                InventoryItemAi itemInSlot = slot.GetComponentInChildren<InventoryItemAi>(); // רכיב InventoryItem בסלוט
+
+                if (itemInSlot != null) // יש פריט בסלוט
                 {
-                    itemInSlot.count--; // הקטנת כמות
-                    if (itemInSlot.count <= 0) // אם הכמות הגיעה ל-0
+                    ItemNikiAi item = itemInSlot.itemNiki; // הפריט
+                    if (use) // אם רוצים להשתמש בפריט
                     {
-                        Destroy(itemInSlot.gameObject); // השמדת הפריט
+                        itemInSlot.count--; // הקטנת כמות
+                        if (itemInSlot.count <= 0) // אם הכמות הגיעה ל-0
+                        {
+                            Destroy(itemInSlot.gameObject); // השמדת הפריט
+                        }
+                        else
+                        {
+                            itemInSlot.RefreshCount(); // עדכון תצוגה
+                        }
+                        return item; // החזרת הפריט
                     }
-                    else
-                    {
-                        itemInSlot.RefreshCount(); // עדכון תצוגה
-                    }
-                    return item; // החזרת הפריט
+                    return item; // החזרת הפריט (ללא שימוש)
                 }
-                return item; // החזרת הפריט (ללא שימוש)
             }
         }
         return null; // אין פריט נבחר
@@ -174,6 +153,32 @@ public class InventoryManagerAi : MonoBehaviour
         {
             // כאן תוסיפו את הלוגיקה לשימוש בפריט
             Debug.Log("Using item: " + selectedItem.itemName); // הדפסת שם הפריט
+        }
+    }
+
+    // פונקציה להסרת פריט מהאינבנטורי
+    public void RemoveItemAi(ItemNikiAi itemNikiAi)
+    {
+        if (inventorySlots == null)
+        {
+            Debug.LogError("inventorySlots is not initialized!");
+            return;
+        }
+
+        foreach (InventorySlotAi slot in inventorySlots)
+        {
+            if (slot == null)
+            {
+                Debug.LogWarning("A slot in inventorySlots is null!");
+                continue;
+            }
+
+            InventoryItemAi itemInSlot = slot.GetComponentInChildren<InventoryItemAi>();
+            if (itemInSlot != null && itemInSlot.itemNiki == itemNikiAi)
+            {
+                Destroy(itemInSlot.gameObject);
+                return;
+            }
         }
     }
 }
