@@ -2,11 +2,13 @@ using UnityEngine;
 
 public class BossHealth : MonoBehaviour
 {
-    public float health = 100f;
+    public int health = 100;
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
         health -= damage;
+        Debug.Log("Boss took " + damage + " damage! Remaining health: " + health);
+
         if (health <= 0)
         {
             Die();
@@ -15,7 +17,7 @@ public class BossHealth : MonoBehaviour
 
     void Die()
     {
-        // Handle boss death (e.g., play death animation, etc.)
-        Destroy(gameObject);
+        Debug.Log("Boss Defeated!");
+        Destroy(gameObject); // Replace with death animation logic
     }
 }

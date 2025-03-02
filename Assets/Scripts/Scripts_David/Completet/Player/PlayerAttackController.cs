@@ -11,18 +11,33 @@ public class PlayerAttackController : MonoBehaviour
     [SerializeField, HideInInspector] private bool isAttacking = false;
 
     [Header("Attack Settings")]
-    [SerializeField] private float attackResetTime = 0.8f; // Time before combo resets
-    [SerializeField] private float attackCooldownTime = 0.3f; // Minimum delay between attacks
-    [SerializeField, Tooltip("Duration for each attack in the combo")] private float[] attackDurations = { 0.4f, 0.35f, 0.3f }; // Duration per attack
+    [SerializeField] private float attackResetTime = 0.8f;
+    [SerializeField] private float attackCooldownTime = 0.3f;
+    [SerializeField, Tooltip("Duration for each attack in the combo")] private float[] attackDurations = { 0.4f, 0.35f, 0.3f };
+
+    [Header("Attack Collider")]
+    [SerializeField] private Collider2D attackCollider;
+    [SerializeField] private float hitboxEnableDelay = 0.1f;
+    [SerializeField] private float hitboxActiveTime = 0.2f;
 
     public bool IsAttacking => isAttacking;
 
     private void Awake()
     {
         animationController = GetComponent<PlayerAnimationController>();
+
         if (animationController == null)
         {
             Debug.LogError("PlayerAnimationController component is missing on this GameObject.");
+        }
+
+        if (attackCollider != null)
+        {
+            attackCollider.enabled = false;
+        }
+        else
+        {
+            Debug.LogError("Attack Collider is not assigned in PlayerAttackController!");
         }
     }
 
@@ -33,7 +48,6 @@ public class PlayerAttackController : MonoBehaviour
             PerformAttack();
         }
 
-        // Reset attack state if the player hasn't attacked for a while
         if (isAttacking && Time.time - lastAttackTime > attackResetTime)
         {
             ResetAttack();
@@ -49,23 +63,31 @@ public class PlayerAttackController : MonoBehaviour
     {
         if (Time.time - lastAttackTime > attackResetTime || attackCount >= attackDurations.Length)
         {
-            attackCount = 0; // Start new combo
+            attackCount = 0;
         }
 
-        attackCount++; // Increment attack count
+        attackCount++;
         lastAttackTime = Time.time;
         isAttacking = true;
 
         animationController.SetAttackState(attackCount);
 
-        // Reset animator to idle after the attack's duration to prevent looping
+        StartCoroutine(EnableHitboxWithDelay(hitboxEnableDelay, hitboxActiveTime));
         StartCoroutine(ResetAnimatorAfterAttack(attackDurations[attackCount - 1]));
+    }
+
+    private IEnumerator EnableHitboxWithDelay(float delay, float duration)
+    {
+        yield return new WaitForSeconds(delay);
+        attackCollider.enabled = true;
+        yield return new WaitForSeconds(duration);
+        attackCollider.enabled = false;
     }
 
     private IEnumerator ResetAnimatorAfterAttack(float delay)
     {
         yield return new WaitForSeconds(delay);
-        animationController.SetAttackState(0); // Reset animator's AttackCount
+        animationController.SetAttackState(0);
     }
 
     private void ResetAttack()
@@ -73,13 +95,5 @@ public class PlayerAttackController : MonoBehaviour
         attackCount = 0;
         isAttacking = false;
         animationController.SetAttackState(0);
-    }
-
-    private void OnValidate()
-    {
-        if (attackDurations.Length == 0)
-        {
-            Debug.LogWarning("attackDurations array is empty. Add durations for each attack.");
-        }
     }
 }
