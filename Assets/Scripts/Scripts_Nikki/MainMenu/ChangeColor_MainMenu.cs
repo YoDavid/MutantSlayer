@@ -1,26 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ChangeColor_MainMenu : MonoBehaviour
 {
-    public Image image; // רכיב התמונה של הסלוט
-    public Color selectedColor = Color.white; // צבע נבחר (ברירת מחדל - לבן)
-    public Color notSelectedColor = Color.gray; // צבע לא נבחר (ברירת מחדל - אפור)
+    public Image image; // הפניה לרכיב התמונה
+    public Color selectedColor = Color.yellow;
+    public Color notSelectedColor = Color.white;
 
-    private void Awake() // אתחול לפני Start
+    private Color originalColor;
+
+    void Start()
     {
-        Deselect(); // הגדרת צבע ברירת מחדל
+        originalColor = image.color;
     }
 
-    public void Select() // בחירת הסלוט
+    public void Select()
     {
-        image.color = selectedColor; // שינוי צבע
+        image.color = selectedColor;
     }
 
-    public void Deselect() // ביטול בחירת הסלוט
+    public void Deselect()
     {
-        image.color = notSelectedColor; // שינוי צבע
+        image.color = notSelectedColor;
+    }
+
+    public void SetAlpha(float alpha)
+    {
+        Color newColor = image.color;
+        newColor.a = alpha;
+        image.color = newColor;
     }
 }

@@ -473,7 +473,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 301916626}
   selectedColor: {r: 1, g: 0.9082564, b: 0, a: 1}
-  notSelectedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  notSelectedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &395042917
 GameObject:
   m_ObjectHideFlags: 0
@@ -622,7 +622,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 395042920}
   selectedColor: {r: 0, g: 0.12981081, b: 1, a: 1}
-  notSelectedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  notSelectedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -999,7 +999,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 782883900}
   selectedColor: {r: 1, g: 0, b: 0, a: 1}
-  notSelectedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  notSelectedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1408084294
 GameObject:
   m_ObjectHideFlags: 0
@@ -1185,7 +1185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 1426709756}
   selectedColor: {r: 0, g: 1, b: 0.0791831, a: 1}
-  notSelectedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  notSelectedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1453274477
 GameObject:
   m_ObjectHideFlags: 0
@@ -1373,6 +1373,7 @@ MonoBehaviour:
   - {fileID: 301916628}
   - {fileID: 1426709758}
   - {fileID: 395042922}
+  fadeDuration: 0.2
 --- !u!1 &1497279045
 GameObject:
   m_ObjectHideFlags: 0

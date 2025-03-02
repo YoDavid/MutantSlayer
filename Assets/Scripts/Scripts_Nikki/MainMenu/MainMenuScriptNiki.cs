@@ -1,40 +1,82 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MainMenuScriptNiki : MonoBehaviour
 {
-    public static MainMenuScriptNiki instance; // יצירת Instance סטטי - גישה נוחה מכל מקום
+    public static MainMenuScriptNiki instance;
+    public ChangeColor_MainMenu[] mainMenuSlots;
+    public float fadeDuration = 0.5f; // משך זמן הדהייה
 
-    public ChangeColor_MainMenu[] mainMenuSlots; // מערך של סלוטים במלאי
+    private int selectedSlot = -1;
+    private bool isTransitioning = false; // בדיקה אם מתבצע מעבר
 
-    private int selectedSlot = -1; // אינדקס של הסלוט הנבחר
-
-    private void Awake() // אתחול לפני Start
+    private void Awake()
     {
-        instance = this; // הגדרת ה-instance
+        instance = this;
     }
 
-    private void Start() // אתחול
+    private void Start()
     {
-        ChangeSelectedSlot(0); // בחירת סלוט ראשון
-        Debug.Log("mainMenuSlots Length: " + mainMenuSlots.Length); // הדפסת אורך המערך
+        ChangeSelectedSlot(0);
+        Debug.Log("mainMenuSlots Length: " + mainMenuSlots.Length);
     }
 
-    private void Update() // עדכון
+    private void Update()
     {
-        // מעבר בין סלוטים באמצעות מקשי W ו-S
+        if (isTransitioning) return; // מניעת קלט בזמן מעבר
+
         if (Input.GetKeyDown(KeyCode.W))
         {
-            ChangeSelectedSlot(selectedSlot - 1); // בחירת סלוט קודם
+            StartCoroutine(TransitionSlots(selectedSlot - 1));
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            ChangeSelectedSlot(selectedSlot + 1); // בחירת סלוט הבא
+            StartCoroutine(TransitionSlots(selectedSlot + 1));
         }
     }
 
-    void ChangeSelectedSlot(int newValue) // שינוי הסלוט הנבחר
+    IEnumerator TransitionSlots(int newSlotIndex)
+    {
+        isTransitioning = true; // סימון תחילת מעבר
+
+        if (selectedSlot >= 0 && selectedSlot < mainMenuSlots.Length)
+        {
+            yield return StartCoroutine(FadeSlot(mainMenuSlots[selectedSlot], false)); // דהייה לסלוט הנוכחי
+            mainMenuSlots[selectedSlot].Deselect();
+        }
+
+        newSlotIndex = Mathf.Clamp(newSlotIndex, 0, mainMenuSlots.Length - 1);
+
+        if (newSlotIndex >= 0 && newSlotIndex < mainMenuSlots.Length)
+        {
+            mainMenuSlots[newSlotIndex].Select();
+            yield return StartCoroutine(FadeSlot(mainMenuSlots[newSlotIndex], true)); // דהייה לסלוט החדש
+            selectedSlot = newSlotIndex;
+        }
+
+        isTransitioning = false; // סימון סיום מעבר
+    }
+
+    IEnumerator FadeSlot(ChangeColor_MainMenu slot, bool fadeIn)
+    {
+        float startTime = Time.time;
+        float startAlpha = fadeIn ? 0f : 1f;
+        float endAlpha = fadeIn ? 1f : 0f;
+
+        while (Time.time < startTime + fadeDuration)
+        {
+            float timePassed = Time.time - startTime;
+            float t = timePassed / fadeDuration; // ערך בין 0 ל-1
+            float alpha = Mathf.Lerp(startAlpha, endAlpha, t);
+            slot.SetAlpha(alpha); // שינוי שקיפות
+            yield return null;
+        }
+
+        slot.SetAlpha(endAlpha); // הגדרה סופית
+    }
+
+
+void ChangeSelectedSlot(int newValue) // שינוי הסלוט הנבחר
     {
         if (selectedSlot >= 0 && selectedSlot < mainMenuSlots.Length) // בדיקה בטווח
         {
