@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Scenes_David/Scene_PauseMenu_Test_David.unity
     guid: 7b704c538c69c334ea161b30dc329297
+  - enabled: 1
+    path: Assets/Scenes/Scenes_Nikki/Photo&Text.unity
+    guid: 4c1f4f5832ad4814cb213887f89922a3
+  - enabled: 1
+    path: Assets/Scenes/Scenes_Nikki/Scene_Save&Load.unity
+    guid: fc70881326c7ad1489b6f31e097af698
   m_configObjects: {}
