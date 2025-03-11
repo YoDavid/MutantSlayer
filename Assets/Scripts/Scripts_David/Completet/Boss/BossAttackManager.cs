@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class BossAttackManager : MonoBehaviour
@@ -8,17 +9,9 @@ public class BossAttackManager : MonoBehaviour
     // Reference to the BossAttackHitbox
     [SerializeField] private BossAttackHitbox comboAttackHitbox;
 
-    // Expose combo attack duration to the Inspector
-    [SerializeField] private float comboAttackDuration = 2.3f;
-
     void Start()
     {
         bossAI = GetComponent<BossAI>();
-
-        if (comboAttackHitbox == null)
-        {
-            Debug.LogError("BossAttackHitbox reference is missing in BossAttackManager.");
-        }
     }
 
     public void AOEAttackBehavior()
@@ -27,7 +20,9 @@ public class BossAttackManager : MonoBehaviour
         {
             bossAI.SetAttacking(true);
             animator.SetTrigger("AOEAttackTrigger");
-            Invoke(nameof(ResetAttackState), 1.5f);
+
+            // Use the AOE attack duration from BossAI
+            Invoke(nameof(ResetAttackState), bossAI.aoeAttackDuration);
         }
     }
 
@@ -37,7 +32,9 @@ public class BossAttackManager : MonoBehaviour
         {
             bossAI.SetAttacking(true);
             animator.SetTrigger("RangedAttackTrigger");
-            Invoke(nameof(ResetAttackState), 1.5f);
+
+            // Use the ranged attack duration from BossAI
+            Invoke(nameof(ResetAttackState), bossAI.rangedAttackDuration);
         }
     }
 
@@ -51,13 +48,20 @@ public class BossAttackManager : MonoBehaviour
             // Activate the combo attack hitbox
             comboAttackHitbox.ActivateComboAttackCollider();
 
-            // Use the exposed variable for timing
-            Invoke(nameof(ResetAttackState), comboAttackDuration);
+            // Use the combo attack duration from BossAI
+            Invoke(nameof(ResetAttackState), bossAI.comboAttackDuration);
         }
     }
 
     private void ResetAttackState()
     {
+        StartCoroutine(ResetAfterDelay());
+    }
+
+    private IEnumerator ResetAfterDelay()
+    {
+        yield return new WaitForSeconds(0.2f); // Small buffer to ensure attack finishes properly
+
         bossAI.SetAttacking(false);
         float distanceToPlayer = Vector2.Distance(bossAI.transform.position, bossAI.player.position);
         if (distanceToPlayer < bossAI.attackRange)

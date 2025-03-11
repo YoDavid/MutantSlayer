@@ -5,7 +5,6 @@ public class BossMovement : MonoBehaviour
     public float speed = 2f;
     public Transform player;
     public Animator animator;
-
     private Rigidbody2D rb;
     public float jumpForce = 5f;
 
@@ -14,39 +13,33 @@ public class BossMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    // Idle simply stops walking
     public void HandleIdleState()
     {
         animator.SetBool("IsWalking", false);
     }
 
-    // Only move if not attacking (matching the test script’s MoveBehavior)
-    public void HandleMovingState(float distanceToPlayer, bool isAttacking)
+    public void HandleMovingState(float distanceToPlayer, float stopDistance, bool isAttacking)
     {
-        if (!isAttacking)
+        if (isAttacking) return;
+
+        if (distanceToPlayer > stopDistance)
         {
             animator.SetBool("IsWalking", true);
-            transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
-            FlipTowardsPlayer();
+            // Move the boss with Rigidbody2D velocity
+            Vector2 direction = (player.position - transform.position).normalized;
+            rb.velocity = new Vector2(direction.x * speed, rb.velocity.y); // Only move horizontally
+        }
+        else
+        {
+            animator.SetBool("IsWalking", false);
+            rb.velocity = Vector2.zero; // Stop moving when within stop distance
         }
     }
+
 
     public void HandleJumpingState()
     {
         animator.SetBool("IsJumping", true);
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-    }
-
-    void FlipTowardsPlayer()
-    {
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        if (player.position.x < transform.position.x && spriteRenderer.flipX)
-        {
-            spriteRenderer.flipX = false;
-        }
-        else if (player.position.x > transform.position.x && !spriteRenderer.flipX)
-        {
-            spriteRenderer.flipX = true;
-        }
     }
 }

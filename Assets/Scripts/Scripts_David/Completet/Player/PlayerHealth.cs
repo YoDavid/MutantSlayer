@@ -4,29 +4,30 @@ public class PlayerHealth : MonoBehaviour
 {
     [Header("Health Settings")]
     public int maxHealth = 100; // Maximum health value
-    private int currentHealth;
+    [SerializeField] private int currentHealth;
 
     [Header("Player Status")]
     public bool isDead = false; // To track if the player is dead
 
     // Reference to the Damage Blink script
     private PlayerDamageBlink damageBlink;
+    private PlayerMovementController playerMovement; // Cached reference                                               
+    private PlayerHurtbox playerHurtbox;
+
 
     void Start()
     {
         currentHealth = maxHealth;
-        damageBlink = GetComponent<PlayerDamageBlink>(); // Get the Damage Blink script component
-
-        if (damageBlink == null)
-        {
-            Debug.LogWarning("PlayerDamageBlink component not found! Blinking effect will not work.");
-        }
+        damageBlink = GetComponent<PlayerDamageBlink>();
+        playerMovement = GetComponent<PlayerMovementController>(); // Cache the reference
+        playerHurtbox = GetComponentInChildren<PlayerHurtbox>();
     }
 
     public void TakeDamage(int damage)
     {
-        if (isDead)
-            return; // Prevent damage if the player is dead
+        // Check if the player is dead or if the hurtbox is disabled (invincible)
+        if (isDead || playerHurtbox == null || !playerHurtbox.enabled)
+            return; // Prevent damage if the player is dead or invincible
 
         currentHealth -= damage;
         Debug.Log("Player took " + damage + " damage! Remaining health: " + currentHealth);
@@ -42,6 +43,12 @@ public class PlayerHealth : MonoBehaviour
         {
             Die();
         }
+    }
+
+    public bool IsPlayerInvulnerable()
+    {
+        // Return true if the player is dashing (or any other invincible condition)
+        return playerMovement.isDashing;
     }
 
     private void Die()

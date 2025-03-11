@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
@@ -5,6 +6,7 @@ public class PlayerMovementController : MonoBehaviour
     private Rigidbody2D rb;
     private PlayerAnimationController playerAnimationController;
     private PlayerAttackController playerAttackController;
+    private PlayerHurtbox playerHurtbox;
 
     [Header("Debugging")]
     public bool isGrounded = false;
@@ -13,9 +15,10 @@ public class PlayerMovementController : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float dashMoveSpeedMultiplier = 2.4f; // Add this variable
 
     [Header("Dash Settings")]
-    [SerializeField] private float dashDistance = 5f;
+    [SerializeField] private float dashSpeed = 25f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
 
@@ -48,6 +51,7 @@ public class PlayerMovementController : MonoBehaviour
         rb.gravityScale = gravityScale;
         playerAnimationController = GetComponent<PlayerAnimationController>();
         playerAttackController = GetComponent<PlayerAttackController>();
+        playerHurtbox = GetComponentInChildren<PlayerHurtbox>(); // Ensure this points to the PlayerHurtbox
     }
 
     private void Update()
@@ -85,7 +89,14 @@ public class PlayerMovementController : MonoBehaviour
     private void Move(float move)
     {
         HandleFlip(move);
-        rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y);
+        float currentMoveSpeed = moveSpeed; // Store the original moveSpeed
+
+        if (isDashing)
+        {
+            currentMoveSpeed *= dashMoveSpeedMultiplier; // Apply the multiplier if dashing
+        }
+
+        rb.velocity = new Vector2(move * currentMoveSpeed, rb.velocity.y);
     }
 
     private void HandleFlip(float move)
@@ -127,17 +138,27 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Dash()
     {
+        if (isDashing) return;
+
         isDashing = true;
         lastDashTime = Time.time;
-        rb.velocity = new Vector2(facingDirection * dashDistance / dashDuration, rb.velocity.y);
+
+        playerHurtbox.SetInvincible(true);
+
+        rb.velocity = new Vector2(facingDirection * dashSpeed, rb.velocity.y);
         StartCoroutine(StopDash());
     }
 
-    private System.Collections.IEnumerator StopDash()
+    private IEnumerator StopDash()
     {
         yield return new WaitForSeconds(dashDuration);
+
+        playerHurtbox.SetInvincible(false);
+
+        rb.velocity = new Vector2(0, rb.velocity.y);
         isDashing = false;
     }
+
 
     private void CheckIfGrounded()
     {
