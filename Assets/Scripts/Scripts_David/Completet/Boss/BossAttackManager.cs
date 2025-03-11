@@ -5,28 +5,29 @@ public class BossAttackManager : MonoBehaviour
     public Animator animator;
     private BossAI bossAI;
 
-    // Add a reference to the BossAttackHitbox
+    // Reference to the BossAttackHitbox
     [SerializeField] private BossAttackHitbox comboAttackHitbox;
+
+    // Expose combo attack duration to the Inspector
+    [SerializeField] private float comboAttackDuration = 2.3f;
 
     void Start()
     {
         bossAI = GetComponent<BossAI>();
 
-        // Make sure comboAttackHitbox is assigned, either in the editor or by code
         if (comboAttackHitbox == null)
         {
             Debug.LogError("BossAttackHitbox reference is missing in BossAttackManager.");
         }
     }
 
-    // These methods mirror the test script’s attack behaviors.
     public void AOEAttackBehavior()
     {
         if (!bossAI.IsAttacking())
         {
             bossAI.SetAttacking(true);
             animator.SetTrigger("AOEAttackTrigger");
-            Invoke(nameof(ResetAttackState), 1.5f); // Adjust timing as in the test script
+            Invoke(nameof(ResetAttackState), 1.5f);
         }
     }
 
@@ -47,16 +48,14 @@ public class BossAttackManager : MonoBehaviour
             bossAI.SetAttacking(true);
             animator.SetTrigger("ComboAttackTrigger");
 
-            // Activate the combo attack hitbox for a brief period during the attack
+            // Activate the combo attack hitbox
             comboAttackHitbox.ActivateComboAttackCollider();
 
-            Invoke(nameof(ResetAttackState), 2.0f); // Adjust timing for combo attack duration
+            // Use the exposed variable for timing
+            Invoke(nameof(ResetAttackState), comboAttackDuration);
         }
     }
 
-
-    // ResetAttackState replicates the test script’s ResetAttackState:
-    // it resets the isAttacking flag, updates the current state based on distance, and randomizes the cooldown.
     private void ResetAttackState()
     {
         bossAI.SetAttacking(false);

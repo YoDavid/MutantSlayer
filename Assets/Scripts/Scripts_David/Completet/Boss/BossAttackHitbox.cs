@@ -3,70 +3,49 @@ using UnityEngine;
 
 public class BossAttackHitbox : MonoBehaviour
 {
-    [SerializeField] private int attackDamage = 10; // Damage per hit
-    [SerializeField] private float comboAttackStartTime = 0.2f; // Delay before the first hit
-    [SerializeField] private float comboAttackDuration = 0.1f; // Duration to keep the collider active during each attack
-    private Collider2D attackCollider; // The collider for the attack hitbox
-
-    private int currentComboHits = 0; // To track how many hits have been applied
+    [SerializeField] private int attackDamage = 10;
+    [SerializeField] private float attackDuration = 0.2f; // Active time per hit
+    [SerializeField] private float[] attackTimings = { 0.7f, 1.1f, 1.9f }; // Attack moments (fixed values)
+    private Collider2D attackCollider;
 
     private void Awake()
     {
         attackCollider = GetComponent<Collider2D>();
-        if (attackCollider != null)
-        {
-            attackCollider.enabled = false; // Ensure the collider is initially disabled
-        }
-        else
+        if (attackCollider == null)
         {
             Debug.LogError("Attack Collider is not attached to the BossAttackHitbox object.");
         }
+        attackCollider.enabled = false; // Ensure the collider is initially disabled
     }
 
-    // Activate the combo attack hitbox for a series of attacks
     public void ActivateComboAttackCollider()
     {
-        currentComboHits = 0; // Reset the combo hits counter before starting
         StartCoroutine(ActivateComboWithIntervals());
     }
 
-    // Coroutine to manage multiple activations of the collider
     private IEnumerator ActivateComboWithIntervals()
     {
-        attackCollider.enabled = true; // Enable the collider for the whole combo duration
+        float startTime = Time.time; // Capture the exact start time
 
-        // The total duration of the combo is 1.3 seconds, divided into 3 hits
-        float intervalBetweenHits = 1.3f / 3f; // Divide the 1.3s into 3 intervals
-
-        for (int i = 0; i < 3; i++)
+        foreach (float attackTime in attackTimings)
         {
-            // Wait for the interval before applying damage
-            yield return new WaitForSeconds(i == 0 ? comboAttackStartTime : intervalBetweenHits); // Wait before the first hit and then between each subsequent hit
+            float waitTime = attackTime - (Time.time - startTime);
+            if (waitTime > 0)
+                yield return new WaitForSeconds(waitTime); // Wait until the attack moment
 
-            // Apply damage if the collider is active
-            if (currentComboHits < 3)
-            {
-                attackCollider.enabled = true; // Ensure the collider is active during each damage application
-
-                // Apply damage to the player
-                PlayerHealth playerHealth = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>(); // Assuming you can find the player this way
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage(attackDamage);
-                    currentComboHits++; // Increment the hit counter
-                }
-            }
+            attackCollider.enabled = true; // Enable hitbox
+            ApplyDamage(); // Apply damage to player
+            yield return new WaitForSeconds(attackDuration); // Keep active for attack duration
+            attackCollider.enabled = false; // Disable hitbox
         }
-
-        attackCollider.enabled = false; // Disable the collider after all hits
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void ApplyDamage()
     {
-        // Optional: If you need the collider to check when the player is hit (you might not need this now since we're controlling damage directly)
-        if (other.CompareTag("Player"))
+        PlayerHealth playerHealth = GameObject.FindWithTag("Player")?.GetComponent<PlayerHealth>();
+        if (playerHealth != null)
         {
-            Debug.Log("Boss hit the player!");
+            playerHealth.TakeDamage(attackDamage);
         }
     }
 }
