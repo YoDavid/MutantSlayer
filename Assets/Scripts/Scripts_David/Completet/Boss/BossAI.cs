@@ -11,6 +11,7 @@ public class BossAI : MonoBehaviour
     [Header("Movement Settings")]
     public float speed = 2f;
     public float desiredDistanceFromPlayer = 1f;
+    public bool isFacingLeft; // Regular public flag
 
     [Header("Attack Timer Settings")]
     public float minAttackTime = 1f;
@@ -196,11 +197,13 @@ public class BossAI : MonoBehaviour
         if (player.position.x < transform.position.x)
         {
             spriteRenderer.flipX = false;
+            isFacingLeft = true;
             bossAttackHitbox.FlipCollider(false);
         }
         else
         {
             spriteRenderer.flipX = true;
+            isFacingLeft = false;
             bossAttackHitbox.FlipCollider(true);
         }
     }
