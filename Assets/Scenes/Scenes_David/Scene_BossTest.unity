@@ -248,7 +248,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 16.84, y: -4.7, z: 0}
-  m_LocalScale: {x: 77.00334, y: 1, z: 1}
+  m_LocalScale: {x: 181.9204, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -5247,8 +5247,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 5956691561915802686}
-  offset: {x: 0, y: 0, z: -10}
-  smoothSpeed: 0.125
+  boundsSize: {x: 20, y: 10}
+  idleCenterTime: 3
+  initialCenterSpeed: 0.25
+  maxCenterSpeed: 2
+  speedIncreaseRate: 1
+  idleTimer: 0
 --- !u!1001 &3742120542383075744
 PrefabInstance:
   m_ObjectHideFlags: 0
