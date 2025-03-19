@@ -71,7 +71,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3910551624939298788}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -96,7 +96,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -10.608569, y: -2.3672009}
+  m_Offset: {x: -12.243673, y: -5.966129}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -107,7 +107,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 19.060858, y: 20.814339}
+  m_Size: {x: 18.112537, y: 13.616483}
   m_EdgeRadius: 0
 --- !u!114 &4378328218187293667
 MonoBehaviour:
@@ -128,7 +128,7 @@ MonoBehaviour:
   - 1.1
   - 1.9
   playerHealth: {fileID: 0}
-  colliderShift: 3
+  colliderShift: 33
 --- !u!1 &5512506803662219850
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,7 +162,7 @@ Transform:
   m_GameObject: {fileID: 5512506803662219850}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -41.6, y: -6.7, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -330,17 +330,18 @@ MonoBehaviour:
   currentState: 0
   player: {fileID: 0}
   speed: 2
-  desiredDistanceFromPlayer: 1
+  desiredDistanceFromPlayer: 8
+  isFacingLeft: 0
   minAttackTime: 1
   maxAttackTime: 5
   attackCooldownTimer: 0
-  attackRange: 10
-  rangedAttackRange: 25
-  aoeAttackRange: 3
+  attackRange: 8.68
+  rangedAttackRange: 33
+  aoeAttackRange: 18.8
   walkingRange: 35
-  comboAttackDuration: 2.3
-  rangedAttackDuration: 1.5
-  aoeAttackDuration: 3
+  comboAttackDuration: 2.8
+  rangedAttackDuration: 1
+  aoeAttackDuration: 4.4
   rb: {fileID: 6801926445257053491}
   animator: {fileID: 1398573991708630370}
 --- !u!114 &9057135614513273811
@@ -357,8 +358,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 1398573991708630370}
   comboAttackHitbox: {fileID: 4378328218187293667}
-  spitParticlePrefab: {fileID: 0}
-  spitSpawnPoint: {fileID: 0}
+  spitParticlePrefab: {fileID: 4635511025921963439, guid: 5616280496e7c5b40b2438d91e28831b, type: 3}
+  projectileSpeed: 5
+  spitSpawnPoint: {fileID: 5485990403015595304}
+  spitDelay: 0.85
 --- !u!114 &3513243742902532373
 MonoBehaviour:
   m_ObjectHideFlags: 0
