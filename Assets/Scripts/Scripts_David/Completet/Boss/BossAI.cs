@@ -1,9 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
+public enum BossState { Idle, Moving, Jumping, AOEAttack, RangedAttack, ComboAttack }
+
 public class BossAI : MonoBehaviour
 {
-    public enum BossState { Idle, Moving, Jumping, AOEAttack, RangedAttack, ComboAttack }
+    
     public BossState currentState;
 
     public Transform player;
@@ -11,7 +13,7 @@ public class BossAI : MonoBehaviour
     [Header("Movement Settings")]
     public float speed = 2f;
     public float desiredDistanceFromPlayer = 1f;
-    public bool isFacingLeft; // Regular public flag
+    public bool isFacingLeft;
 
     [Header("Attack Timer Settings")]
     public float minAttackTime = 1f;
@@ -23,28 +25,31 @@ public class BossAI : MonoBehaviour
     public float rangedAttackRange = 5f; // Ranged attack range
     public float aoeAttackRange = 3f; // AOE attack range
     public float walkingRange = 4f;
+    public float jumpingAttackRange = 4f;
 
     [Header("Timers For Each Attack Type")]
-    public float comboAttackDuration = 2.3f; // Combo Attack Duration
-    public float rangedAttackDuration = 1.5f; // Ranged Attack Duration
-    public float aoeAttackDuration = 3.0f;  // AOE Attack Duration
-
+    public float comboAttackDuration = 2.3f;
+    public float rangedAttackDuration = 1.5f;
+    public float aoeAttackDuration = 3.0f;
+    public float jumpiAttackDuration = 2.0f; // New timer for jumping attack
 
     public Rigidbody2D rb;
     public Animator animator;
-    private BossMovement movement;
+    public BossMovement bossMovement;
     private BossAttackManager attackManager;
     private BossAttackHitbox bossAttackHitbox;
     private BossHealth bossHealth;
 
     private bool _isAttacking = false;
 
+    public bool showGizmos = false;
+
     void Start()
     {
         currentState = BossState.Idle;
         attackCooldownTimer = Random.Range(minAttackTime, maxAttackTime);
         bossAttackHitbox = GetComponentInChildren<BossAttackHitbox>();
-        movement = GetComponent<BossMovement>();
+        bossMovement = GetComponent<BossMovement>();
         attackManager = GetComponent<BossAttackManager>();
         bossHealth = GetComponent<BossHealth>();
     }
@@ -65,7 +70,7 @@ public class BossAI : MonoBehaviour
             case BossState.Idle:
                 if (!IsAttacking())
                 {
-                    movement.HandleIdleState();
+                    bossMovement.HandleIdleState();
                     if (distanceToPlayer < rangedAttackRange && attackCooldownTimer <= 0f)
                     {
                         DecideAttack();
@@ -80,7 +85,7 @@ public class BossAI : MonoBehaviour
             case BossState.Moving:
                 if (!IsAttacking()) // Prevent movement while attacking
                 {
-                    movement.HandleMovingState(distanceToPlayer, desiredDistanceFromPlayer, IsAttacking());
+                    bossMovement.HandleMovingState(distanceToPlayer, desiredDistanceFromPlayer, IsAttacking());
                     if (distanceToPlayer <= desiredDistanceFromPlayer)
                     {
                         currentState = BossState.Idle;
@@ -95,6 +100,7 @@ public class BossAI : MonoBehaviour
             case BossState.AOEAttack:
             case BossState.RangedAttack:
             case BossState.ComboAttack:
+            case BossState.Jumping:  // Added Jumping to stop movement
                 StopMovement(); // Ensures boss doesn't move while attacking
                 break;
         }
@@ -109,27 +115,31 @@ public class BossAI : MonoBehaviour
         if (bossHealth.health > 50)
         {
             // Above 50% health
-            if (distanceToPlayer < attackRange)  // Red Gizmo: Close range
+            if (distanceToPlayer < attackRange)
             {
                 currentState = Random.Range(0, 2) == 0 ? BossState.ComboAttack : BossState.RangedAttack;
             }
-            else if (distanceToPlayer < rangedAttackRange)  // Blue Gizmo: Mid range
+            else if (distanceToPlayer < rangedAttackRange)
             {
                 currentState = BossState.RangedAttack;
+            }
+            else if (distanceToPlayer < jumpingAttackRange)  // Add a condition for the jumping attack
+            {
+                currentState = BossState.Jumping;  // Trigger the Jumping attack state
             }
         }
         else
         {
             // Below 50% health
-            if (distanceToPlayer < attackRange)  // Red Gizmo: Close range
+            if (distanceToPlayer < attackRange)
             {
                 currentState = (Random.Range(0, 3) == 0) ? BossState.ComboAttack : (Random.Range(0, 2) == 0 ? BossState.RangedAttack : BossState.AOEAttack);
             }
-            else if (distanceToPlayer < aoeAttackRange)  // Yellow Gizmo: Close-mid range
+            else if (distanceToPlayer < aoeAttackRange)
             {
                 currentState = (Random.Range(0, 2) == 0) ? BossState.AOEAttack : BossState.RangedAttack;
             }
-            else if (distanceToPlayer < rangedAttackRange)  // Blue Gizmo: Mid range
+            else if (distanceToPlayer < rangedAttackRange)
             {
                 currentState = BossState.RangedAttack;
             }
@@ -144,37 +154,46 @@ public class BossAI : MonoBehaviour
         {
             case BossState.AOEAttack:
                 attackManager.AOEAttackBehavior();
-                StartCoroutine(WaitForAttack(aoeAttackDuration));  // Wait for AOE attack to complete
+                StartCoroutine(WaitForAttack(aoeAttackDuration));
                 break;
             case BossState.RangedAttack:
                 attackManager.RangedAttackBehavior();
-                StartCoroutine(WaitForAttack(rangedAttackDuration));  // Wait for Ranged attack to complete
+                StartCoroutine(WaitForAttack(rangedAttackDuration));
                 break;
             case BossState.ComboAttack:
                 attackManager.ComboAttackBehavior();
-                StartCoroutine(WaitForAttack(comboAttackDuration));  // Wait for Combo attack to complete
+                StartCoroutine(WaitForAttack(comboAttackDuration));
+                break;
+            case BossState.Jumping:
+                bossMovement.TriggerJump();
+                StartCoroutine(WaitForAttack(jumpiAttackDuration));
                 break;
         }
     }
 
     IEnumerator WaitForAttack(float duration)
     {
-        yield return new WaitForSeconds(duration);  // Wait for the attack animation to finish
-        SetAttacking(false);
-        ResumeMovement(); // Allow movement again after attack
-        currentState = BossState.Moving;  // Transition to Moving or Idle depending on the situation
-        attackCooldownTimer = Random.Range(minAttackTime, maxAttackTime);  // Reset the attack cooldown
+        SetAttacking(true); // Start the attack state
+        yield return new WaitForSeconds(duration); // Wait for attack to complete
+        SetAttacking(false); // End the attack state
+        ResumeMovement();
+        currentState = BossState.Moving; // Transition to moving state
+        attackCooldownTimer = Random.Range(minAttackTime, maxAttackTime); // Reset cooldown timer
     }
 
     public void StopMovement()
     {
-        rb.velocity = Vector2.zero;
-        movement.enabled = false;
+        // Stop horizontal movement only, but allow vertical velocity (jumping) to continue if the boss is not jumping
+        if (currentState != BossState.Jumping)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y); // Stop horizontal velocity only
+        }
+        animator.SetBool("IsWalking", false);
     }
 
     public void ResumeMovement()
     {
-        movement.enabled = true;
+        bossMovement.enabled = true;
     }
 
     public bool IsAttacking()
@@ -187,7 +206,6 @@ public class BossAI : MonoBehaviour
         _isAttacking = value;
     }
 
-    // **Restored FlipTowardsPlayer() Function**
     void FlipTowardsPlayer()
     {
         if (player == null) return;
@@ -208,19 +226,27 @@ public class BossAI : MonoBehaviour
         }
     }
 
-    // **Restored OnDrawGizmos() Function**
+    // Modified OnDrawGizmos to check for showGizmos flag
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        if (showGizmos)
+        {
+            // Draw attack range gizmos
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, attackRange);
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, rangedAttackRange);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, rangedAttackRange);
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, walkingRange);
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(transform.position, walkingRange);
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, aoeAttackRange);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, aoeAttackRange);
+
+            // New Gizmo for Jumping Attack Distance
+            Gizmos.color = Color.cyan;  // You can change the color here
+            Gizmos.DrawWireSphere(transform.position, jumpingAttackRange); // Jumping attack distance
+        }
     }
 }

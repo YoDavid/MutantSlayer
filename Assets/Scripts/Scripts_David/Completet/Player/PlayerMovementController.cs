@@ -11,7 +11,6 @@ public class PlayerMovementController : MonoBehaviour
     [Header("Debugging")]
     public bool isGrounded = false;
     public bool isDashing = false;
-    public bool isCollidingWithWall = false;
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
@@ -21,24 +20,24 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private float dashSpeed = 25f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
+    [SerializeField] private KeyCode dashKey = KeyCode.LeftShift;
 
     [Header("Jump Settings")]
     [SerializeField] private float jumpForce = 8f;
     [SerializeField] private float maxJumpTime = 0.35f;
     [SerializeField] private float jumpCancelRate = 0.5f;
-    [SerializeField] private KeyCode dashKey = KeyCode.LeftShift;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheckPoint;
     [SerializeField] private float groundCheckDistance = 0.2f;
     [SerializeField] private LayerMask groundLayer;
 
-    [Header("Wall Slide Settings")]
-    [SerializeField] private float wallSlideSpeed = 2f;
-    [SerializeField] private LayerMask wallLayer;
-
     [Header("Gravity Settings")]
     [SerializeField] private float gravityScale = 2.5f;
+
+    // New toggle for gizmos visibility
+    [Header("Gizmos Settings")]
+    public bool drawGizmos = false;
 
     private float lastDashTime = -999f;
     private int facingDirection = 1;
@@ -58,7 +57,6 @@ public class PlayerMovementController : MonoBehaviour
     {
         HandleInput();
         CheckIfGrounded();
-        HandleWallSlide();
         HandleJump();
     }
 
@@ -138,7 +136,7 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Dash()
     {
-        if (isDashing) return;
+        if (isDashing) return; // Prevent multiple dashes
 
         isDashing = true;
         lastDashTime = Time.time;
@@ -159,29 +157,25 @@ public class PlayerMovementController : MonoBehaviour
         isDashing = false;
     }
 
-
     private void CheckIfGrounded()
     {
         isGrounded = Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckDistance, groundLayer);
     }
 
-    private void HandleWallSlide()
+    private void OnDrawGizmos()
     {
-        if (isCollidingWithWall)
+        if (drawGizmos) // Check if drawing is enabled
         {
-            rb.velocity = new Vector2(0, rb.velocity.y < 0 ? -wallSlideSpeed : rb.velocity.y);
+            // Draw the ground check point
+            if (groundCheckPoint != null)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawSphere(groundCheckPoint.position, 0.1f); // Draw a small sphere at the ground check point
+
+                // Draw the ground check distance
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(groundCheckPoint.position, groundCheckPoint.position + Vector3.down * groundCheckDistance); // Draw a line for the ground check distance
+            }
         }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
-            isCollidingWithWall = true;
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
-            isCollidingWithWall = false;
     }
 }

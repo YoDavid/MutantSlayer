@@ -37,6 +37,9 @@ public class CameraDeadZoneFollow : MonoBehaviour
     private bool isIdle; // To check if the player is idle
     private float currentCenterSpeed; // Current speed of centering
 
+    [Header("Debugging")]
+    public bool showGizmos = false;  // Toggle for Gizmos visibility
+
     void Start()
     {
         if (player == null)
@@ -150,7 +153,7 @@ public class CameraDeadZoneFollow : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (player == null) return;
+        if (player == null || !showGizmos) return;
 
         Gizmos.color = Color.green;
         Vector3 camPos = transform.position;

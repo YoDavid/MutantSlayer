@@ -764,6 +764,7 @@ MonoBehaviour:
   maxCenterSpeed: 2
   speedIncreaseRate: 1
   idleTimer: 0
+  showGizmos: 0
 --- !u!1001 &3742120542383075744
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -828,6 +829,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainBossHolder
       objectReference: {fileID: 0}
+    - target: {fileID: 6801926445257053491, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 9380b5f613c0e7b4f898b7660160cedd, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -841,29 +846,37 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1966099470471522157, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: m_Size.x
-      value: 4.4514813
-      objectReference: {fileID: 0}
-    - target: {fileID: 1966099470471522157, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: m_Offset.x
-      value: -0.20797253
-      objectReference: {fileID: 0}
     - target: {fileID: 2053396173614233089, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
       propertyPath: m_Name
       value: David's_PlayeHolder
       objectReference: {fileID: 0}
     - target: {fileID: 2253954913604739603, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: m_Size.x
-      value: 6.2484303
+      propertyPath: m_Size.y
+      value: 12.688177
       objectReference: {fileID: 0}
-    - target: {fileID: 2253954913604739603, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: m_Material
+    - target: {fileID: 3453436363987902926, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453436363987902926, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -15.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 3485264429582931297, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3668487788743562154, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
+      propertyPath: m_Icon
       value: 
-      objectReference: {fileID: 6200000, guid: 9380b5f613c0e7b4f898b7660160cedd, type: 2}
-    - target: {fileID: 2253954913604739603, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: m_Offset.x
-      value: 0.15597382
+      objectReference: {fileID: 0}
+    - target: {fileID: 3668487788743562154, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
+      propertyPath: m_Name
+      value: GroundCheckPoint_Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4116720502197867891, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5052164383907270479, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -871,7 +884,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5052164383907270479, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.58
       objectReference: {fileID: 0}
     - target: {fileID: 5052164383907270479, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -906,8 +919,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6259436513426233103, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: gravityScale
-      value: 4
+      propertyPath: jumpForce
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259436513426233103, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
+      propertyPath: drawGizmos
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259436513426233103, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
+      propertyPath: groundCheckDistance
+      value: 0.59
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

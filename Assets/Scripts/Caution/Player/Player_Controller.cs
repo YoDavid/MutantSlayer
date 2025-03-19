@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool debugIsJumping = false; // Set the jump state manually when debugging
 
     [Header("Settings")]
-    [SerializeField] private float speedThreshold = 0.1f; // Threshold for switching between idle and running
     private bool isJumping = false;
 
     void Start()

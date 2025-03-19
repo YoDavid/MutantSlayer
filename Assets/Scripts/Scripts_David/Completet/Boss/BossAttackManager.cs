@@ -59,7 +59,6 @@ public class BossAttackManager : MonoBehaviour
             Invoke(nameof(ResetAttackState), bossAI.comboAttackDuration);
         }
     }
-
     public void RangedAttackBehavior()
     {
         if (!bossAI.IsAttacking())
@@ -72,6 +71,20 @@ public class BossAttackManager : MonoBehaviour
 
             // Use the ranged attack duration from BossAI
             Invoke(nameof(ResetAttackState), bossAI.rangedAttackDuration);
+        }
+    }
+    public void JumpAttackBehavior()
+    {
+        if (!bossAI.IsAttacking())
+        {
+            bossAI.SetAttacking(true);
+            animator.SetTrigger("JumpAnticipation");
+
+            // Make the boss jump
+            bossAI.bossMovement.JumpTowardsPlayer();
+
+            // Use the jump attack duration from BossAI
+            Invoke(nameof(ResetAttackState), bossAI.jumpiAttackDuration);
         }
     }
 
@@ -118,11 +131,11 @@ public class BossAttackManager : MonoBehaviour
         float distanceToPlayer = Vector2.Distance(bossAI.transform.position, bossAI.player.position);
         if (distanceToPlayer < bossAI.attackRange)
         {
-            bossAI.currentState = BossAI.BossState.Idle;
+            bossAI.currentState = BossState.Idle;
         }
         else
         {
-            bossAI.currentState = BossAI.BossState.Moving;
+            bossAI.currentState = BossState.Moving;
         }
         bossAI.attackCooldownTimer = Random.Range(bossAI.minAttackTime, bossAI.maxAttackTime);
     }

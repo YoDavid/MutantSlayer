@@ -26,18 +26,9 @@ public class PlayerAttackController : MonoBehaviour
     {
         animationController = GetComponent<PlayerAnimationController>();
 
-        if (animationController == null)
-        {
-            Debug.LogError("PlayerAnimationController component is missing on this GameObject.");
-        }
-
         if (attackCollider != null)
         {
             attackCollider.enabled = false;
-        }
-        else
-        {
-            Debug.LogError("Attack Collider is not assigned in PlayerAttackController!");
         }
     }
 
