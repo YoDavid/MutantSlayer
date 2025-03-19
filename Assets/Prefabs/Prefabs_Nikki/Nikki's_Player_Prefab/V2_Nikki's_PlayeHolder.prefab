@@ -172,8 +172,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.62391835, y: -9.514752}
-  m_Size: {x: 5.075399, y: 12.542486}
+  m_Offset: {x: -0.20797253, y: -9.514752}
+  m_Size: {x: 4.4514813, y: 12.542486}
   m_Direction: 0
 --- !u!1 &4373448419953047939
 GameObject:
@@ -329,7 +329,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 4373448419953047939}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 9380b5f613c0e7b4f898b7660160cedd, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -352,8 +352,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.57191926, y: -9.6187525}
-  m_Size: {x: 7.0803213, y: 14.775295}
+  m_Offset: {x: 0.15597382, y: -9.6187525}
+  m_Size: {x: 6.2484303, y: 14.775295}
   m_Direction: 0
 --- !u!114 &5889972071756339075
 MonoBehaviour:
@@ -424,7 +424,7 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 128
-  gravityScale: 2.5
+  gravityScale: 4
 --- !u!114 &1353762432173463006
 MonoBehaviour:
   m_ObjectHideFlags: 0
