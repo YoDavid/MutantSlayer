@@ -4,42 +4,185 @@ using UnityEngine;
 
 public class PlayerControllerNiki : MonoBehaviour
 {
-    public float speed = 5f;
-    public float jumpForce = 10f;
-
     private Rigidbody2D rb;
-    private bool isGrounded;
+    private PlayerAnimationController playerAnimationController;
+    private PlayerAttackController playerAttackController;
+    private PlayerHurtbox playerHurtbox;
 
-    void Start()
+    [Header("Debugging")]
+    public bool isGrounded = false;
+    public bool isDashing = false;
+    public bool isCollidingWithWall = false;
+
+    [Header("Movement Settings")]
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float dashMoveSpeedMultiplier = 2.4f; // Add this variable
+
+    [Header("Dash Settings")]
+    [SerializeField] private float dashSpeed = 25f;
+    [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private float dashCooldown = 1f;
+
+    [Header("Jump Settings")]
+    [SerializeField] private float jumpForce = 8f;
+    [SerializeField] private float maxJumpTime = 0.35f;
+    [SerializeField] private float jumpCancelRate = 0.5f;
+    [SerializeField] private KeyCode dashKey = KeyCode.LeftShift;
+
+    [Header("Ground Check")]
+    [SerializeField] private Transform groundCheckPoint;
+    [SerializeField] private float groundCheckDistance = 0.2f;
+    [SerializeField] private LayerMask groundLayer;
+
+    [Header("Wall Slide Settings")]
+    [SerializeField] private float wallSlideSpeed = 2f;
+    [SerializeField] private LayerMask wallLayer;
+
+    [Header("Gravity Settings")]
+    [SerializeField] private float gravityScale = 2.5f;
+
+    private float lastDashTime = -999f;
+    private int facingDirection = 1;
+    private bool isJumping = false;
+    private float jumpTimeCounter;
+
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = gravityScale;
+        playerAnimationController = GetComponent<PlayerAnimationController>();
+        playerAttackController = GetComponent<PlayerAttackController>();
+        playerHurtbox = GetComponentInChildren<PlayerHurtbox>(); // Ensure this points to the PlayerHurtbox
     }
 
-    void Update()
+    private void Update()
     {
-        // תנועה אופקית
-        float moveInput = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+        HandleInput();
+        CheckIfGrounded();
+        HandleWallSlide();
+        HandleJump();
+    }
 
-        // קפיצה
-        if (Input.GetButtonDown("Jump") && isGrounded)
+    private void HandleInput()
+    {
+        float move = 0f;
+        if (!playerAttackController.IsAttacking)
         {
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            isGrounded = false;
+            if (Input.GetKey(KeyCode.A)) move = -1f;
+            else if (Input.GetKey(KeyCode.D)) move = 1f;
+        }
+
+        Move(move);
+
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+            StartJump();
+        if (Input.GetKey(KeyCode.Space) && isJumping)
+            ContinueJump();
+        if (Input.GetKeyUp(KeyCode.Space) && isJumping)
+            CancelJump();
+
+        if (Input.GetKeyDown(dashKey) && Time.time - lastDashTime > dashCooldown)
+            Dash();
+
+        playerAnimationController.UpdateAnimationStates(move, isGrounded, isDashing);
+    }
+
+    private void Move(float move)
+    {
+        HandleFlip(move);
+        float currentMoveSpeed = moveSpeed; // Store the original moveSpeed
+
+        if (isDashing)
+        {
+            currentMoveSpeed *= dashMoveSpeedMultiplier; // Apply the multiplier if dashing
+        }
+
+        rb.velocity = new Vector2(move * currentMoveSpeed, rb.velocity.y);
+    }
+
+    private void HandleFlip(float move)
+    {
+        if (move < 0) facingDirection = -1;
+        else if (move > 0) facingDirection = 1;
+        transform.localScale = new Vector3(facingDirection, 1, 1);
+    }
+
+    private void StartJump()
+    {
+        isJumping = true;
+        jumpTimeCounter = maxJumpTime;
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+    }
+
+    private void ContinueJump()
+    {
+        if (jumpTimeCounter > 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            jumpTimeCounter -= Time.deltaTime;
+        }
+        else isJumping = false;
+    }
+
+    private void CancelJump()
+    {
+        if (rb.velocity.y > 0)
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * jumpCancelRate);
+        isJumping = false;
+    }
+
+    private void HandleJump()
+    {
+        if (!isGrounded)
+            rb.gravityScale = gravityScale;
+    }
+
+    private void Dash()
+    {
+        if (isDashing) return;
+
+        isDashing = true;
+        lastDashTime = Time.time;
+
+        playerHurtbox.SetInvincible(true);
+
+        rb.velocity = new Vector2(facingDirection * dashSpeed, rb.velocity.y);
+        StartCoroutine(StopDash());
+    }
+
+    private IEnumerator StopDash()
+    {
+        yield return new WaitForSeconds(dashDuration);
+
+        playerHurtbox.SetInvincible(false);
+
+        rb.velocity = new Vector2(0, rb.velocity.y);
+        isDashing = false;
+    }
+
+
+    private void CheckIfGrounded()
+    {
+        isGrounded = Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckDistance, groundLayer);
+    }
+
+    private void HandleWallSlide()
+    {
+        if (isCollidingWithWall)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y < 0 ? -wallSlideSpeed : rb.velocity.y);
         }
     }
 
-    // בדיקה אם השחקן נוגע בקרקע
-    void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-        }
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+            isCollidingWithWall = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionExit2D(Collision2D collision)
     {
-        
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+            isCollidingWithWall = false;
     }
 }

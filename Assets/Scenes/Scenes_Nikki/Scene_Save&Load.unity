@@ -12743,8 +12743,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27ba15901b24aa54aa75a97ff0f09c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 25
+  isGrounded: 0
+  isDashing: 0
+  isCollidingWithWall: 0
+  moveSpeed: 5
+  dashMoveSpeedMultiplier: 2.4
+  dashSpeed: 25
+  dashDuration: 0.2
+  dashCooldown: 1
   jumpForce: 20
+  maxJumpTime: 0.35
+  jumpCancelRate: 0.5
+  dashKey: 304
+  groundCheckPoint: {fileID: 0}
+  groundCheckDistance: 0.2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  wallSlideSpeed: 2
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  gravityScale: 2.5
 --- !u!1 &1349285198
 GameObject:
   m_ObjectHideFlags: 0
@@ -12981,11 +13001,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4274865384483371385, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3788.5
+      value: 1567.8
       objectReference: {fileID: 0}
     - target: {fileID: 4274865384483371385, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -418.9
+      value: -210.3
       objectReference: {fileID: 0}
     - target: {fileID: 4373448419953047939, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
       propertyPath: m_TagString
