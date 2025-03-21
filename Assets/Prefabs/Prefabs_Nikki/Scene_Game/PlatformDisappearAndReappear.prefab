@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b08d2f35c7ec24a429b19c73d57ae4a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  disappearTime: 3
-  blinkDuration: 1
+  disappearTime: 0.1
+  blinkDuration: 0.1
   blinkCount: 5
   reappearTime: 5
