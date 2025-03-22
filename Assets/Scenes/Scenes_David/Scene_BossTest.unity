@@ -938,34 +938,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: David's_PlayeHolder
       objectReference: {fileID: 0}
-    - target: {fileID: 2253954913604739603, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: m_Size.y
-      value: 12.688177
-      objectReference: {fileID: 0}
-    - target: {fileID: 3453436363987902926, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.06
-      objectReference: {fileID: 0}
-    - target: {fileID: 3453436363987902926, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -15.34
-      objectReference: {fileID: 0}
-    - target: {fileID: 3485264429582931297, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: m_FlipX
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3668487788743562154, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3668487788743562154, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: m_Name
-      value: GroundCheckPoint_Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 4116720502197867891, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5052164383907270479, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1005,18 +977,6 @@ PrefabInstance:
     - target: {fileID: 5052164383907270479, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6259436513426233103, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: jumpForce
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 6259436513426233103, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: drawGizmos
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6259436513426233103, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
-      propertyPath: groundCheckDistance
-      value: 0.59
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
