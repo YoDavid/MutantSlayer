@@ -73,7 +73,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3453436363987902926}
   m_Layer: 0
-  m_Name: groundCheckPoint
+  m_Name: GroundCheckPoint_Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,7 +88,7 @@ Transform:
   m_GameObject: {fileID: 3668487788743562154}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -16.56, z: 0}
+  m_LocalPosition: {x: 0.06, y: -15.34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -353,7 +353,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.15597382, y: -9.6187525}
-  m_Size: {x: 6.2484303, y: 14.775295}
+  m_Size: {x: 6.2484303, y: 12.688177}
   m_Direction: 0
 --- !u!114 &5889972071756339075
 MonoBehaviour:
@@ -405,26 +405,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGrounded: 0
   isDashing: 0
-  isCollidingWithWall: 0
   moveSpeed: 12
   dashMoveSpeedMultiplier: 2.4
   dashSpeed: 12
   dashDuration: 0.8
   dashCooldown: 1
-  jumpForce: 12
+  dashKey: 13
+  jumpForce: 15
   maxJumpTime: 0.35
   jumpCancelRate: 0.5
-  dashKey: 13
   groundCheckPoint: {fileID: 3453436363987902926}
-  groundCheckDistance: 0.2
+  groundCheckDistance: 0.59
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  wallSlideSpeed: 9.8
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 128
   gravityScale: 4
+  drawGizmos: 1
 --- !u!114 &1353762432173463006
 MonoBehaviour:
   m_ObjectHideFlags: 0
