@@ -5,9 +5,7 @@ public enum BossState { Idle, Moving, Jumping, AOEAttack, RangedAttack, ComboAtt
 
 public class BossAI : MonoBehaviour
 {
-    
     public BossState currentState;
-
     public Transform player;
 
     [Header("Movement Settings")]
@@ -15,10 +13,11 @@ public class BossAI : MonoBehaviour
     public float desiredDistanceFromPlayer = 1f;
     public bool isFacingLeft;
 
-    [Header("Attack Timer Settings")]
-    public float minAttackTime = 1f;
-    public float maxAttackTime = 3f;
-    public float attackCooldownTimer;
+    [Header("Ground Check")]
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.2f;
+    public LayerMask groundLayer;
+    public bool isGrounded;
 
     [Header("Attack Range Definitions")]
     public float attackRange = 2f; // Melee attack range
@@ -27,12 +26,17 @@ public class BossAI : MonoBehaviour
     public float walkingRange = 4f;
     public float jumpingAttackRange = 4f;
 
+    [Header("Attack Timer Settings")]
+    public float minAttackTime = 1f;
+    public float maxAttackTime = 3f;
+    public float attackCooldownTimer;
+
     [Header("Timers For Each Attack Type")]
     public float comboAttackDuration = 2.3f;
     public float rangedAttackDuration = 1.5f;
     public float aoeAttackDuration = 3.0f;
-    public float jumpiAttackDuration = 2.0f; // New timer for jumping attack
 
+    [Header("Other References")]
     public Rigidbody2D rb;
     public Animator animator;
     public BossMovement bossMovement;
@@ -40,9 +44,15 @@ public class BossAI : MonoBehaviour
     private BossAttackHitbox bossAttackHitbox;
     private BossHealth bossHealth;
 
-    private bool _isAttacking = false;
-
+    [Header("Miscellaneous")]
+    public bool _isAttacking = false;
     public bool showGizmos = false;
+
+    [Header("Jump Cooldown")]
+    public float jumpCooldownTimer = 0f;  // Timer for jump cooldown
+    public float maxJumpCooldown = 10f;  // Max cooldown time for jumps
+
+   
 
     void Start()
     {
@@ -61,12 +71,30 @@ public class BossAI : MonoBehaviour
 
         FlipTowardsPlayer();
         HandleState(distanceToPlayer);
+        isGrounded = IsGrounded();
+
+        if (jumpCooldownTimer > 0)
+        {
+            jumpCooldownTimer -= Time.deltaTime;
+        }
+
+        if (attackCooldownTimer > 0)
+        {
+            attackCooldownTimer -= Time.deltaTime;
+        }
     }
 
     void HandleState(float distanceToPlayer)
     {
         switch (currentState)
         {
+            case BossState.Jumping:
+                if (!IsAttacking())
+                {
+                    attackManager.JumpAttackBehavior();
+                }
+                break;
+
             case BossState.Idle:
                 if (!IsAttacking())
                 {
@@ -100,7 +128,6 @@ public class BossAI : MonoBehaviour
             case BossState.AOEAttack:
             case BossState.RangedAttack:
             case BossState.ComboAttack:
-            case BossState.Jumping:  // Added Jumping to stop movement
                 StopMovement(); // Ensures boss doesn't move while attacking
                 break;
         }
@@ -112,36 +139,45 @@ public class BossAI : MonoBehaviour
 
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        if (bossHealth.health > 50)
+        // Randomly decide to jump if cooldown is ready
+        if (jumpCooldownTimer <= 0 && Random.value < 0.3f)
         {
-            // Above 50% health
-            if (distanceToPlayer < attackRange)
-            {
-                currentState = Random.Range(0, 2) == 0 ? BossState.ComboAttack : BossState.RangedAttack;
-            }
-            else if (distanceToPlayer < rangedAttackRange)
-            {
-                currentState = BossState.RangedAttack;
-            }
-            else if (distanceToPlayer < jumpingAttackRange)  // Add a condition for the jumping attack
-            {
-                currentState = BossState.Jumping;  // Trigger the Jumping attack state
-            }
+            currentState = BossState.Jumping;
+            jumpCooldownTimer = maxJumpCooldown; // Reset cooldown
         }
         else
         {
-            // Below 50% health
-            if (distanceToPlayer < attackRange)
+            // Decide attack based on health and distance
+            if (bossHealth.health > 50)
             {
-                currentState = (Random.Range(0, 3) == 0) ? BossState.ComboAttack : (Random.Range(0, 2) == 0 ? BossState.RangedAttack : BossState.AOEAttack);
+                if (distanceToPlayer < attackRange)
+                {
+                    // Within melee range for combo attack
+                    currentState = BossState.ComboAttack;
+                }
+                else if (distanceToPlayer < rangedAttackRange && distanceToPlayer >= attackRange)
+                {
+                    // Within ranged attack range, but outside melee range
+                    currentState = BossState.RangedAttack;
+                }
             }
-            else if (distanceToPlayer < aoeAttackRange)
+            else  // Boss health is 50 or below
             {
-                currentState = (Random.Range(0, 2) == 0) ? BossState.AOEAttack : BossState.RangedAttack;
-            }
-            else if (distanceToPlayer < rangedAttackRange)
-            {
-                currentState = BossState.RangedAttack;
+                if (distanceToPlayer < attackRange)
+                {
+                    // Within melee range for combo attack
+                    currentState = BossState.ComboAttack;
+                }
+                else if (distanceToPlayer < aoeAttackRange && distanceToPlayer >= rangedAttackRange)
+                {
+                    // Within AOE attack range, but outside ranged attack range
+                    currentState = BossState.AOEAttack;
+                }
+                else if (distanceToPlayer < rangedAttackRange && distanceToPlayer >= aoeAttackRange)
+                {
+                    // Within ranged attack range
+                    currentState = BossState.RangedAttack;
+                }
             }
         }
 
@@ -165,20 +201,19 @@ public class BossAI : MonoBehaviour
                 StartCoroutine(WaitForAttack(comboAttackDuration));
                 break;
             case BossState.Jumping:
-                bossMovement.TriggerJump();
-                StartCoroutine(WaitForAttack(jumpiAttackDuration));
+                attackManager.JumpAttackBehavior();
                 break;
         }
     }
 
     IEnumerator WaitForAttack(float duration)
     {
-        SetAttacking(true); // Start the attack state
-        yield return new WaitForSeconds(duration); // Wait for attack to complete
-        SetAttacking(false); // End the attack state
+        SetAttacking(true);
+        yield return new WaitForSeconds(duration);
+        SetAttacking(false);
         ResumeMovement();
-        currentState = BossState.Moving; // Transition to moving state
-        attackCooldownTimer = Random.Range(minAttackTime, maxAttackTime); // Reset cooldown timer
+        currentState = BossState.Moving;
+        attackCooldownTimer = Random.Range(minAttackTime, maxAttackTime);
     }
 
     public void StopMovement()
@@ -208,7 +243,7 @@ public class BossAI : MonoBehaviour
 
     void FlipTowardsPlayer()
     {
-        if (player == null) return;
+        if (player == null || !IsGrounded()) return;  // Don't flip if not grounded or player is null
 
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -226,7 +261,28 @@ public class BossAI : MonoBehaviour
         }
     }
 
-    // Modified OnDrawGizmos to check for showGizmos flag
+    private bool IsGrounded()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckRadius, groundLayer);
+
+        if (hit.collider != null && hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            if (!isGrounded) // Transitioning to grounded state
+            {
+                attackManager.isJumping = false;  // Stop jumping flag when grounded
+            }
+            return true;  // Return true when hitting the ground
+        }
+        else
+        {
+            if (isGrounded) // If no longer grounded
+            {
+                attackManager.isJumping = true; // Set jumping state
+            }
+            return false;  // Return false when not hitting the ground
+        }
+    }
+
     private void OnDrawGizmos()
     {
         if (showGizmos)
@@ -247,6 +303,13 @@ public class BossAI : MonoBehaviour
             // New Gizmo for Jumping Attack Distance
             Gizmos.color = Color.cyan;  // You can change the color here
             Gizmos.DrawWireSphere(transform.position, jumpingAttackRange); // Jumping attack distance
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius); // Draw ground check area
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, groundCheck.position); // Draw a line to visualize the check
         }
     }
+
+ 
 }

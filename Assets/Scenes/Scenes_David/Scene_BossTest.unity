@@ -388,6 +388,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8670795172798651577, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
   m_PrefabInstance: {fileID: 3742120542383075744}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &648752440 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3513243742902532373, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+  m_PrefabInstance: {fileID: 3742120542383075744}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c61ed1a155658e84789c9cfc1040af5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &656648534
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,7 +765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 1
-  player: {fileID: 5956691561915802686}
+  player: {fileID: 638095899}
   enemy: {fileID: 638095899}
   combatDistanceThreshold: 40
   combatCameraSize: 15
@@ -765,6 +776,11 @@ MonoBehaviour:
   speedIncreaseRate: 1
   idleTimer: 0
   showGizmos: 0
+--- !u!4 &1483591540 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3456259372687484516, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+  m_PrefabInstance: {fileID: 3742120542383075744}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3742120542383075744
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -777,6 +793,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 5956691561915802686}
+    - target: {fileID: 3513243742902532373, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: groundSmashTime
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 4378328218187293667, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
       propertyPath: playerHealth
       value: 
@@ -825,14 +845,82 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 5956691561915802686}
+    - target: {fileID: 5261898287216626214, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: jumpForce
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5261898287216626214, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: isGrounded
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5261898287216626214, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: groundCheck
+      value: 
+      objectReference: {fileID: 1483591540}
+    - target: {fileID: 5261898287216626214, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: bossMovement
+      value: 
+      objectReference: {fileID: 648752440}
+    - target: {fileID: 5261898287216626214, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: maxJumpCooldown
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 5261898287216626214, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: groundCheckRadius
+      value: 0.62
+      objectReference: {fileID: 0}
+    - target: {fileID: 5261898287216626214, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5261898287216626214, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: jumpingAttackRange
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 5676303788097376030, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
       propertyPath: m_Name
       value: MainBossHolder
       objectReference: {fileID: 0}
     - target: {fileID: 6801926445257053491, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: m_Mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801926445257053491, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 6200000, guid: 9380b5f613c0e7b4f898b7660160cedd, type: 2}
+      objectReference: {fileID: 6200000, guid: 9442afdaee78f074f8d78fc12411f67b, type: 2}
+    - target: {fileID: 6801926445257053491, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801926445257053491, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9057135614513273811, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: jumpForce
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9057135614513273811, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: jumpHeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9057135614513273811, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: jumpHeightMax
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 9057135614513273811, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: jumpHeightMin
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 9057135614513273811, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: jumpHorizontalSpeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9057135614513273811, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: jumpSpeedMultiplier
+      value: 0.2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
