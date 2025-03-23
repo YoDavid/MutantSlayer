@@ -46,3 +46,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: 1-BackGround
+    uniqueID: 1801015451
+    locked: 0
+  - name: 2-BackGround
+    uniqueID: 2794128715
+    locked: 0
+  - name: 3-BackGround
+    uniqueID: 2375610731
+    locked: 0
+  - name: 4-BackGround
+    uniqueID: 2481495577
+    locked: 0
+  - name: Player
+    uniqueID: 568015659
+    locked: 0
+  - name: FordGroud
+    uniqueID: 1890701361
+    locked: 0

@@ -3583,7 +3583,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &294084897
 Transform:
   m_ObjectHideFlags: 0
@@ -13001,11 +13001,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4274865384483371385, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1567.8
+      value: -621.2
       objectReference: {fileID: 0}
     - target: {fileID: 4274865384483371385, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -210.3
+      value: 24.3
       objectReference: {fileID: 0}
     - target: {fileID: 4373448419953047939, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
       propertyPath: m_TagString
@@ -15664,13 +15664,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7596a4234e8daf64f9a1b60e2f7dc227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 1
   player: {fileID: 0}
+  enemy: {fileID: 0}
+  combatDistanceThreshold: 5
+  combatCameraSize: 17
   boundsSize: {x: 5, y: 3}
   idleCenterTime: 3
   initialCenterSpeed: 2
   maxCenterSpeed: 10
   speedIncreaseRate: 1
   idleTimer: 0
+  showGizmos: 0
 --- !u!1001 &1715166165
 PrefabInstance:
   m_ObjectHideFlags: 0
