@@ -5777,6 +5777,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4274865384483371385, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
   m_PrefabInstance: {fileID: 607425224}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &607425227 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1353762432173463006, guid: 5c240959b6ee41542907675e0815dc2c, type: 3}
+  m_PrefabInstance: {fileID: 607425224}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7840b6f265762c14e8e785d06370f85f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &612175611 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2833721365130449538, guid: f4ada9318c85be649840e870830fa14e, type: 3}
@@ -14296,6 +14307,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 607425226}
+    - target: {fileID: 4378328218187293667, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
+      propertyPath: playerHealth
+      value: 
+      objectReference: {fileID: 607425227}
     - target: {fileID: 5251717069979468308, guid: e81f302e138358e429693dbc7378bfa2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 86.80881
