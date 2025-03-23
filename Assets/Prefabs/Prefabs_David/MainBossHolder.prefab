@@ -162,9 +162,9 @@ Transform:
   m_GameObject: {fileID: 5512506803662219850}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 5159.6, y: -972.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1568578004230728822}
   - {fileID: 5485990403015595304}
@@ -332,23 +332,31 @@ MonoBehaviour:
   player: {fileID: 0}
   speed: 2
   desiredDistanceFromPlayer: 8
-  isFacingLeft: 0
-  minAttackTime: 1
-  maxAttackTime: 5
-  attackCooldownTimer: 0
+  isFacingLeft: 1
+  groundCheck: {fileID: 3456259372687484516}
+  groundCheckRadius: 0.6
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  isGrounded: 0
   attackRange: 8.68
   rangedAttackRange: 25
   aoeAttackRange: 18.8
-  walkingRange: 35
+  walkingRange: 37.1
   jumpingAttackRange: 35
+  minAttackTime: 1
+  maxAttackTime: 5
+  attackCooldownTimer: 0
   comboAttackDuration: 2.8
   rangedAttackDuration: 1
   aoeAttackDuration: 4.4
-  jumpiAttackDuration: 5
   rb: {fileID: 6801926445257053491}
   animator: {fileID: 1398573991708630370}
-  bossMovement: {fileID: 0}
+  bossMovement: {fileID: 3513243742902532373}
+  _isAttacking: 0
   showGizmos: 1
+  jumpCooldownTimer: 0
+  maxJumpCooldown: 15
 --- !u!114 &9057135614513273811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,6 +375,16 @@ MonoBehaviour:
   projectileSpeed: 5
   spitSpawnPoint: {fileID: 5485990403015595304}
   spitDelay: 0.85
+  isJumping: 0
+  isJumpingSmash: 0
+  jumpAnticipationTime: 0.7
+  jumpForce: 0
+  jumpHorizontalSpeed: 0
+  jumpHeightMin: 10
+  jumpHeightMax: 15
+  jumpHeight: 0
+  jumpTargetPosition: {x: 0, y: 0}
+  jumpAttackDuration: 0
 --- !u!114 &3513243742902532373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,17 +400,7 @@ MonoBehaviour:
   speed: 6
   player: {fileID: 0}
   animator: {fileID: 1398573991708630370}
-  jumpForce: 20
-  groundCheck: {fileID: 3456259372687484516}
-  groundCheckRadius: 0.59
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  anticipationTime: 0.7
-  jumpUpwardTime: 0.3
-  JumpMidair: 0.1
-  landingTime: 0.1
-  groundSmashTime: 0.8
+  showGroundCheckGizmo: 1
 --- !u!114 &1121652860993372087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -432,7 +440,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.22, y: 6.03, z: 0}
-  m_LocalScale: {x: 0.28485882, y: 0.28485882, z: 0.28485882}
+  m_LocalScale: {x: 0.024514526, y: 0.024514526, z: 0.024514526}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8670795172798651577}
