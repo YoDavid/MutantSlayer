@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BossMovement : MonoBehaviour
 {
-    public float speed = 2f;
+    public float speed;
     public Transform player;
     public Animator animator;
     private Rigidbody2D rb;

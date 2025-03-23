@@ -9,32 +9,32 @@ public class BossAI : MonoBehaviour
     public Transform player;
 
     [Header("Movement Settings")]
-    public float speed = 2f;
-    public float desiredDistanceFromPlayer = 1f;
+    public float speed;
+    public float desiredDistanceFromPlayer;
     public bool isFacingLeft;
 
     [Header("Ground Check")]
     public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
+    public float groundCheckRadius;
     public LayerMask groundLayer;
     public bool isGrounded;
 
     [Header("Attack Range Definitions")]
-    public float attackRange = 2f; // Melee attack range
-    public float rangedAttackRange = 5f; // Ranged attack range
-    public float aoeAttackRange = 3f; // AOE attack range
-    public float walkingRange = 4f;
-    public float jumpingAttackRange = 4f;
+    public float attackRange; // Melee attack range
+    public float rangedAttackRange; // Ranged attack range
+    public float aoeAttackRange; // AOE attack range
+    public float walkingRange;
+    public float jumpingAttackRange;
 
     [Header("Attack Timer Settings")]
-    public float minAttackTime = 1f;
-    public float maxAttackTime = 3f;
+    public float minAttackTime;
+    public float maxAttackTime;
     public float attackCooldownTimer;
 
     [Header("Timers For Each Attack Type")]
-    public float comboAttackDuration = 2.3f;
-    public float rangedAttackDuration = 1.5f;
-    public float aoeAttackDuration = 3.0f;
+    public float comboAttackDuration;
+    public float rangedAttackDuration;
+    public float aoeAttackDuration;
 
     [Header("Other References")]
     public Rigidbody2D rb;
@@ -49,8 +49,8 @@ public class BossAI : MonoBehaviour
     public bool showGizmos = false;
 
     [Header("Jump Cooldown")]
-    public float jumpCooldownTimer = 0f;  // Timer for jump cooldown
-    public float maxJumpCooldown = 10f;  // Max cooldown time for jumps
+    public float jumpCooldownTimer;  // Timer for jump cooldown
+    public float maxJumpCooldown;  // Max cooldown time for jumps
 
    
 
@@ -168,7 +168,7 @@ public class BossAI : MonoBehaviour
                     // Within melee range for combo attack
                     currentState = BossState.ComboAttack;
                 }
-                else if (distanceToPlayer < aoeAttackRange && distanceToPlayer >= rangedAttackRange)
+                else if (distanceToPlayer < aoeAttackRange && distanceToPlayer < rangedAttackRange)
                 {
                     // Within AOE attack range, but outside ranged attack range
                     currentState = BossState.AOEAttack;

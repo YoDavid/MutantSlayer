@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class BossAttackManager : MonoBehaviour
 {
+
+    [Header("Camera Components")]
+    CameraDeadZoneFollow cameraDeadZoneFollow;
+
     [Header("Boss Components")]
     public Animator animator;
     private BossAI bossAI;
@@ -13,24 +17,26 @@ public class BossAttackManager : MonoBehaviour
 
     [Header("Ranged Attack Settings")]
     [SerializeField] private GameObject spitParticlePrefab;
-    [SerializeField] private float projectileSpeed = 5f;
+    [SerializeField] private float projectileSpeed;
     [SerializeField] private Transform spitSpawnPoint;
-    [SerializeField] private float spitDelay = 0.5f;
+    [SerializeField] private float spitDelay;
+     
+    [Header("Jump Settings (Floats)")]
+    public float jumpAnticipationTime = 0.7f;  // Time before jump starts after trigger                  
+    public float jumpHeightMin;               // Minimum jump height
+    public float jumpHeightMax;               // Maximum jump height        
+
+    [Header("Jump Target Position")]
+    public Vector2 jumpTargetPosition;        // Position where the boss will jump towards
 
     [Header("Jump Settings (Booleans & Flags)")]
     public bool isJumping = false;            // Flag to indicate jump is in progress
     public bool isJumpingSmash = false;       // Flag to ensure smash is triggered only once
 
-    [Header("Jump Settings (Floats)")]
-    public float jumpAnticipationTime = 0.7f;  // Time before jump starts after trigger
-    public float jumpForce;                   // Upward force applied when jumping
-    public float jumpHorizontalSpeed;         // Controls side movement speed
-    public float jumpHeightMin;               // Minimum jump height
-    public float jumpHeightMax;               // Maximum jump height
-    public float jumpHeight;                  // Actual jump height (calculated)
-
-    [Header("Jump Target Position")]
-    public Vector2 jumpTargetPosition;        // Position where the boss will jump towards
+    [Header("Jump Debug")]
+    public float jumpForce;                    // Upward force applied when jumping
+    public float jumpHorizontalSpeed;          // Controls side movement speed
+    public float jumpHeight;                   // Actual jump height (calculated)
 
     [Header("Jump Timer (Debug)")]
     public float jumpAttackDuration;          // Duration measured and shown in Inspector
@@ -38,10 +44,12 @@ public class BossAttackManager : MonoBehaviour
     private float jumpEndTime;                // Time when jump attack ends
 
 
+
     void Start()
     {
         bossAI = GetComponent<BossAI>();
         bossSpriteRenderer = GetComponent<SpriteRenderer>();
+        cameraDeadZoneFollow = FindAnyObjectByType<CameraDeadZoneFollow>();
     }
 
     private void Update()
@@ -53,16 +61,7 @@ public class BossAttackManager : MonoBehaviour
             jumpAttackDuration = jumpEndTime - jumpStartTime;
         }
 
-        // Other attack triggers:
-        if (Input.GetKeyDown(KeyCode.K) && !bossAI.IsAttacking())
-        {
-            ComboAttackBehavior();
-        }
-        if (Input.GetKeyDown(KeyCode.R) && !bossAI.IsAttacking())
-        {
-            RangedAttackBehavior();
-        }
-        if (Input.GetKeyDown(KeyCode.P) && !bossAI.IsAttacking())
+        if (Input.GetKeyDown(KeyCode.P)) 
         {
             JumpAttackBehavior();
         }
@@ -144,6 +143,7 @@ public class BossAttackManager : MonoBehaviour
         {
             animator.SetTrigger("JumpGroundSmash");
             isJumpingSmash = true;
+            cameraDeadZoneFollow.ShakeCamera();
 
             // **Wait for the smash animation to complete before resetting state**
             float smashDuration = animator.GetCurrentAnimatorStateInfo(0).length;

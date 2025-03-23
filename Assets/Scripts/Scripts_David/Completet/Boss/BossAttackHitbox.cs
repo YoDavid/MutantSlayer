@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class BossAttackHitbox : MonoBehaviour
 {
-    [SerializeField] private int attackDamage = 10;
-    [SerializeField] private float attackDuration = 0.2f;
-    [SerializeField] private float[] attackTimings = { 0.7f, 1.1f, 1.9f };
+    [SerializeField] private int attackDamage;
+    [SerializeField] private float attackDuration;
+    [SerializeField] private float[] attackTimings = { 0.6f, 1.1f, 1.9f };
     private Collider2D attackCollider;
 
     [SerializeField] private PlayerHealth playerHealth;
@@ -14,7 +14,7 @@ public class BossAttackHitbox : MonoBehaviour
     private bool isPlayerInRange = false;
 
     private Vector2 originalOffset;
-    public float colliderShift = 3f;
+    public float colliderShift;
 
     private void Awake()
     {
