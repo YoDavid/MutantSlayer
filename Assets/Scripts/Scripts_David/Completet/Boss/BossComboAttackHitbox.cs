@@ -1,37 +1,69 @@
 using System.Collections;
 using UnityEngine;
 
-public class BossAttackHitbox : MonoBehaviour
+public class BossComboAttackHitbox : MonoBehaviour
 {
+    [Header("Attack Settings")]
     [SerializeField] private int attackDamage;
     [SerializeField] private float attackDuration;
-    [SerializeField] private float[] attackTimings = { 0.6f, 1.1f, 1.9f };
-    private Collider2D attackCollider;
+    [SerializeField] private float[] attackTimings;
 
+    [Header("Collider Settings")]
+    [SerializeField] private float colliderShift;
+    private Collider2D attackCollider;
+    private Vector2 originalOffset;
+
+    [Header("Player References")]
     [SerializeField] private PlayerHealth playerHealth;
     private Collider2D playerHurtBoxCollider;
-
     private bool isPlayerInRange = false;
 
-    private Vector2 originalOffset;
-    public float colliderShift;
+    [Header("Camera Shake")]
+    private CameraShake cameraShake;
 
     private void Awake()
+    {
+        InitializeComponents();
+    }
+
+    private void Start()
+    {
+        SetupCollider();
+        FindPlayerReferences();
+    }
+
+    private void InitializeComponents()
     {
         attackCollider = GetComponent<Collider2D>();
         if (attackCollider == null)
         {
             Debug.LogError("Attack Collider is not attached to the BossAttackHitbox object.");
         }
-        attackCollider.enabled = false;
 
-        GameObject player = GameObject.FindWithTag("Player");
-        playerHurtBoxCollider = player.GetComponent<Collider2D>();
-        playerHealth = FindObjectOfType<PlayerHealth>();
+        cameraShake = FindAnyObjectByType<CameraShake>();
+    }
+
+    private void SetupCollider()
+    {
+        attackCollider.enabled = false;
 
         if (attackCollider is BoxCollider2D boxCollider)
         {
             originalOffset = boxCollider.offset;
+        }
+    }
+
+    private void FindPlayerReferences()
+    {
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            playerHurtBoxCollider = player.GetComponent<Collider2D>();
+            playerHealth = player.GetComponent<PlayerHealth>();
+        }
+        else
+        {
+            Debug.LogError("Player not found in scene.");
         }
     }
 
@@ -50,11 +82,20 @@ public class BossAttackHitbox : MonoBehaviour
             if (waitTime > 0)
                 yield return new WaitForSeconds(waitTime);
 
-            attackCollider.enabled = true;
-
+            EnableCollider();
             yield return new WaitForSeconds(attackDuration);
-            attackCollider.enabled = false;
+            DisableCollider();
         }
+    }
+
+    private void EnableCollider()
+    {
+        attackCollider.enabled = true;
+    }
+
+    private void DisableCollider()
+    {
+        attackCollider.enabled = false;
     }
 
     private void ApplyDamage()
@@ -62,6 +103,7 @@ public class BossAttackHitbox : MonoBehaviour
         if (isPlayerInRange && !playerHealth.IsPlayerInvulnerable())
         {
             playerHealth.TakeDamage(attackDamage);
+            cameraShake.ShakeCameraComboAttack();
         }
     }
 
@@ -79,7 +121,6 @@ public class BossAttackHitbox : MonoBehaviour
         if (other == playerHurtBoxCollider)
         {
             isPlayerInRange = false;
-            ApplyDamage();
         }
     }
 
@@ -96,14 +137,9 @@ public class BossAttackHitbox : MonoBehaviour
     {
         if (attackCollider is BoxCollider2D boxCollider)
         {
-            if (isFlipped) // If facing right (flipX is true)
-            {
-                boxCollider.offset = new Vector2(originalOffset.x + colliderShift, originalOffset.y);
-            }
-            else // If facing left (flipX is false)
-            {
-                boxCollider.offset = originalOffset;
-            }
+            boxCollider.offset = isFlipped
+                ? new Vector2(originalOffset.x + colliderShift, originalOffset.y)
+                : originalOffset;
         }
     }
 }

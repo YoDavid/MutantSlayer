@@ -3,78 +3,101 @@ using UnityEngine;
 
 public class BossAttackManager : MonoBehaviour
 {
-
     [Header("Camera Components")]
-    CameraDeadZoneFollow cameraDeadZoneFollow;
+    private CameraShake cameraShake;
 
     [Header("Boss Components")]
-    public Animator animator;
+    private Animator animator;
     private BossAI bossAI;
     private SpriteRenderer bossSpriteRenderer;
 
     [Header("Attack Hitboxes")]
-    [SerializeField] private BossAttackHitbox comboAttackHitbox;
+    [SerializeField] private BossComboAttackHitbox comboAttackHitbox;
 
     [Header("Ranged Attack Settings")]
     [SerializeField] private GameObject spitParticlePrefab;
     [SerializeField] private float projectileSpeed;
     [SerializeField] private Transform spitSpawnPoint;
     [SerializeField] private float spitDelay;
-     
+
     [Header("Jump Settings (Floats)")]
-    public float jumpAnticipationTime = 0.7f;  // Time before jump starts after trigger                  
-    public float jumpHeightMin;               // Minimum jump height
-    public float jumpHeightMax;               // Maximum jump height        
+    public float jumpAnticipationTime = 0.7f;
+    public float jumpHeightMin;
+    public float jumpHeightMax;
 
     [Header("Jump Target Position")]
-    public Vector2 jumpTargetPosition;        // Position where the boss will jump towards
+    public Vector2 jumpTargetPosition;
 
     [Header("Jump Settings (Booleans & Flags)")]
-    public bool isJumping = false;            // Flag to indicate jump is in progress
-    public bool isJumpingSmash = false;       // Flag to ensure smash is triggered only once
+    public bool isJumping = false;
+    public bool isJumpingSmash = false;
 
     [Header("Jump Debug")]
-    public float jumpForce;                    // Upward force applied when jumping
-    public float jumpHorizontalSpeed;          // Controls side movement speed
-    public float jumpHeight;                   // Actual jump height (calculated)
+    public float jumpForce;
+    public float jumpHorizontalSpeed;
+    public float jumpHeight;
 
     [Header("Jump Timer (Debug)")]
-    public float jumpAttackDuration;          // Duration measured and shown in Inspector
-    private float jumpStartTime;              // Time when jump attack starts
-    private float jumpEndTime;                // Time when jump attack ends
+    public float jumpAttackDuration;
+    private float jumpStartTime;
+    private float jumpEndTime;
 
-
+    [Header("AOE Attack Components")]
+    [SerializeField] private BossAOEAttack bossAOEAttack;  // Reference to BossAOEAttack script
 
     void Start()
     {
+        AssignReferences();
+    }
+
+    private void AssignReferences()
+    {
         bossAI = GetComponent<BossAI>();
+        animator = GetComponent<Animator>();
         bossSpriteRenderer = GetComponent<SpriteRenderer>();
-        cameraDeadZoneFollow = FindAnyObjectByType<CameraDeadZoneFollow>();
+        cameraShake = FindObjectOfType<CameraShake>();
+        comboAttackHitbox = transform.Find("BossComboAttackCollider")?.GetComponent<BossComboAttackHitbox>();
+        spitSpawnPoint = transform.Find("Spit_Position_Instantiaion");
+        bossAOEAttack = GetComponentInChildren<BossAOEAttack>();  // Make sure this is correctly referenced
+
+        if (bossAI == null) Debug.LogWarning("BossAI not found!");
+        if (bossSpriteRenderer == null) Debug.LogWarning("BossSpriteRenderer not found!");
+        if (cameraShake == null) Debug.LogWarning("CameraDeadZoneFollow not found!");
+        if (comboAttackHitbox == null) Debug.LogWarning("BossComboAttackCollider not found or ComboAttackHitbox component missing!");
+        if (spitSpawnPoint == null) Debug.LogWarning("Spit_Position_Instantiaion not found!");
+        if (animator == null) Debug.LogWarning("Animator is not assigned!");
+        if (spitParticlePrefab == null) Debug.LogWarning("SpitParticlePrefab is not assigned!");
+        if (bossAOEAttack == null) Debug.LogWarning("BossAOEAttack component not found in children!");
     }
 
     private void Update()
     {
-        // For debugging: update timer while jump is active
         if (isJumping)
         {
             jumpEndTime = Time.time;
             jumpAttackDuration = jumpEndTime - jumpStartTime;
         }
 
-        if (Input.GetKeyDown(KeyCode.P)) 
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            JumpAttackBehavior();
+            AOEAttackBehavior();
         }
     }
-
-    // 2. Attack Behaviors
 
     public void AOEAttackBehavior()
     {
         if (!bossAI.IsAttacking())
         {
-            bossAI.SetAttacking(true);
-            animator.SetTrigger("AOEAttackTrigger");
+            bossAI.SetAttacking(true);  // Set the boss as attacking
+            animator.SetTrigger("AOEAttackTrigger");  // Trigger the AOE attack animation
+
+            // Activate the AOE Attack Collider (spikes)
+            if (bossAOEAttack != null)
+            {
+                bossAOEAttack.ActivateAOEAttack();  // Activate the AOE spikes
+            }
+
+            // After the AOE attack duration, reset the attack state and deactivate the collider
             Invoke(nameof(ResetAttackState), bossAI.aoeAttackDuration);
         }
     }
@@ -102,7 +125,6 @@ public class BossAttackManager : MonoBehaviour
         }
     }
 
-    // 3. Jump Attack Behavior (All Logic in One Method)
     public void JumpAttackBehavior()
     {
         if (!bossAI.IsAttacking())
@@ -121,7 +143,6 @@ public class BossAttackManager : MonoBehaviour
         }
     }
 
-    // Single coroutine that handles anticipation, upward movement, landing, and smash
     IEnumerator JumpAnticipationRoutine()
     {
         jumpStartTime = Time.time;
@@ -143,19 +164,16 @@ public class BossAttackManager : MonoBehaviour
         {
             animator.SetTrigger("JumpGroundSmash");
             isJumpingSmash = true;
-            cameraDeadZoneFollow.ShakeCamera();
+            cameraShake.ShakeCameraJumpSmashAttack();
 
             // **Wait for the smash animation to complete before resetting state**
             float smashDuration = animator.GetCurrentAnimatorStateInfo(0).length;
             yield return new WaitForSeconds(smashDuration);
         }
 
-        // **Reset state after the smash attack finishes**
         ResetJumpState();
         isJumpingSmash = false;
     }
-
-    // 4. Helper Methods
 
     private IEnumerator InstantiateSpitAfterDelay()
     {

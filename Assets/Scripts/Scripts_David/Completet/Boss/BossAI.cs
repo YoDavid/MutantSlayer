@@ -5,26 +5,21 @@ public enum BossState { Idle, Moving, Jumping, AOEAttack, RangedAttack, ComboAtt
 
 public class BossAI : MonoBehaviour
 {
+    [Header("Boss State")]
     public BossState currentState;
-    public Transform player;
+    public Vector2 startingPosition;
 
     [Header("Movement Settings")]
-    public float speed;
-    public float desiredDistanceFromPlayer;
+    [SerializeField] private float speed;
+    [SerializeField] private float desiredDistanceFromPlayer;
     public bool isFacingLeft;
-
-    [Header("Ground Check")]
-    public Transform groundCheck;
-    public float groundCheckRadius;
-    public LayerMask groundLayer;
-    public bool isGrounded;
 
     [Header("Attack Range Definitions")]
     public float attackRange; // Melee attack range
-    public float rangedAttackRange; // Ranged attack range
-    public float aoeAttackRange; // AOE attack range
-    public float walkingRange;
-    public float jumpingAttackRange;
+    [SerializeField] private float rangedAttackRange; // Ranged attack range
+    [SerializeField] private float aoeAttackRange; // AOE attack range
+    [SerializeField] private float walkingRange;
+    [SerializeField] private float jumpingAttackRange;
 
     [Header("Attack Timer Settings")]
     public float minAttackTime;
@@ -36,43 +31,101 @@ public class BossAI : MonoBehaviour
     public float rangedAttackDuration;
     public float aoeAttackDuration;
 
+    [Header("Jump Cooldown")]
+    [SerializeField] private float jumpCooldownTimer;
+    [SerializeField] private float maxJumpCooldown;
+
+    [Header("Ground Check")]
+    [SerializeField] private float groundCheckRadius;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private Transform groundCheck;
+    public bool isGrounded;
+
     [Header("Other References")]
     public Rigidbody2D rb;
-    public Animator animator;
-    public BossMovement bossMovement;
+    private Animator animator;
+    private BossMovement bossMovement;
     private BossAttackManager attackManager;
-    private BossAttackHitbox bossAttackHitbox;
+    private BossComboAttackHitbox bossAttackHitbox;
     private BossHealth bossHealth;
+    public Transform player;
 
-    [Header("Miscellaneous")]
-    public bool _isAttacking = false;
-    public bool showGizmos = false;
-
-    [Header("Jump Cooldown")]
-    public float jumpCooldownTimer;  // Timer for jump cooldown
-    public float maxJumpCooldown;  // Max cooldown time for jumps
-
-   
+    [Header("Debugging")]
+    [SerializeField] private bool _isAttacking = false;
+    [SerializeField] private bool showGizmos = false;
+    [SerializeField] private bool isDebugMode = false;
 
     void Start()
     {
+        InitializeValues();
+        FindReferences();
+    }
+
+    void InitializeValues()
+    {
         currentState = BossState.Idle;
         attackCooldownTimer = Random.Range(minAttackTime, maxAttackTime);
-        bossAttackHitbox = GetComponentInChildren<BossAttackHitbox>();
+        groundCheckRadius = 0.62f;
+        startingPosition = transform.position;
+    }
+
+    void FindReferences()
+    {
+        bossAttackHitbox = GetComponentInChildren<BossComboAttackHitbox>();
         bossMovement = GetComponent<BossMovement>();
         attackManager = GetComponent<BossAttackManager>();
         bossHealth = GetComponent<BossHealth>();
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+
+        groundLayer = LayerMask.GetMask("Ground");
+
+        groundCheck = transform.Find("GroundCheckPoint_Boss");
+
+        if (bossAttackHitbox == null) Debug.LogWarning("BossAttackHitbox not found!");
+        if (bossMovement == null) Debug.LogWarning("BossMovement not found!");
+        if (attackManager == null) Debug.LogWarning("BossAttackManager not found!");
+        if (bossHealth == null) Debug.LogWarning("BossHealth not found!");
+        if (animator == null) Debug.LogWarning("Animator not found!");
+        if (player == null) Debug.LogWarning("Player not found! Make sure the Player has the correct tag.");
+        if (groundCheck == null) Debug.LogWarning("GroundCheckPoint_Boss not found! Make sure it exists in the hierarchy.");
     }
 
     void Update()
     {
-        attackCooldownTimer -= Time.deltaTime;
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+        HandleCooldowns();
+        UpdatePlayerDistance();
+        UpdateGroundedStatus();
+        HandleFlipAndState();
 
-        FlipTowardsPlayer();
-        HandleState(distanceToPlayer);
-        isGrounded = IsGrounded();
+        // Debug key to test attacks without range checks
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (isDebugMode)
+            {
+                DebugAttackBehavior();
+            }
+        }
+    }
 
+    private void DebugAttackBehavior()
+    {
+        if (!IsAttacking())
+        {
+            // Trigger any attack for testing (e.g., AOE attack)
+            attackManager.AOEAttackBehavior();
+        }
+    }
+
+    private bool IsPlayerInWalkingRange(float distanceToPlayer)
+    {
+        return distanceToPlayer < walkingRange && distanceToPlayer > desiredDistanceFromPlayer;
+    }
+
+    void HandleCooldowns()
+    {
         if (jumpCooldownTimer > 0)
         {
             jumpCooldownTimer -= Time.deltaTime;
@@ -82,6 +135,22 @@ public class BossAI : MonoBehaviour
         {
             attackCooldownTimer -= Time.deltaTime;
         }
+    }
+
+    void UpdatePlayerDistance()
+    {
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+    }
+
+    void UpdateGroundedStatus()
+    {
+        isGrounded = IsGrounded();
+    }
+
+    void HandleFlipAndState()
+    {
+        FlipTowardsPlayer();
+        HandleState(Vector2.Distance(transform.position, player.position));
     }
 
     void HandleState(float distanceToPlayer)
@@ -103,9 +172,14 @@ public class BossAI : MonoBehaviour
                     {
                         DecideAttack();
                     }
-                    else if (distanceToPlayer < walkingRange && distanceToPlayer > desiredDistanceFromPlayer)
+                    else if (IsPlayerInWalkingRange(distanceToPlayer))
                     {
                         currentState = BossState.Moving;
+                    }
+                    else
+                    {
+                        // Player is out of walking range; return to starting position
+                        ReturnToStartingPosition();
                     }
                 }
                 break;
@@ -117,6 +191,11 @@ public class BossAI : MonoBehaviour
                     if (distanceToPlayer <= desiredDistanceFromPlayer)
                     {
                         currentState = BossState.Idle;
+                    }
+                    else if (!IsPlayerInWalkingRange(distanceToPlayer))
+                    {
+                        // Player is out of walking range; return to starting position
+                        ReturnToStartingPosition();
                     }
                     else if (attackCooldownTimer <= 0f)
                     {
@@ -131,6 +210,12 @@ public class BossAI : MonoBehaviour
                 StopMovement(); // Ensures boss doesn't move while attacking
                 break;
         }
+    }
+
+    private void ReturnToStartingPosition()
+    {
+        currentState = BossState.Moving;
+        bossMovement.StartReturningToStart();
     }
 
     void DecideAttack()
@@ -247,17 +332,37 @@ public class BossAI : MonoBehaviour
 
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
-        if (player.position.x < transform.position.x)
+        if (currentState == BossState.Moving && bossMovement.isReturningToStart)
         {
-            spriteRenderer.flipX = false;
-            isFacingLeft = true;
-            bossAttackHitbox.FlipCollider(false);
+            // Flip toward the starting position
+            if (startingPosition.x < transform.position.x)
+            {
+                spriteRenderer.flipX = false;
+                isFacingLeft = true;
+                bossAttackHitbox.FlipCollider(false);
+            }
+            else
+            {
+                spriteRenderer.flipX = true;
+                isFacingLeft = false;
+                bossAttackHitbox.FlipCollider(true);
+            }
         }
         else
         {
-            spriteRenderer.flipX = true;
-            isFacingLeft = false;
-            bossAttackHitbox.FlipCollider(true);
+            // Flip toward the player
+            if (player.position.x < transform.position.x)
+            {
+                spriteRenderer.flipX = false;
+                isFacingLeft = true;
+                bossAttackHitbox.FlipCollider(false);
+            }
+            else
+            {
+                spriteRenderer.flipX = true;
+                isFacingLeft = false;
+                bossAttackHitbox.FlipCollider(true);
+            }
         }
     }
 
@@ -267,27 +372,16 @@ public class BossAI : MonoBehaviour
 
         if (hit.collider != null && hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            if (!isGrounded) // Transitioning to grounded state
-            {
-                attackManager.isJumping = false;  // Stop jumping flag when grounded
-            }
-            return true;  // Return true when hitting the ground
+            return true;
         }
-        else
-        {
-            if (isGrounded) // If no longer grounded
-            {
-                attackManager.isJumping = true; // Set jumping state
-            }
-            return false;  // Return false when not hitting the ground
-        }
+
+        return false;
     }
 
     private void OnDrawGizmos()
     {
         if (showGizmos)
         {
-            // Draw attack range gizmos
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, attackRange);
 
@@ -300,16 +394,14 @@ public class BossAI : MonoBehaviour
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, aoeAttackRange);
 
-            // New Gizmo for Jumping Attack Distance
-            Gizmos.color = Color.cyan;  // You can change the color here
-            Gizmos.DrawWireSphere(transform.position, jumpingAttackRange); // Jumping attack distance
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, jumpingAttackRange);
 
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius); // Draw ground check area
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
             Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, groundCheck.position); // Draw a line to visualize the check
+            Gizmos.DrawLine(transform.position, groundCheck.position);
+
         }
     }
-
- 
 }

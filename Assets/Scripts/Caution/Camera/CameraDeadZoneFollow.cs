@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public enum CameraState
 {
@@ -38,20 +37,18 @@ public class CameraDeadZoneFollow : MonoBehaviour
     private bool isIdle;
     private float currentCenterSpeed;
 
-    [Header("Shake Effect")]
-    public float shakeDuration;
-    public float minshakeMagnitude;
-    public float maxshakeMagnitude;
-    public float shakeMagnitude;
-    public float dampingSpeed;
-    private Vector3 originalPosition;
-    private bool isShaking = false;
-    private float initialShakeMagnitude;
+    [Header("Camera Shake References")]
+    public CameraShake cameraShake; 
 
     [Header("Debugging")]
     public bool showGizmos = false;
 
     void Start()
+    {
+        InitializeReferences();
+    }
+
+    private void InitializeReferences()
     {
         if (player == null)
         {
@@ -71,10 +68,15 @@ public class CameraDeadZoneFollow : MonoBehaviour
         lastPlayerPosition = player.position;
         idleTimer = 0f;
         currentCenterSpeed = initialCenterSpeed;
-        initialShakeMagnitude = shakeMagnitude; // Store initial shake magnitude
     }
 
     void Update()
+    {
+        UpdateCameraState();
+        HandleCameraState();
+    }
+
+    private void UpdateCameraState()
     {
         if (player == null) return;
 
@@ -86,7 +88,10 @@ public class CameraDeadZoneFollow : MonoBehaviour
         {
             currentState = CameraState.Exploration;
         }
+    }
 
+    private void HandleCameraState()
+    {
         switch (currentState)
         {
             case CameraState.Combat:
@@ -96,21 +101,16 @@ public class CameraDeadZoneFollow : MonoBehaviour
                 HandleExplorationCamera();
                 break;
         }
-
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            ShakeCamera();
-        }
     }
 
-    void HandleCombatCamera()
+    private void HandleCombatCamera()
     {
         cameraComponent.orthographicSize = Mathf.Lerp(cameraComponent.orthographicSize, combatCameraSize, Time.deltaTime * 2f);
         Vector3 targetPosition = new Vector3(player.position.x, player.position.y, transform.position.z);
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 5f);
     }
 
-    void HandleExplorationCamera()
+    private void HandleExplorationCamera()
     {
         cameraComponent.orthographicSize = Mathf.Lerp(cameraComponent.orthographicSize, defaultCameraSize, Time.deltaTime * 2f);
 
@@ -121,20 +121,7 @@ public class CameraDeadZoneFollow : MonoBehaviour
         Vector3 newPos = camPos;
         Vector3 playerDelta = player.position - lastPlayerPosition;
 
-        if (playerDelta.magnitude > 0)
-        {
-            idleTimer = 0f;
-            isIdle = false;
-            currentCenterSpeed = initialCenterSpeed;
-        }
-        else
-        {
-            idleTimer += Time.deltaTime;
-            if (idleTimer >= idleCenterTime)
-            {
-                isIdle = true;
-            }
-        }
+        UpdateIdleState();
 
         if (player.position.x < minBounds.x || player.position.x > maxBounds.x)
             newPos.x += playerDelta.x;
@@ -152,36 +139,24 @@ public class CameraDeadZoneFollow : MonoBehaviour
         lastPlayerPosition = player.position;
     }
 
-    public void ShakeCamera()
+    private void UpdateIdleState()
     {
-        if (!isShaking)
+        Vector3 playerDelta = player.position - lastPlayerPosition;
+
+        if (playerDelta.magnitude > 0)
         {
-            shakeMagnitude = initialShakeMagnitude; // Reset shake magnitude
-            originalPosition = transform.position; // Save the starting position
-            StartCoroutine(Shake());
+            idleTimer = 0f;
+            isIdle = false;
+            currentCenterSpeed = initialCenterSpeed;
         }
-    }
-
-    private IEnumerator Shake()
-    {
-        isShaking = true;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < shakeDuration)
+        else
         {
-            float x = Random.Range(minshakeMagnitude, maxshakeMagnitude) * shakeMagnitude;
-            float y = Random.Range(minshakeMagnitude, maxshakeMagnitude) * shakeMagnitude;
-
-            transform.position = new Vector3(originalPosition.x + x, originalPosition.y + y, fixedZ);
-
-            elapsedTime += Time.deltaTime;
-            shakeMagnitude = Mathf.Lerp(shakeMagnitude, 0, dampingSpeed * Time.deltaTime);
-
-            yield return null;
+            idleTimer += Time.deltaTime;
+            if (idleTimer >= idleCenterTime)
+            {
+                isIdle = true;
+            }
         }
-
-        transform.position = originalPosition;
-        isShaking = false;
     }
 
     void OnDrawGizmos()
