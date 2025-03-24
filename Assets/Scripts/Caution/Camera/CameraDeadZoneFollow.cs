@@ -46,10 +46,16 @@ public class CameraDeadZoneFollow : MonoBehaviour
     void Start()
     {
         InitializeReferences();
+
     }
 
     private void InitializeReferences()
     {
+        if (player != null)
+        {
+            transform.position = new Vector3(player.position.x, player.position.y, -10f);
+        }
+
         if (player == null)
         {
             Debug.LogError("Camera: No player assigned!");

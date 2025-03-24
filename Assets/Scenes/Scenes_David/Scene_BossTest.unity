@@ -1277,6 +1277,7 @@ MonoBehaviour:
   initialDelay: 1
   enableSideSpikes: 1
   sideSpikesInterval: 0.4
+  sideSpikesActive: 0
 --- !u!1 &1595591451
 GameObject:
   m_ObjectHideFlags: 0
@@ -1544,6 +1545,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7636191823830998340}
     - target: {fileID: 5237804102926040271, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
+      propertyPath: cameraShake
+      value: 
+      objectReference: {fileID: 1871402385}
+    - target: {fileID: 5237804102926040271, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
       propertyPath: maxshakeMagnitude
       value: 1
       objectReference: {fileID: 0}
@@ -1778,17 +1783,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2616876883140300564, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: attackDurations.Array.data[0]
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2616876883140300564, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: attackDurations.Array.data[1]
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 2796465483129043920, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_Name
       value: PlayerHurtBox
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -49.4
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.58
+      value: 8.86
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1822,16 +1835,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5837879875248761564, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 9380b5f613c0e7b4f898b7660160cedd, type: 2}
     - target: {fileID: 6021447871000286383, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6739346586538796022, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: dashSpeed
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 6739346586538796022, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: dashDuration
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 9043775258710831573, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_Name
       value: PlayeHolder
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1186493370608933377, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+    - {fileID: 3425056500348954911, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
