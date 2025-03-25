@@ -1,23 +1,22 @@
 using System.Collections;
 using UnityEngine;
 
-
-public class BossComboAttackHitbox : MonoBehaviour
+public class BossJumpAttackHitbox : MonoBehaviour
 {
     [Header("Attack Settings")]
-    [SerializeField] private int attackDamage;
-    [SerializeField] private float attackDuration;
-    [SerializeField] private float[] attackTimings;
+    [SerializeField] private int attackDamage = 20;
+    [SerializeField] private float attackDuration = 0.5f;
+    [SerializeField] private float activationDelay = 0.2f;
 
     [Header("Collider Settings")]
-    [SerializeField] private float colliderShift;
+    [SerializeField] private float colliderShift; // Set this value in the inspector to determine how much to shift the collider
     private Collider2D attackCollider;
     private Vector2 originalOffset;
 
     [Header("Player References")]
     [SerializeField] private PlayerHealth playerHealth;
-    private Collider2D playerHurtBoxCollider;
-    private bool isPlayerInRange = false;
+    [SerializeField] private Collider2D playerHurtBoxCollider;
+    [SerializeField] private bool isPlayerInRange = false;
 
     [Header("Camera Shake")]
     private CameraShake cameraShake;
@@ -36,11 +35,6 @@ public class BossComboAttackHitbox : MonoBehaviour
     private void InitializeComponents()
     {
         attackCollider = GetComponent<Collider2D>();
-        if (attackCollider == null)
-        {
-            Debug.LogError("Attack Collider is not attached to the BossAttackHitbox object.");
-        }
-
         cameraShake = FindAnyObjectByType<CameraShake>();
     }
 
@@ -56,37 +50,49 @@ public class BossComboAttackHitbox : MonoBehaviour
 
     private void FindPlayerReferences()
     {
-        GameObject player = GameObject.FindWithTag("Player");
-        if (player != null)
+        GameObject playerHurtBox = GameObject.FindWithTag("PlayerHurtBox");
+        if (playerHurtBox != null)
         {
-            playerHurtBoxCollider = player.GetComponent<Collider2D>();
-            playerHealth = player.GetComponent<PlayerHealth>();
+            playerHurtBoxCollider = playerHurtBox.GetComponent<Collider2D>();
+            if (playerHurtBoxCollider == null)
+            {
+                Debug.LogError("Player hurtbox found but has no Collider2D component!");
+            }
         }
         else
         {
-            Debug.LogError("Player not found in scene.");
+            Debug.LogError("Player hurtbox not found! Make sure it exists and has the 'PlayerHurtBox' tag.");
         }
-    }
 
-    public void ActivateComboAttackCollider()
-    {
-        StartCoroutine(ActivateComboWithIntervals());
-    }
-
-    private IEnumerator ActivateComboWithIntervals()
-    {
-        float startTime = Time.time;
-
-        foreach (float attackTime in attackTimings)
+        // Find player health through the main player object
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
         {
-            float waitTime = attackTime - (Time.time - startTime);
-            if (waitTime > 0)
-                yield return new WaitForSeconds(waitTime);
-
-            EnableCollider();
-            yield return new WaitForSeconds(attackDuration);
-            DisableCollider();
+            playerHealth = player.GetComponent<PlayerHealth>();
+            if (playerHealth == null)
+            {
+                Debug.LogError("Player found but has no PlayerHealth component!");
+            }
         }
+        else
+        {
+            Debug.LogError("Player not found in scene!");
+        }
+    }
+
+    public void ActivateJumpAttackCollider(bool isFlipped)
+    {
+        FlipCollider(isFlipped); // Flip the collider based on the boss's facing direction
+        StartCoroutine(ActivateWithDelay());
+    }
+
+    private IEnumerator ActivateWithDelay()
+    {
+        yield return new WaitForSeconds(activationDelay);
+
+        EnableCollider();
+        yield return new WaitForSeconds(attackDuration);
+        DisableCollider();
     }
 
     private void EnableCollider()
@@ -94,7 +100,7 @@ public class BossComboAttackHitbox : MonoBehaviour
         attackCollider.enabled = true;
     }
 
-    private void DisableCollider()
+    public void DisableCollider()
     {
         attackCollider.enabled = false;
     }
@@ -104,7 +110,7 @@ public class BossComboAttackHitbox : MonoBehaviour
         if (isPlayerInRange && !playerHealth.IsPlayerInvulnerable())
         {
             playerHealth.TakeDamage(attackDamage);
-            cameraShake.ShakeCameraComboAttack();
+            cameraShake.ShakeCameraJumpSmashAttack();
         }
     }
 

@@ -13,6 +13,9 @@ public class BossAttackManager : MonoBehaviour
 
     [Header("Attack Hitboxes")]
     [SerializeField] private BossComboAttackHitbox comboAttackHitbox;
+    [SerializeField] private BossJumpAttackHitbox bossJumpAttackHitbox;
+    [SerializeField] private BossAOEAttack bossAOEAttack; 
+
 
     [Header("Ranged Attack Settings")]
     [SerializeField] private GameObject spitParticlePrefab;
@@ -42,8 +45,6 @@ public class BossAttackManager : MonoBehaviour
     private float jumpStartTime;
     private float jumpEndTime;
 
-    [Header("AOE Attack Components")]
-    [SerializeField] private BossAOEAttack bossAOEAttack;  // Reference to BossAOEAttack script
 
     void Start()
     {
@@ -58,16 +59,8 @@ public class BossAttackManager : MonoBehaviour
         cameraShake = FindObjectOfType<CameraShake>();
         comboAttackHitbox = transform.Find("BossComboAttackCollider")?.GetComponent<BossComboAttackHitbox>();
         spitSpawnPoint = transform.Find("Spit_Position_Instantiaion");
-        bossAOEAttack = GetComponentInChildren<BossAOEAttack>();  // Make sure this is correctly referenced
+        bossAOEAttack = GetComponentInChildren<BossAOEAttack>(); 
 
-        if (bossAI == null) Debug.LogWarning("BossAI not found!");
-        if (bossSpriteRenderer == null) Debug.LogWarning("BossSpriteRenderer not found!");
-        if (cameraShake == null) Debug.LogWarning("CameraDeadZoneFollow not found!");
-        if (comboAttackHitbox == null) Debug.LogWarning("BossComboAttackCollider not found or ComboAttackHitbox component missing!");
-        if (spitSpawnPoint == null) Debug.LogWarning("Spit_Position_Instantiaion not found!");
-        if (animator == null) Debug.LogWarning("Animator is not assigned!");
-        if (spitParticlePrefab == null) Debug.LogWarning("SpitParticlePrefab is not assigned!");
-        if (bossAOEAttack == null) Debug.LogWarning("BossAOEAttack component not found in children!");
     }
 
     private void Update()
@@ -88,16 +81,14 @@ public class BossAttackManager : MonoBehaviour
     {
         if (!bossAI.IsAttacking())
         {
-            bossAI.SetAttacking(true);  // Set the boss as attacking
-            animator.SetTrigger("AOEAttackTrigger");  // Trigger the AOE attack animation
+            bossAI.SetAttacking(true);
+            animator.SetTrigger("AOEAttackTrigger"); 
 
-            // Activate the AOE Attack Collider (spikes)
             if (bossAOEAttack != null)
             {
-                bossAOEAttack.ActivateAOEAttack();  // Activate the AOE spikes
+                bossAOEAttack.ActivateAOEAttack();  
             }
 
-            // After the AOE attack duration, reset the attack state and deactivate the collider
             Invoke(nameof(ResetAttackState), bossAI.aoeAttackDuration);
         }
     }
@@ -132,10 +123,8 @@ public class BossAttackManager : MonoBehaviour
             bossAI.SetAttacking(true);
             bossAI.currentState = BossState.Jumping;
 
-            // **Save player's position before jumping**
             jumpTargetPosition = bossAI.player.position;
 
-            // **Calculate Jump Force and Horizontal Speed dynamically**
             CalculateJumpParameters();
 
             animator.SetTrigger("JumpAnticipation");
@@ -148,22 +137,19 @@ public class BossAttackManager : MonoBehaviour
         jumpStartTime = Time.time;
         yield return new WaitForSeconds(jumpAnticipationTime);
 
-        // **Apply the calculated jump force and speed**
         bossAI.rb.velocity = new Vector2(jumpHorizontalSpeed, jumpForce);
         animator.SetTrigger("JumpUpwardMovement");
 
-        // Wait until the boss starts falling
         yield return new WaitUntil(() => bossAI.rb.velocity.y <= 0);
         animator.SetTrigger("JumpLanding");
 
-        // Wait until the boss touches the ground
         yield return new WaitUntil(() => bossAI.isGrounded);
 
-        // **Trigger the Smash Attack immediately upon landing**
         if (!isJumpingSmash)
         {
             animator.SetTrigger("JumpGroundSmash");
             isJumpingSmash = true;
+            bossJumpAttackHitbox.ActivateJumpAttackCollider(!bossAI.isFacingLeft); // Pass the facing direction here
             cameraShake.ShakeCameraJumpSmashAttack();
 
             // **Wait for the smash animation to complete before resetting state**

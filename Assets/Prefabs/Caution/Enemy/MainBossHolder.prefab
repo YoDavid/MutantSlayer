@@ -190,8 +190,8 @@ MonoBehaviour:
   - 0.6
   - 1.1
   - 1.9
-  playerHealth: {fileID: 0}
   colliderShift: 33
+  playerHealth: {fileID: 0}
 --- !u!1 &8864536568879513787
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,10 +205,6 @@ GameObject:
   - component: {fileID: 3822332763899041743}
   - component: {fileID: 2179824735393026984}
   - component: {fileID: 6444275532621671161}
-  - component: {fileID: 4045320201171481269}
-  - component: {fileID: 1520108886889284226}
-  - component: {fileID: 2926239813930849319}
-  - component: {fileID: 984672109741078132}
   m_Layer: 9
   m_Name: MainBoss
   m_TagString: BossEnemy
@@ -379,101 +375,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &4045320201171481269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8864536568879513787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 900a43b67d0bc044d8e8a25fd729d511, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentState: 0
-  player: {fileID: 0}
-  speed: 2
-  desiredDistanceFromPlayer: 8
-  isFacingLeft: 0
-  groundCheck: {fileID: 5391930648154139053}
-  groundCheckRadius: 0.62
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  isGrounded: 0
-  attackRange: 8.68
-  rangedAttackRange: 25
-  aoeAttackRange: 18.8
-  walkingRange: 35
-  jumpingAttackRange: 35
-  minAttackTime: 1
-  maxAttackTime: 5
-  attackCooldownTimer: 0
-  comboAttackDuration: 2.8
-  rangedAttackDuration: 1
-  aoeAttackDuration: 4.4
-  rb: {fileID: 6444275532621671161}
-  animator: {fileID: 3822332763899041743}
-  bossMovement: {fileID: 2926239813930849319}
-  _isAttacking: 0
-  showGizmos: 1
-  jumpCooldownTimer: 0
-  maxJumpCooldown: 13
---- !u!114 &1520108886889284226
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8864536568879513787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5e77f61655b5364fb4fd6ad89a7d333, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 3822332763899041743}
-  comboAttackHitbox: {fileID: 703529009565821125}
-  spitParticlePrefab: {fileID: 4635511025921963439, guid: 5616280496e7c5b40b2438d91e28831b, type: 3}
-  projectileSpeed: 5
-  spitSpawnPoint: {fileID: 2623339895284347317}
-  spitDelay: 0.85
-  isJumping: 0
-  isJumpingSmash: 0
-  jumpAnticipationTime: 0.7
-  jumpForce: 0
-  jumpHorizontalSpeed: 0
-  jumpHeightMin: 10
-  jumpHeightMax: 15
-  jumpHeight: 0
-  jumpTargetPosition: {x: 0, y: 0}
-  jumpAttackDuration: 0
---- !u!114 &2926239813930849319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8864536568879513787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c61ed1a155658e84789c9cfc1040af5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 6
-  player: {fileID: 0}
-  animator: {fileID: 3822332763899041743}
-  showGroundCheckGizmo: 1
---- !u!114 &984672109741078132
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8864536568879513787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aae55d8bf34db7b45b5871023b20bdf9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 100

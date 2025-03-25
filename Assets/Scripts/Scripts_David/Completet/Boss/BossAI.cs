@@ -179,7 +179,7 @@ public class BossAI : MonoBehaviour
                     else
                     {
                         // Player is out of walking range; return to starting position
-                        ReturnToStartingPosition();
+                        //ReturnToStartingPosition();
                     }
                 }
                 break;
@@ -195,7 +195,7 @@ public class BossAI : MonoBehaviour
                     else if (!IsPlayerInWalkingRange(distanceToPlayer))
                     {
                         // Player is out of walking range; return to starting position
-                        ReturnToStartingPosition();
+                        //ReturnToStartingPosition();
                     }
                     else if (attackCooldownTimer <= 0f)
                     {
