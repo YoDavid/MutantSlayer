@@ -40,11 +40,12 @@ public class BossMovement : MonoBehaviour
         animator.SetBool("IsWalking", false);
     }
 
+
     public void HandleMovingState(float distanceToPlayer, float stopDistance, bool isAttacking)
     {
         if (isAttacking) return;
 
-        if (isReturningToStart)
+        /*if (isReturningToStart)
         {
             // Move toward the starting position
             Vector2 direction = (bossAI.startingPosition - (Vector2)transform.position).normalized;
@@ -60,7 +61,7 @@ public class BossMovement : MonoBehaviour
                 bossAI.currentState = BossState.Idle; // Transition to Idle state
             }
         }
-        else
+        else*/
         {
             // Move toward the player
             if (distanceToPlayer > stopDistance)
@@ -77,8 +78,9 @@ public class BossMovement : MonoBehaviour
         }
     }
 
-    public void StartReturningToStart()
+    /*public void StartReturningToStart()
     {
         isReturningToStart = true; // Set the flag to start returning to the starting position
-    }
+    }*/
 }
+

@@ -68,7 +68,7 @@ public class CameraDeadZoneFollow : MonoBehaviour
             Debug.LogError("Camera: No orthographic camera found!");
             return;
         }
-
+        cameraShake = GetComponent<CameraShake>();
         defaultCameraSize = cameraComponent.orthographicSize;
         fixedZ = transform.position.z;
         lastPlayerPosition = player.position;

@@ -7,7 +7,6 @@ public class BossAI : MonoBehaviour
 {
     [Header("Boss State")]
     public BossState currentState;
-    public Vector2 startingPosition;
 
     [Header("Movement Settings")]
     [SerializeField] private float speed;
@@ -53,7 +52,6 @@ public class BossAI : MonoBehaviour
     [Header("Debugging")]
     [SerializeField] private bool _isAttacking = false;
     [SerializeField] private bool showGizmos = false;
-    [SerializeField] private bool isDebugMode = false;
 
     void Start()
     {
@@ -66,7 +64,6 @@ public class BossAI : MonoBehaviour
         currentState = BossState.Idle;
         attackCooldownTimer = Random.Range(minAttackTime, maxAttackTime);
         groundCheckRadius = 0.62f;
-        startingPosition = transform.position;
     }
 
     void FindReferences()
@@ -84,13 +81,6 @@ public class BossAI : MonoBehaviour
 
         groundCheck = transform.Find("GroundCheckPoint_Boss");
 
-        if (bossAttackHitbox == null) Debug.LogWarning("BossAttackHitbox not found!");
-        if (bossMovement == null) Debug.LogWarning("BossMovement not found!");
-        if (attackManager == null) Debug.LogWarning("BossAttackManager not found!");
-        if (bossHealth == null) Debug.LogWarning("BossHealth not found!");
-        if (animator == null) Debug.LogWarning("Animator not found!");
-        if (player == null) Debug.LogWarning("Player not found! Make sure the Player has the correct tag.");
-        if (groundCheck == null) Debug.LogWarning("GroundCheckPoint_Boss not found! Make sure it exists in the hierarchy.");
     }
 
     void Update()
@@ -99,29 +89,6 @@ public class BossAI : MonoBehaviour
         UpdatePlayerDistance();
         UpdateGroundedStatus();
         HandleFlipAndState();
-
-        // Debug key to test attacks without range checks
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            if (isDebugMode)
-            {
-                DebugAttackBehavior();
-            }
-        }
-    }
-
-    private void DebugAttackBehavior()
-    {
-        if (!IsAttacking())
-        {
-            // Trigger any attack for testing (e.g., AOE attack)
-            attackManager.AOEAttackBehavior();
-        }
-    }
-
-    private bool IsPlayerInWalkingRange(float distanceToPlayer)
-    {
-        return distanceToPlayer < walkingRange && distanceToPlayer > desiredDistanceFromPlayer;
     }
 
     void HandleCooldowns()
@@ -172,30 +139,20 @@ public class BossAI : MonoBehaviour
                     {
                         DecideAttack();
                     }
-                    else if (IsPlayerInWalkingRange(distanceToPlayer))
+                    else if (distanceToPlayer < walkingRange && distanceToPlayer > desiredDistanceFromPlayer)
                     {
                         currentState = BossState.Moving;
-                    }
-                    else
-                    {
-                        // Player is out of walking range; return to starting position
-                        ReturnToStartingPosition();
                     }
                 }
                 break;
 
             case BossState.Moving:
-                if (!IsAttacking()) // Prevent movement while attacking
+                if (!IsAttacking())
                 {
                     bossMovement.HandleMovingState(distanceToPlayer, desiredDistanceFromPlayer, IsAttacking());
                     if (distanceToPlayer <= desiredDistanceFromPlayer)
                     {
                         currentState = BossState.Idle;
-                    }
-                    else if (!IsPlayerInWalkingRange(distanceToPlayer))
-                    {
-                        // Player is out of walking range; return to starting position
-                        ReturnToStartingPosition();
                     }
                     else if (attackCooldownTimer <= 0f)
                     {
@@ -210,12 +167,6 @@ public class BossAI : MonoBehaviour
                 StopMovement(); // Ensures boss doesn't move while attacking
                 break;
         }
-    }
-
-    private void ReturnToStartingPosition()
-    {
-        currentState = BossState.Moving;
-        bossMovement.StartReturningToStart();
     }
 
     void DecideAttack()
@@ -303,10 +254,9 @@ public class BossAI : MonoBehaviour
 
     public void StopMovement()
     {
-        // Stop horizontal movement only, but allow vertical velocity (jumping) to continue if the boss is not jumping
         if (currentState != BossState.Jumping)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y); // Stop horizontal velocity only
+            rb.velocity = new Vector2(0, rb.velocity.y); 
         }
         animator.SetBool("IsWalking", false);
     }
@@ -332,37 +282,17 @@ public class BossAI : MonoBehaviour
 
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
-        if (currentState == BossState.Moving && bossMovement.isReturningToStart)
+        if (player.position.x < transform.position.x)
         {
-            // Flip toward the starting position
-            if (startingPosition.x < transform.position.x)
-            {
-                spriteRenderer.flipX = false;
-                isFacingLeft = true;
-                bossAttackHitbox.FlipCollider(false);
-            }
-            else
-            {
-                spriteRenderer.flipX = true;
-                isFacingLeft = false;
-                bossAttackHitbox.FlipCollider(true);
-            }
+            spriteRenderer.flipX = false;
+            isFacingLeft = true;
+            bossAttackHitbox.FlipCollider(false);
         }
         else
         {
-            // Flip toward the player
-            if (player.position.x < transform.position.x)
-            {
-                spriteRenderer.flipX = false;
-                isFacingLeft = true;
-                bossAttackHitbox.FlipCollider(false);
-            }
-            else
-            {
-                spriteRenderer.flipX = true;
-                isFacingLeft = false;
-                bossAttackHitbox.FlipCollider(true);
-            }
+            spriteRenderer.flipX = true;
+            isFacingLeft = false;
+            bossAttackHitbox.FlipCollider(true);
         }
     }
 
