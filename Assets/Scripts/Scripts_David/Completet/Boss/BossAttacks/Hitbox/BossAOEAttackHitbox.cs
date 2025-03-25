@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossAOEAttack : MonoBehaviour
+public class BossAOEAttackHitbox : MonoBehaviour
 {
     [Header("Spikes Settings")]
     [SerializeField] private List<GameObject> spikes;
@@ -31,10 +31,6 @@ public class BossAOEAttack : MonoBehaviour
         if (spikeRight != null) spikeRight.SetActive(false);
 
         cameraShake = FindAnyObjectByType<CameraShake>();
-        if (cameraShake == null)
-        {
-            Debug.LogError("CameraShake component not found in the scene.");
-        }
     }
 
     public void ActivateAOEAttack()
@@ -150,6 +146,33 @@ public class BossAOEAttack : MonoBehaviour
             {
                 Debug.LogError("Spike script not found on Spike_Right.");
             }
+        }
+    }
+
+    public void DeactivateAOEAttack()
+    {
+        // Stop any running AOE coroutine
+        StopAllCoroutines();
+
+        // Disable all main attack spikes
+        foreach (var spike in spikes)
+        {
+            if (spike != null)
+            {
+                spike.SetActive(false);
+                Spike spikeScript = spike.GetComponent<Spike>();
+                if (spikeScript != null)
+                {
+                    spikeScript.SetColliderEnabled(false);
+                }
+            }
+        }
+
+        // Disable side spikes if they are active
+        if (enableSideSpikes && sideSpikesCoroutine != null)
+        {
+            StopCoroutine(sideSpikesCoroutine);
+            ToggleSideSpikes(false);
         }
     }
 }

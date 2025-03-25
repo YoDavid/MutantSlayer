@@ -13,8 +13,8 @@ public class BossAttackManager : MonoBehaviour
 
     [Header("Attack Hitboxes")]
     [SerializeField] private BossComboAttackHitbox comboAttackHitbox;
-    [SerializeField] private BossJumpAttackCollider jumpAttackCollider;
-    [SerializeField] private BossAOEAttack bossAOEAttack;
+    [SerializeField] private BossJumpAttackHitbox jumpAttackCollider; // New reference
+    [SerializeField] private BossAOEAttackHitbox bossAOEAttack;
 
     [Header("Ranged Attack Settings")]
     [SerializeField] private GameObject spitParticlePrefab;
@@ -26,8 +26,8 @@ public class BossAttackManager : MonoBehaviour
     public float jumpAnticipationTime = 0.7f;
     public float jumpHeightMin;
     public float jumpHeightMax;
-    [SerializeField] private float groundSmashDuration = 0.5f; 
-    [SerializeField] private float postSmashRecovery = 0.3f; 
+    [SerializeField] private float groundSmashDuration = 0.5f; // Specific duration for ground smash
+    [SerializeField] private float postSmashRecovery = 0.3f; // Time before boss can move after smash
 
     [Header("Jump Target Position")]
     public Vector2 jumpTargetPosition;
@@ -60,20 +60,11 @@ public class BossAttackManager : MonoBehaviour
 
         // Find attack colliders
         comboAttackHitbox = transform.Find("BossComboAttackCollider")?.GetComponent<BossComboAttackHitbox>();
-        jumpAttackCollider = transform.Find("BossJumpAttackCollider")?.GetComponent<BossJumpAttackCollider>();
+        jumpAttackCollider = transform.Find("BossJumpAttackCollider")?.GetComponent<BossJumpAttackHitbox>();
 
         spitSpawnPoint = transform.Find("Spit_Position_Instantiaion");
-        bossAOEAttack = GetComponentInChildren<BossAOEAttack>();
+        bossAOEAttack = GetComponentInChildren<BossAOEAttackHitbox>();
 
-        if (bossAI == null) Debug.LogWarning("BossAI not found!");
-        if (bossSpriteRenderer == null) Debug.LogWarning("BossSpriteRenderer not found!");
-        if (cameraShake == null) Debug.LogWarning("CameraDeadZoneFollow not found!");
-        if (comboAttackHitbox == null) Debug.LogWarning("BossComboAttackCollider not found!");
-        if (jumpAttackCollider == null) Debug.LogWarning("BossJumpAttackCollider not found!");
-        if (spitSpawnPoint == null) Debug.LogWarning("Spit_Position_Instantiaion not found!");
-        if (animator == null) Debug.LogWarning("Animator is not assigned!");
-        if (spitParticlePrefab == null) Debug.LogWarning("SpitParticlePrefab is not assigned!");
-        if (bossAOEAttack == null) Debug.LogWarning("BossAOEAttack component not found!");
     }
 
     private void Update()
@@ -106,7 +97,7 @@ public class BossAttackManager : MonoBehaviour
         {
             bossAI.SetAttacking(true);
             animator.SetTrigger("ComboAttackTrigger");
-            comboAttackHitbox.ActivateComboAttackCollider();
+            //comboAttackHitbox.ActivateComboAttackCollider();
             Invoke(nameof(ResetAttackState), bossAI.comboAttackDuration);
         }
     }

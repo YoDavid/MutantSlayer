@@ -1123,7 +1123,6 @@ GameObject:
   - component: {fileID: 2179824735393026984}
   - component: {fileID: 6444275532621671161}
   - component: {fileID: 4045320201171481269}
-  - component: {fileID: 1520108886889284226}
   - component: {fileID: 2926239813930849319}
   - component: {fileID: 984672109741078132}
   m_Layer: 9
@@ -1311,6 +1310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
+  startingPosition: {x: 0, y: 0}
   speed: 2
   desiredDistanceFromPlayer: 8
   isFacingLeft: 0
@@ -1337,38 +1337,7 @@ MonoBehaviour:
   player: {fileID: 0}
   _isAttacking: 0
   showGizmos: 1
---- !u!114 &1520108886889284226
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8864536568879513787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5e77f61655b5364fb4fd6ad89a7d333, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  comboAttackHitbox: {fileID: 703529009565821125}
-  jumpAttackCollider: {fileID: 8901799560776821766}
-  bossAOEAttack: {fileID: 0}
-  spitParticlePrefab: {fileID: 4635511025921963439, guid: 5616280496e7c5b40b2438d91e28831b, type: 3}
-  projectileSpeed: 5
-  spitSpawnPoint: {fileID: 2623339895284347317}
-  spitDelay: 0.85
-  jumpAnticipationTime: 0.7
-  jumpHeightMin: 10
-  jumpHeightMax: 15
-  groundSmashDuration: 0.5
-  postSmashRecovery: 0.3
-  jumpTargetPosition: {x: 0, y: 0}
-  isJumping: 0
-  isJumpingSmash: 0
-  hasLanded: 0
-  jumpForce: 0
-  jumpHorizontalSpeed: 0
-  jumpHeight: 0
-  jumpAttackDuration: 0
+  isDebugMode: 0
 --- !u!114 &2926239813930849319
 MonoBehaviour:
   m_ObjectHideFlags: 0

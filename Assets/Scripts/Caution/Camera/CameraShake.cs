@@ -3,6 +3,8 @@ using System.Collections;
 
 public class CameraShake : MonoBehaviour
 {
+    public static CameraShake Instance { get; private set; }
+
     [Header("Shake Effect")]
     [SerializeField] private float shakeDuration;
     [SerializeField] private float minshakeMagnitude;
