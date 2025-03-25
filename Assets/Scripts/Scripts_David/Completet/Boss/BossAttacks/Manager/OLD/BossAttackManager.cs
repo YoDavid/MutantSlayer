@@ -13,8 +13,11 @@ public class BossAttackManager : MonoBehaviour
 
     [Header("Attack Hitboxes")]
     [SerializeField] private BossComboAttackHitbox comboAttackHitbox;
+<<<<<<< HEAD:Assets/Scripts/Scripts_David/Completet/Boss/BossAttacks/Manager/OLD/BossAttackManager.cs
     [SerializeField] private BossJumpAttackHitbox jumpAttackCollider; // New reference
     [SerializeField] private BossAOEAttackHitbox bossAOEAttack;
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player):Assets/Scripts/Scripts_David/Completet/Boss/BossAttackManager.cs
 
     [Header("Ranged Attack Settings")]
     [SerializeField] private GameObject spitParticlePrefab;
@@ -22,29 +25,35 @@ public class BossAttackManager : MonoBehaviour
     [SerializeField] private Transform spitSpawnPoint;
     [SerializeField] private float spitDelay;
 
-    [Header("Jump Attack Settings")]
+    [Header("Jump Settings (Floats)")]
     public float jumpAnticipationTime = 0.7f;
     public float jumpHeightMin;
     public float jumpHeightMax;
+<<<<<<< HEAD:Assets/Scripts/Scripts_David/Completet/Boss/BossAttacks/Manager/OLD/BossAttackManager.cs
     [SerializeField] private float groundSmashDuration = 0.5f; // Specific duration for ground smash
     [SerializeField] private float postSmashRecovery = 0.3f; // Time before boss can move after smash
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player):Assets/Scripts/Scripts_David/Completet/Boss/BossAttackManager.cs
 
     [Header("Jump Target Position")]
     public Vector2 jumpTargetPosition;
 
-    [Header("Jump State Flags")]
+    [Header("Jump Settings (Booleans & Flags)")]
     public bool isJumping = false;
     public bool isJumpingSmash = false;
-    public bool hasLanded = false;
 
-    [Header("Jump Debug Info")]
+    [Header("Jump Debug")]
     public float jumpForce;
     public float jumpHorizontalSpeed;
     public float jumpHeight;
+
+    [Header("Jump Timer (Debug)")]
     public float jumpAttackDuration;
     private float jumpStartTime;
+    private float jumpEndTime;
 
-
+    [Header("AOE Attack Components")]
+    [SerializeField] private BossAOEAttack bossAOEAttack;  // Reference to BossAOEAttack script
 
     void Start()
     {
@@ -57,21 +66,39 @@ public class BossAttackManager : MonoBehaviour
         animator = GetComponent<Animator>();
         bossSpriteRenderer = GetComponent<SpriteRenderer>();
         cameraShake = FindObjectOfType<CameraShake>();
-
-        // Find attack colliders
         comboAttackHitbox = transform.Find("BossComboAttackCollider")?.GetComponent<BossComboAttackHitbox>();
+<<<<<<< HEAD:Assets/Scripts/Scripts_David/Completet/Boss/BossAttacks/Manager/OLD/BossAttackManager.cs
         jumpAttackCollider = transform.Find("BossJumpAttackCollider")?.GetComponent<BossJumpAttackHitbox>();
 
         spitSpawnPoint = transform.Find("Spit_Position_Instantiaion");
         bossAOEAttack = GetComponentInChildren<BossAOEAttackHitbox>();
 
+=======
+        spitSpawnPoint = transform.Find("Spit_Position_Instantiaion");
+        bossAOEAttack = GetComponentInChildren<BossAOEAttack>();  // Make sure this is correctly referenced
+
+        if (bossAI == null) Debug.LogWarning("BossAI not found!");
+        if (bossSpriteRenderer == null) Debug.LogWarning("BossSpriteRenderer not found!");
+        if (cameraShake == null) Debug.LogWarning("CameraDeadZoneFollow not found!");
+        if (comboAttackHitbox == null) Debug.LogWarning("BossComboAttackCollider not found or ComboAttackHitbox component missing!");
+        if (spitSpawnPoint == null) Debug.LogWarning("Spit_Position_Instantiaion not found!");
+        if (animator == null) Debug.LogWarning("Animator is not assigned!");
+        if (spitParticlePrefab == null) Debug.LogWarning("SpitParticlePrefab is not assigned!");
+        if (bossAOEAttack == null) Debug.LogWarning("BossAOEAttack component not found in children!");
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player):Assets/Scripts/Scripts_David/Completet/Boss/BossAttackManager.cs
     }
 
     private void Update()
     {
         if (isJumping)
         {
-            jumpAttackDuration = Time.time - jumpStartTime;
+            jumpEndTime = Time.time;
+            jumpAttackDuration = jumpEndTime - jumpStartTime;
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            AOEAttackBehavior();
         }
     }
 
@@ -79,14 +106,16 @@ public class BossAttackManager : MonoBehaviour
     {
         if (!bossAI.IsAttacking())
         {
-            bossAI.SetAttacking(true);
-            animator.SetTrigger("AOEAttackTrigger");
+            bossAI.SetAttacking(true);  // Set the boss as attacking
+            animator.SetTrigger("AOEAttackTrigger");  // Trigger the AOE attack animation
 
+            // Activate the AOE Attack Collider (spikes)
             if (bossAOEAttack != null)
             {
-                bossAOEAttack.ActivateAOEAttack();
+                bossAOEAttack.ActivateAOEAttack();  // Activate the AOE spikes
             }
 
+            // After the AOE attack duration, reset the attack state and deactivate the collider
             Invoke(nameof(ResetAttackState), bossAI.aoeAttackDuration);
         }
     }
@@ -99,6 +128,7 @@ public class BossAttackManager : MonoBehaviour
             animator.SetTrigger("ComboAttackTrigger");
             //comboAttackHitbox.ActivateComboAttackCollider();
             Invoke(nameof(ResetAttackState), bossAI.comboAttackDuration);
+            Debug.Log("Combo Attack: Timer Has Reset");
         }
     }
 
@@ -119,53 +149,48 @@ public class BossAttackManager : MonoBehaviour
         {
             bossAI.SetAttacking(true);
             bossAI.currentState = BossState.Jumping;
+
+            // **Save player's position before jumping**
             jumpTargetPosition = bossAI.player.position;
+
+            // **Calculate Jump Force and Horizontal Speed dynamically**
             CalculateJumpParameters();
 
             animator.SetTrigger("JumpAnticipation");
-            StartCoroutine(JumpAttackSequence());
+            StartCoroutine(JumpAnticipationRoutine());
         }
     }
 
-    IEnumerator JumpAttackSequence()
+    IEnumerator JumpAnticipationRoutine()
     {
-        // Anticipation phase
         jumpStartTime = Time.time;
         yield return new WaitForSeconds(jumpAnticipationTime);
 
-        // Jump upward phase
+        // **Apply the calculated jump force and speed**
         bossAI.rb.velocity = new Vector2(jumpHorizontalSpeed, jumpForce);
         animator.SetTrigger("JumpUpwardMovement");
-        isJumping = true;
 
-        // Wait until starting to fall
+        // Wait until the boss starts falling
         yield return new WaitUntil(() => bossAI.rb.velocity.y <= 0);
         animator.SetTrigger("JumpLanding");
 
-        // Wait until landed
+        // Wait until the boss touches the ground
         yield return new WaitUntil(() => bossAI.isGrounded);
-        hasLanded = true;
 
-        // Ground smash phase
+        // **Trigger the Smash Attack immediately upon landing**
         if (!isJumpingSmash)
         {
             animator.SetTrigger("JumpGroundSmash");
             isJumpingSmash = true;
             cameraShake.ShakeCameraJumpSmashAttack();
 
-            // Activate jump attack collider
-            if (jumpAttackCollider != null)
-            {
-                jumpAttackCollider.ActivateJumpAttackCollider();
-            }
-
-            // Wait for smash to complete
-            yield return new WaitForSeconds(groundSmashDuration);
+            // **Wait for the smash animation to complete before resetting state**
+            float smashDuration = animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(smashDuration);
         }
 
-        // Recovery phase
-        yield return new WaitForSeconds(postSmashRecovery);
         ResetJumpState();
+        isJumpingSmash = false;
     }
 
     private IEnumerator InstantiateSpitAfterDelay()
@@ -205,24 +230,30 @@ public class BossAttackManager : MonoBehaviour
 
     private void ResetJumpState()
     {
-        isJumping = false;
-        isJumpingSmash = false;
-        hasLanded = false;
         bossAI.SetAttacking(false);
-        bossAI.currentState = BossState.Idle;
+        bossAI.currentState = BossState.Idle; // Ensure the boss returns to Idle after the jump
         bossAI.attackCooldownTimer = Random.Range(bossAI.minAttackTime, bossAI.maxAttackTime);
     }
 
     private void CalculateJumpParameters()
     {
+        // Randomly pick a jump height between the minimum and maximum values
         jumpHeight = Random.Range(jumpHeightMin, jumpHeightMax);
+
+        // Get gravity from Unity's physics settings
         float gravity = Mathf.Abs(Physics2D.gravity.y);
+
+        // Calculate initial vertical velocity needed to reach the desired height
         jumpForce = Mathf.Sqrt(2 * gravity * jumpHeight);
 
+        // Calculate time to reach peak and total time in air
         float timeToPeak = jumpForce / gravity;
-        float totalAirTime = timeToPeak * 2;
+        float totalAirTime = timeToPeak * 2; // Up + Down
 
+        // Calculate horizontal distance to the player's last position
         float distanceToPlayer = jumpTargetPosition.x - transform.position.x;
+
+        // Calculate horizontal speed required to land at player's saved position
         jumpHorizontalSpeed = distanceToPlayer / totalAirTime;
     }
 }

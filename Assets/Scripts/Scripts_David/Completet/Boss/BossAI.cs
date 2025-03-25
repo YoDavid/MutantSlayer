@@ -83,6 +83,13 @@ public class BossAI : MonoBehaviour
         groundLayer = LayerMask.GetMask("Ground");
         groundCheck = transform.Find("GroundCheckPoint_Boss");
 
+        if (bossAttackHitbox == null) Debug.LogWarning("BossAttackHitbox not found!");
+        if (bossMovement == null) Debug.LogWarning("BossMovement not found!");
+        if (attackManager == null) Debug.LogWarning("BossAttackManager not found!");
+        if (bossHealth == null) Debug.LogWarning("BossHealth not found!");
+        if (animator == null) Debug.LogWarning("Animator not found!");
+        if (player == null) Debug.LogWarning("Player not found! Make sure the Player has the correct tag.");
+        if (groundCheck == null) Debug.LogWarning("GroundCheckPoint_Boss not found! Make sure it exists in the hierarchy.");
     }
 
     void Update()
@@ -92,6 +99,10 @@ public class BossAI : MonoBehaviour
         UpdateGroundedStatus();
         HandleFlipAndState();
 
+<<<<<<< HEAD
+=======
+        // Debug key to test attacks without range checks
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
         if (Input.GetKeyDown(KeyCode.P))
         {
             if (isDebugMode)
@@ -103,9 +114,16 @@ public class BossAI : MonoBehaviour
 
     private void DebugAttackBehavior()
     {
+<<<<<<< HEAD
         if (!IsAttacking() && isDebugMode)
         {
             attackCoordinator.ExecuteAttack(BossState.AOEAttack);
+=======
+        if (!IsAttacking())
+        {
+            // Trigger any attack for testing (e.g., AOE attack)
+            attackManager.AOEAttackBehavior();
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
         }
     }
 
@@ -162,15 +180,24 @@ public class BossAI : MonoBehaviour
                     {
                         DecideAttack();
                     }
+<<<<<<< HEAD
                     else if (distanceToPlayer > desiredDistanceFromPlayer)
+=======
+                    else if (IsPlayerInWalkingRange(distanceToPlayer))
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
                     {
                         currentState = BossState.Moving;
+                    }
+                    else
+                    {
+                        // Player is out of walking range; return to starting position
+                        ReturnToStartingPosition();
                     }
                 }
                 break;
 
             case BossState.Moving:
-                if (!IsAttacking())
+                if (!IsAttacking()) // Prevent movement while attacking
                 {
                     Vector2 moveDirection = (player.position - transform.position).normalized;
                     rb.velocity = new Vector2(moveDirection.x * speed, rb.velocity.y);
@@ -180,6 +207,18 @@ public class BossAI : MonoBehaviour
                     {
                         currentState = BossState.Idle;
                     }
+<<<<<<< HEAD
+=======
+                    else if (!IsPlayerInWalkingRange(distanceToPlayer))
+                    {
+                        // Player is out of walking range; return to starting position
+                        ReturnToStartingPosition();
+                    }
+                    else if (attackCooldownTimer <= 0f)
+                    {
+                        DecideAttack();
+                    }
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
                 }
                 break;
 
@@ -189,6 +228,12 @@ public class BossAI : MonoBehaviour
                 StopMovement();
                 break;
         }
+    }
+
+    private void ReturnToStartingPosition()
+    {
+        currentState = BossState.Moving;
+        bossMovement.StartReturningToStart();
     }
 
     void DecideAttack()

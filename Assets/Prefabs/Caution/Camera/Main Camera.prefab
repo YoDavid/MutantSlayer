@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 830497461497421387}
   - component: {fileID: 5935964887508393519}
   - component: {fileID: 5237804102926040271}
-  - component: {fileID: 6242179860162967101}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -117,37 +116,4 @@ MonoBehaviour:
   maxCenterSpeed: 2
   speedIncreaseRate: 1
   idleTimer: 0
-  cameraShake: {fileID: 6242179860162967101}
   showGizmos: 0
---- !u!114 &6242179860162967101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3598796034816624143}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d38aa663dc612554d98356c8c66ad219, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shakeDuration: 0.5
-  minshakeMagnitude: -1
-  maxshakeMagnitude: 1
-  shakeMagnitude: 1
-  dampingSpeed: 1
-  comboShakeDuration: 0.2
-  comboMinShakeMagnitude: -0.5
-  comboMaxShakeMagnitude: 0.5
-  comboShakeMagnitude: 1
-  comboDampingSpeed: 1
-  aoeShakeDuration: 0.1
-  aoeMinShakeMagnitude: -0.2
-  aoeMaxShakeMagnitude: 2
-  aoeShakeMagnitude: 1
-  aoeDampingSpeed: 1
-  jumpSmashShakeDuration: 0.5
-  jumpSmashMinShakeMagnitude: -3
-  jumpSmashMaxShakeMagnitude: 3
-  jumpSmashShakeMagnitude: 1
-  jumpSmashDampingSpeed: 1

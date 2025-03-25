@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1186493370608933377
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4081362992476606288}
+  m_Layer: 0
+  m_Name: wallCheckCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4081362992476606288
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186493370608933377}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1, y: -8, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6021447871000286383}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2796465483129043920
 GameObject:
   m_ObjectHideFlags: 0
@@ -12,7 +43,7 @@ GameObject:
   - component: {fileID: 4911678382661314713}
   - component: {fileID: 6372703181808931048}
   m_Layer: 8
-  m_Name: PlayerHurtBox
+  m_Name: PlayerHurtbox
   m_TagString: PlayerHurtBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81,6 +112,37 @@ CapsuleCollider2D:
   m_Offset: {x: -0.20797253, y: -9.514752}
   m_Size: {x: 4.4514813, y: 12.542486}
   m_Direction: 0
+--- !u!1 &3425056500348954911
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2388315245418799028}
+  m_Layer: 0
+  m_Name: WallCheckGizmo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2388315245418799028
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3425056500348954911}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6021447871000286383}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4054908745697952195
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,11 +299,13 @@ Transform:
   m_GameObject: {fileID: 8882437758783256304}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.4, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7718894815750935042}
+  - {fileID: 4081362992476606288}
+  - {fileID: 2388315245418799028}
   - {fileID: 4494550968159967690}
   - {fileID: 1041172249927486458}
   m_Father: {fileID: 2998746881342463500}
@@ -335,7 +399,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 2
-  m_Material: {fileID: 6200000, guid: 9380b5f613c0e7b4f898b7660160cedd, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -408,15 +472,15 @@ MonoBehaviour:
   attackCount: 0
   lastAttackTime: 0
   isAttacking: 0
-  comboWindowTimer: 0
-  comboWindowDuration: 5
+  attackResetTime: 0.8
   attackCooldownTime: 0.3
   attackDurations:
-  - 0.3
   - 0.4
+  - 0.35
   - 0.3
   attackCollider: {fileID: 5562773795898690743}
   hitboxEnableDelay: 0.1
+  hitboxActiveTime: 1
 --- !u!114 &6739346586538796022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -433,8 +497,8 @@ MonoBehaviour:
   isDashing: 0
   moveSpeed: 12
   dashMoveSpeedMultiplier: 2.4
-  dashSpeed: 18
-  dashDuration: 0.5
+  dashSpeed: 12
+  dashDuration: 0.8
   dashCooldown: 1
   dashKey: 13
   jumpForce: 15
