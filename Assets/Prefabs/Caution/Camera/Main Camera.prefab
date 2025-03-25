@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 830497461497421387}
   - component: {fileID: 5935964887508393519}
   - component: {fileID: 5237804102926040271}
+  - component: {fileID: 2376414341489296268}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -107,7 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 1
   player: {fileID: 0}
-  enemy: {fileID: 0}
+  BossEnemy: {fileID: 0}
   combatDistanceThreshold: 40
   combatCameraSize: 15
   boundsSize: {x: 20, y: 10}
@@ -115,5 +116,38 @@ MonoBehaviour:
   initialCenterSpeed: 0.25
   maxCenterSpeed: 2
   speedIncreaseRate: 1
-  idleTimer: 0
+  idleTimer: 3
+  cameraShake: {fileID: 0}
   showGizmos: 0
+--- !u!114 &2376414341489296268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3598796034816624143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d38aa663dc612554d98356c8c66ad219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeDuration: 0
+  minshakeMagnitude: 0
+  maxshakeMagnitude: 0
+  shakeMagnitude: 0
+  dampingSpeed: 0
+  comboShakeDuration: 0
+  comboMinShakeMagnitude: 0
+  comboMaxShakeMagnitude: 0
+  comboShakeMagnitude: 0
+  comboDampingSpeed: 0
+  aoeShakeDuration: 0
+  aoeMinShakeMagnitude: 0
+  aoeMaxShakeMagnitude: 0
+  aoeShakeMagnitude: 0
+  aoeDampingSpeed: 0
+  jumpSmashShakeDuration: 0
+  jumpSmashMinShakeMagnitude: 0
+  jumpSmashMaxShakeMagnitude: 0
+  jumpSmashShakeMagnitude: 0
+  jumpSmashDampingSpeed: 0

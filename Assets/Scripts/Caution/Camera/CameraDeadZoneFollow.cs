@@ -11,7 +11,7 @@ public class CameraDeadZoneFollow : MonoBehaviour
     [Header("Camera States")]
     public CameraState currentState = CameraState.Exploration;
     public Transform player;
-    public Transform enemy;
+    public Transform BossEnemy;
 
     [Header("Combat Settings")]
     public float combatDistanceThreshold;
@@ -50,23 +50,18 @@ public class CameraDeadZoneFollow : MonoBehaviour
 
     private void InitializeReferences()
     {
-        if (player == null)
-        {
-            Debug.LogError("Camera: No player assigned!");
-            return;
-        }
-
         cameraComponent = GetComponent<Camera>();
-        if (cameraComponent == null || !cameraComponent.orthographic)
-        {
-            Debug.LogError("Camera: No orthographic camera found!");
-            return;
-        }
+        cameraShake = GetComponent<CameraShake>();
+
+        // Find player by tag
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+
+        player = playerObject.transform;
+            lastPlayerPosition = player.position;
+
 
         defaultCameraSize = cameraComponent.orthographicSize;
         fixedZ = transform.position.z;
-        lastPlayerPosition = player.position;
-        idleTimer = 0f;
         currentCenterSpeed = initialCenterSpeed;
     }
 
@@ -80,7 +75,7 @@ public class CameraDeadZoneFollow : MonoBehaviour
     {
         if (player == null) return;
 
-        if (Vector2.Distance(player.position, enemy.position) < combatDistanceThreshold)
+        if (Vector2.Distance(player.position, BossEnemy.position) < combatDistanceThreshold)
         {
             currentState = CameraState.Combat;
         }

@@ -11,12 +11,12 @@ public class BossComboAttackHitbox : MonoBehaviour
 
     [Header("Collider Settings")]
     [SerializeField] private float colliderShift;
-    private Collider2D attackCollider;
+    [SerializeField] private Collider2D attackCollider;
     private Vector2 originalOffset;
 
     [Header("Player References")]
     [SerializeField] private PlayerHealth playerHealth;
-    private Collider2D playerHurtBoxCollider;
+    [SerializeField] private Collider2D playerHurtBoxCollider;
     private bool isPlayerInRange = false;
 
     [Header("Camera Shake")]
@@ -36,11 +36,6 @@ public class BossComboAttackHitbox : MonoBehaviour
     private void InitializeComponents()
     {
         attackCollider = GetComponent<Collider2D>();
-        if (attackCollider == null)
-        {
-            Debug.LogError("Attack Collider is not attached to the BossAttackHitbox object.");
-        }
-
         cameraShake = FindAnyObjectByType<CameraShake>();
     }
 
@@ -57,15 +52,10 @@ public class BossComboAttackHitbox : MonoBehaviour
     private void FindPlayerReferences()
     {
         GameObject player = GameObject.FindWithTag("Player");
-        if (player != null)
-        {
-            playerHurtBoxCollider = player.GetComponent<Collider2D>();
-            playerHealth = player.GetComponent<PlayerHealth>();
-        }
-        else
-        {
-            Debug.LogError("Player not found in scene.");
-        }
+
+        GameObject playerHurtbox = GameObject.Find("PlayerHurtbox");
+        playerHealth = player.GetComponent<PlayerHealth>();
+     
     }
 
     public void ActivateComboAttackCollider()

@@ -16,7 +16,6 @@ public class BossAttackManager : MonoBehaviour
     [SerializeField] private BossJumpAttackHitbox bossJumpAttackHitbox;
     [SerializeField] private BossAOEAttack bossAOEAttack; 
 
-
     [Header("Ranged Attack Settings")]
     [SerializeField] private GameObject spitParticlePrefab;
     [SerializeField] private float projectileSpeed;
@@ -45,7 +44,6 @@ public class BossAttackManager : MonoBehaviour
     private float jumpStartTime;
     private float jumpEndTime;
 
-
     void Start()
     {
         AssignReferences();
@@ -73,23 +71,7 @@ public class BossAttackManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.P))
         {
-            AOEAttackBehavior();
-        }
-    }
-
-    public void AOEAttackBehavior()
-    {
-        if (!bossAI.IsAttacking())
-        {
-            bossAI.SetAttacking(true);
-            animator.SetTrigger("AOEAttackTrigger"); 
-
-            if (bossAOEAttack != null)
-            {
-                bossAOEAttack.ActivateAOEAttack();  
-            }
-
-            Invoke(nameof(ResetAttackState), bossAI.aoeAttackDuration);
+            JumpAttackBehavior();
         }
     }
 
@@ -101,7 +83,22 @@ public class BossAttackManager : MonoBehaviour
             animator.SetTrigger("ComboAttackTrigger");
             comboAttackHitbox.ActivateComboAttackCollider();
             Invoke(nameof(ResetAttackState), bossAI.comboAttackDuration);
-            Debug.Log("Combo Attack: Timer Has Reset");
+        }
+    }
+
+    public void AOEAttackBehavior()
+    {
+        if (!bossAI.IsAttacking())
+        {
+            bossAI.SetAttacking(true);
+            animator.SetTrigger("AOEAttackTrigger");
+
+            if (bossAOEAttack != null)
+            {
+                bossAOEAttack.ActivateAOEAttack();
+            }
+
+            Invoke(nameof(ResetAttackState), bossAI.aoeAttackDuration);
         }
     }
 
@@ -113,6 +110,26 @@ public class BossAttackManager : MonoBehaviour
             animator.SetTrigger("RangedAttackTrigger");
             StartCoroutine(InstantiateSpitAfterDelay());
             Invoke(nameof(ResetAttackState), bossAI.rangedAttackDuration);
+        }
+    }
+
+    private IEnumerator InstantiateSpitAfterDelay()
+    {
+        yield return new WaitForSeconds(spitDelay);
+        GameObject spit = Instantiate(spitParticlePrefab, spitSpawnPoint.position, Quaternion.identity);
+        SpitProjectile spitProjectile = spit.GetComponent<SpitProjectile>();
+
+        spitProjectile.SetDirection(bossAI.isFacingLeft);
+
+        StartCoroutine(MoveProjectile(spit, bossAI.isFacingLeft ? Vector2.left : Vector2.right));
+    }
+
+    private IEnumerator MoveProjectile(GameObject projectile, Vector2 direction)
+    {
+        while (projectile != null)
+        {
+            projectile.transform.Translate(direction * projectileSpeed * Time.deltaTime);
+            yield return null;
         }
     }
 
@@ -149,37 +166,15 @@ public class BossAttackManager : MonoBehaviour
         {
             animator.SetTrigger("JumpGroundSmash");
             isJumpingSmash = true;
-            bossJumpAttackHitbox.ActivateJumpAttackCollider(!bossAI.isFacingLeft); // Pass the facing direction here
+            bossJumpAttackHitbox.ActivateJumpAttackCollider(!bossAI.isFacingLeft);
             cameraShake.ShakeCameraJumpSmashAttack();
 
-            // **Wait for the smash animation to complete before resetting state**
             float smashDuration = animator.GetCurrentAnimatorStateInfo(0).length;
             yield return new WaitForSeconds(smashDuration);
         }
 
         ResetJumpState();
         isJumpingSmash = false;
-    }
-
-    private IEnumerator InstantiateSpitAfterDelay()
-    {
-        yield return new WaitForSeconds(spitDelay);
-        GameObject spit = Instantiate(spitParticlePrefab, spitSpawnPoint.position, Quaternion.identity);
-        SpitProjectile spitProjectile = spit.GetComponent<SpitProjectile>();
-        if (spitProjectile != null)
-        {
-            spitProjectile.SetDirection(bossAI.isFacingLeft);
-        }
-        StartCoroutine(MoveProjectile(spit, bossAI.isFacingLeft ? Vector2.left : Vector2.right));
-    }
-
-    private IEnumerator MoveProjectile(GameObject projectile, Vector2 direction)
-    {
-        while (projectile != null)
-        {
-            projectile.transform.Translate(direction * projectileSpeed * Time.deltaTime);
-            yield return null;
-        }
     }
 
     private void ResetAttackState()
@@ -199,7 +194,7 @@ public class BossAttackManager : MonoBehaviour
     private void ResetJumpState()
     {
         bossAI.SetAttacking(false);
-        bossAI.currentState = BossState.Idle; // Ensure the boss returns to Idle after the jump
+        bossAI.currentState = BossState.Idle; 
         bossAI.attackCooldownTimer = Random.Range(bossAI.minAttackTime, bossAI.maxAttackTime);
     }
 

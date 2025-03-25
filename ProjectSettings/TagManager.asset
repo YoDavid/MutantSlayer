@@ -9,6 +9,7 @@ TagManager:
   - Checkpoint
   - BossEnemy
   - PlayerHurtBox
+  - SmallEnemy
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Items.Niki
   - Wall
   - Player
-  - Boss
+  - Enemy
   - 
   - 
   - 
