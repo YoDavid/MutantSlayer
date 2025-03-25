@@ -42,6 +42,7 @@ public class BossMovement : MonoBehaviour
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     private void Update()
     {
         if (ShouldMove())
@@ -136,6 +137,8 @@ public class BossMovement : MonoBehaviour
     }
 }
 =======
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
     public void HandleMovingState(float distanceToPlayer, float stopDistance, bool isAttacking)
     {
         if (isAttacking) return;
@@ -178,4 +181,7 @@ public class BossMovement : MonoBehaviour
         isReturningToStart = true; // Set the flag to start returning to the starting position
     }
 }
+<<<<<<< HEAD
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
+=======
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)

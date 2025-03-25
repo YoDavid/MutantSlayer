@@ -392,7 +392,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
   startingPosition: {x: 0, y: 0}
+=======
+  player: {fileID: 0}
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
 =======
   player: {fileID: 0}
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
@@ -422,8 +426,11 @@ MonoBehaviour:
   _isAttacking: 0
   showGizmos: 1
 <<<<<<< HEAD
+<<<<<<< HEAD
   isDebugMode: 0
 =======
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
   jumpCooldownTimer: 0
   maxJumpCooldown: 13
 --- !u!114 &1520108886889284226

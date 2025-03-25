@@ -100,6 +100,10 @@ public class BossAI : MonoBehaviour
         HandleFlipAndState();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        // Debug key to test attacks without range checks
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
 =======
         // Debug key to test attacks without range checks
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
@@ -115,14 +119,20 @@ public class BossAI : MonoBehaviour
     private void DebugAttackBehavior()
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (!IsAttacking() && isDebugMode)
         {
             attackCoordinator.ExecuteAttack(BossState.AOEAttack);
 =======
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
         if (!IsAttacking())
         {
             // Trigger any attack for testing (e.g., AOE attack)
             attackManager.AOEAttackBehavior();
+<<<<<<< HEAD
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
+=======
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
         }
     }
@@ -181,7 +191,11 @@ public class BossAI : MonoBehaviour
                         DecideAttack();
                     }
 <<<<<<< HEAD
+<<<<<<< HEAD
                     else if (distanceToPlayer > desiredDistanceFromPlayer)
+=======
+                    else if (IsPlayerInWalkingRange(distanceToPlayer))
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
 =======
                     else if (IsPlayerInWalkingRange(distanceToPlayer))
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
@@ -208,7 +222,10 @@ public class BossAI : MonoBehaviour
                         currentState = BossState.Idle;
                     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
                     else if (!IsPlayerInWalkingRange(distanceToPlayer))
                     {
                         // Player is out of walking range; return to starting position

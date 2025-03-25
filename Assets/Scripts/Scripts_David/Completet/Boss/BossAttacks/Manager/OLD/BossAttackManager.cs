@@ -14,8 +14,11 @@ public class BossAttackManager : MonoBehaviour
     [Header("Attack Hitboxes")]
     [SerializeField] private BossComboAttackHitbox comboAttackHitbox;
 <<<<<<< HEAD:Assets/Scripts/Scripts_David/Completet/Boss/BossAttacks/Manager/OLD/BossAttackManager.cs
+<<<<<<< HEAD:Assets/Scripts/Scripts_David/Completet/Boss/BossAttacks/Manager/OLD/BossAttackManager.cs
     [SerializeField] private BossJumpAttackHitbox jumpAttackCollider; // New reference
     [SerializeField] private BossAOEAttackHitbox bossAOEAttack;
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player):Assets/Scripts/Scripts_David/Completet/Boss/BossAttackManager.cs
 =======
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player):Assets/Scripts/Scripts_David/Completet/Boss/BossAttackManager.cs
 
@@ -30,8 +33,11 @@ public class BossAttackManager : MonoBehaviour
     public float jumpHeightMin;
     public float jumpHeightMax;
 <<<<<<< HEAD:Assets/Scripts/Scripts_David/Completet/Boss/BossAttacks/Manager/OLD/BossAttackManager.cs
+<<<<<<< HEAD:Assets/Scripts/Scripts_David/Completet/Boss/BossAttacks/Manager/OLD/BossAttackManager.cs
     [SerializeField] private float groundSmashDuration = 0.5f; // Specific duration for ground smash
     [SerializeField] private float postSmashRecovery = 0.3f; // Time before boss can move after smash
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player):Assets/Scripts/Scripts_David/Completet/Boss/BossAttackManager.cs
 =======
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player):Assets/Scripts/Scripts_David/Completet/Boss/BossAttackManager.cs
 
@@ -68,6 +74,7 @@ public class BossAttackManager : MonoBehaviour
         cameraShake = FindObjectOfType<CameraShake>();
         comboAttackHitbox = transform.Find("BossComboAttackCollider")?.GetComponent<BossComboAttackHitbox>();
 <<<<<<< HEAD:Assets/Scripts/Scripts_David/Completet/Boss/BossAttacks/Manager/OLD/BossAttackManager.cs
+<<<<<<< HEAD:Assets/Scripts/Scripts_David/Completet/Boss/BossAttacks/Manager/OLD/BossAttackManager.cs
         jumpAttackCollider = transform.Find("BossJumpAttackCollider")?.GetComponent<BossJumpAttackHitbox>();
 
         spitSpawnPoint = transform.Find("Spit_Position_Instantiaion");
@@ -75,6 +82,9 @@ public class BossAttackManager : MonoBehaviour
 
 =======
         spitSpawnPoint = transform.Find("Spit_Position_Instantiaion");
+=======
+        spitSpawnPoint = transform.Find("Spit_Position_Instantiaion");
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player):Assets/Scripts/Scripts_David/Completet/Boss/BossAttackManager.cs
         bossAOEAttack = GetComponentInChildren<BossAOEAttack>();  // Make sure this is correctly referenced
 
         if (bossAI == null) Debug.LogWarning("BossAI not found!");
@@ -85,6 +95,9 @@ public class BossAttackManager : MonoBehaviour
         if (animator == null) Debug.LogWarning("Animator is not assigned!");
         if (spitParticlePrefab == null) Debug.LogWarning("SpitParticlePrefab is not assigned!");
         if (bossAOEAttack == null) Debug.LogWarning("BossAOEAttack component not found in children!");
+<<<<<<< HEAD:Assets/Scripts/Scripts_David/Completet/Boss/BossAttacks/Manager/OLD/BossAttackManager.cs
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player):Assets/Scripts/Scripts_David/Completet/Boss/BossAttackManager.cs
+=======
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player):Assets/Scripts/Scripts_David/Completet/Boss/BossAttackManager.cs
     }
 

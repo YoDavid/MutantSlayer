@@ -583,10 +583,13 @@ Transform:
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 <<<<<<< HEAD
+<<<<<<< HEAD
 --- !u!1 &362143051 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8864536568879513787, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
 =======
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
 --- !u!1 &389642398
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,6 +875,9 @@ MonoBehaviour:
 --- !u!4 &561102906 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5391930648154139053, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
+<<<<<<< HEAD
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
+=======
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
   m_PrefabInstance: {fileID: 2941158115394705626}
   m_PrefabAsset: {fileID: 0}
@@ -1230,8 +1236,11 @@ Transform:
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 <<<<<<< HEAD
+<<<<<<< HEAD
 --- !u!114 &932968129 stripped
 =======
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
 --- !u!1 &745568333
 GameObject:
   m_ObjectHideFlags: 0
@@ -1273,6 +1282,9 @@ Transform:
   m_Father: {fileID: 5456802041306983705}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &745568335
+<<<<<<< HEAD
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
+=======
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6242179860162967101, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
@@ -1335,6 +1347,35 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< HEAD
+=======
+  m_GameObject: {fileID: 745568333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f07f7f6d6832bb4fa9202b77c8d546b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spikes:
+  - {fileID: 1595591451}
+  - {fileID: 62635642}
+  - {fileID: 662958022}
+  - {fileID: 1603633556}
+  - {fileID: 389642398}
+  - {fileID: 118776069}
+  spikeLeft: {fileID: 540513334}
+  spikeRight: {fileID: 476057319}
+  spikeActiveDuration: 0.75
+  initialDelay: 1
+  enableSideSpikes: 1
+  sideSpikesInterval: 0.4
+  sideSpikesActive: 0
+--- !u!1 &1595591451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1595591452}
@@ -1568,6 +1609,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 89135943236fa894da791beec3bd87e8, type: 3}
+<<<<<<< HEAD
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
+=======
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
   m_Name: 
   m_EditorClassIdentifier: 
@@ -1713,9 +1757,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4639812247545786851}
 <<<<<<< HEAD
+<<<<<<< HEAD
     - target: {fileID: 2682215318583410983, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
       propertyPath: playerHealth
 =======
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
     - target: {fileID: 984672109741078132, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
       propertyPath: health
       value: 10
@@ -1726,6 +1773,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1520108886889284226, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
       propertyPath: bossAOEAttack
+<<<<<<< HEAD
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
+=======
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
       value: 
       objectReference: {fileID: 0}
@@ -1757,6 +1807,7 @@ PrefabInstance:
       propertyPath: comboAttackHitbox
       value: 
       objectReference: {fileID: 1908876425}
+<<<<<<< HEAD
     - target: {fileID: 2926239813930849319, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
       propertyPath: rb
       value: 
@@ -1765,6 +1816,8 @@ PrefabInstance:
       propertyPath: bossAI
       value: 
       objectReference: {fileID: 5456802041306983709}
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
     - target: {fileID: 2926239813930849319, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
       propertyPath: player
       value: 
@@ -1773,10 +1826,13 @@ PrefabInstance:
       propertyPath: rb
       value: 
       objectReference: {fileID: 5456802041306983710}
+<<<<<<< HEAD
     - target: {fileID: 4045320201171481269, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
       propertyPath: speed
       value: 10
       objectReference: {fileID: 0}
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
     - target: {fileID: 4045320201171481269, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
       propertyPath: player
       value: 
@@ -1826,6 +1882,7 @@ PrefabInstance:
       value: MainBossHolder
       objectReference: {fileID: 0}
 <<<<<<< HEAD
+<<<<<<< HEAD
     - target: {fileID: 8936980893377630432, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
       propertyPath: playerHealth
       value: 
@@ -1834,6 +1891,12 @@ PrefabInstance:
       propertyPath: playerHurtBoxCollider
       value: 
       objectReference: {fileID: 2120988558}
+=======
+    - target: {fileID: 6444275532621671161, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
+      propertyPath: m_GravityScale
+      value: 1
+      objectReference: {fileID: 0}
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1890,10 +1953,13 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
 <<<<<<< HEAD
+<<<<<<< HEAD
     - target: {fileID: 2796465483129043920, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_Layer
       value: 0
 =======
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
     - target: {fileID: 2616876883140300564, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: attackDurations.Array.data[0]
       value: 0.3
@@ -1905,6 +1971,9 @@ PrefabInstance:
     - target: {fileID: 2796465483129043920, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_Name
       value: PlayerHurtBox
+<<<<<<< HEAD
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
+=======
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
@@ -1980,6 +2049,7 @@ Transform:
   m_PrefabInstance: {fileID: 2941158115394705626}
   m_PrefabAsset: {fileID: 0}
 <<<<<<< HEAD
+<<<<<<< HEAD
 --- !u!114 &5456802041306983709 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4045320201171481269, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
@@ -1990,6 +2060,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 900a43b67d0bc044d8e8a25fd729d511, type: 3}
 =======
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
 --- !u!114 &5456802041306983707 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2926239813930849319, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
@@ -1999,6 +2071,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c61ed1a155658e84789c9cfc1040af5a, type: 3}
+<<<<<<< HEAD
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
+=======
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
   m_Name: 
   m_EditorClassIdentifier: 
@@ -2007,6 +2082,7 @@ Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 6444275532621671161, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
   m_PrefabInstance: {fileID: 2941158115394705626}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< HEAD
 <<<<<<< HEAD
 --- !u!114 &5456802041306983714
 MonoBehaviour:
@@ -2103,11 +2179,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
 =======
+=======
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
 --- !u!95 &5456802041306983712 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 3822332763899041743, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
   m_PrefabInstance: {fileID: 2941158115394705626}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< HEAD
+>>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
+=======
 >>>>>>> parent of 33b28b5 (Fixed_Layers_For_Player)
 --- !u!4 &7636191823830998340 stripped
 Transform:
