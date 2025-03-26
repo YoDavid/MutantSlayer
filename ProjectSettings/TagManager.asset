@@ -58,6 +58,12 @@ TagManager:
   - name: 4-BackGround
     uniqueID: 2481495577
     locked: 0
+  - name: 5-BuildOn
+    uniqueID: 4252309241
+    locked: 0
+  - name: 6-BuildOut
+    uniqueID: 439178053
+    locked: 0
   - name: Player
     uniqueID: 568015659
     locked: 0
