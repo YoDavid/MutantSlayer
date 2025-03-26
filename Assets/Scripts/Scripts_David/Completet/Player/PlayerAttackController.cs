@@ -1,96 +1,140 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class PlayerAttackController : MonoBehaviour
 {
     private PlayerAnimationController animationController;
 
-    [Header("Attack Debugging")]
-    [SerializeField, HideInInspector] private int attackCount = 0;
-    [SerializeField, HideInInspector] private float lastAttackTime = 0f;
-    [SerializeField, HideInInspector] public bool isAttacking = false;
-
-    [Header("Attack Settings")]
+    [Header("Combo Settings")]
     [SerializeField] private float attackResetTime = 0.8f;
-    [SerializeField] private float attackCooldownTime = 0.3f;
+    [SerializeField] private float attackCooldown = 0.3f;
     [SerializeField] private float[] attackDurations = { 0.4f, 0.35f, 0.3f };
 
-    [Header("Hitbox Timing (Per Attack)")]
-    [SerializeField] private float[] hitboxEnableDelays = { 0.2f, 0.15f, 0.1f }; // When hitbox activates
-    [SerializeField] private float[] hitboxActiveTimes = { 0.15f, 0.15f, 0.1f }; // How long hitbox stays active
+    [Header("Hitbox Settings (Per Attack)")]
+    [SerializeField]
+    private Vector2[] colliderOffsets = {
+        new Vector2(0.42f, -9.74f),
+        new Vector2(5.24f, -6.08f),
+        new Vector2(9.67f, -8.71f)
+    };
+    [SerializeField]
+    private Vector2[] colliderSizes = {
+        new Vector2(29.9f, 11.12f),
+        new Vector2(16.3f, 23.8f),
+        new Vector2(22.28f, 16.5f)
+    };
+    [SerializeField] private float[] hitboxEnableDelays = { 0.15f, 0.15f, 0.1f };
+    [SerializeField] private float[] hitboxActiveTimes = { 0.15f, 0.2f, 0.3f };
 
-    [Header("Attack Collider")]
-    [SerializeField] private Collider2D attackCollider;
+    [Header("References")]
+    [SerializeField] private BoxCollider2D attackCollider;
+    [SerializeField] private bool showGizmos = true;
 
-    public bool IsAttacking => isAttacking;
+    private int attackCount;
+    private float lastAttackTime;
+    private float lastAttackEndTime;
+    private Vector2 originalOffset;
+    private Vector2 originalSize;
+    private Coroutine currentAttackRoutine;
+
+    public bool IsAttacking { get; private set; }
 
     private void Awake()
     {
         animationController = GetComponent<PlayerAnimationController>();
-        if (attackCollider != null) attackCollider.enabled = false;
+        if (attackCollider != null)
+        {
+            originalOffset = attackCollider.offset;
+            originalSize = attackCollider.size;
+            attackCollider.enabled = false;
+        }
     }
 
     private void Update()
     {
+        if (!IsAttacking && attackCount > 0 && Time.time - lastAttackEndTime > attackResetTime)
+        {
+            ResetCombo();
+        }
+
         if (Input.GetKeyDown(KeyCode.X) && CanAttack())
         {
             PerformAttack();
-        }
-
-        if (isAttacking && Time.time - lastAttackTime > attackResetTime)
-        {
-            ResetAttack();
         }
     }
 
     private bool CanAttack()
     {
-        return Time.time - lastAttackTime >= attackCooldownTime;
+        return !IsAttacking &&
+               (attackCount == 0 || Time.time - lastAttackEndTime <= attackResetTime);
     }
 
     private void PerformAttack()
     {
-        if (Time.time - lastAttackTime > attackResetTime || attackCount >= attackDurations.Length)
+        if (attackCount >= attackDurations.Length)
         {
-            attackCount = 0;
+            ResetCombo();
         }
 
-        int currentAttackIndex = attackCount;
-        attackCount++;
         lastAttackTime = Time.time;
-        isAttacking = true;
+        IsAttacking = true;
+        attackCount++;
 
-        // Start animation and hitbox control
+        if (currentAttackRoutine != null)
+        {
+            StopCoroutine(currentAttackRoutine);
+        }
+
+        attackCollider.offset = colliderOffsets[attackCount - 1];
+        attackCollider.size = colliderSizes[attackCount - 1];
+
         animationController.SetAttackState(attackCount);
-        StartCoroutine(ControlAttackHitbox(currentAttackIndex));
+        currentAttackRoutine = StartCoroutine(ExecuteAttack(attackCount - 1));
     }
 
-    private IEnumerator ControlAttackHitbox(int attackIndex)
+    private IEnumerator ExecuteAttack(int attackIndex)
     {
-        // Wait for hitbox activation time (unique per attack)
         yield return new WaitForSeconds(hitboxEnableDelays[attackIndex]);
-
-        // Enable hitbox for precise duration
         attackCollider.enabled = true;
+
         yield return new WaitForSeconds(hitboxActiveTimes[attackIndex]);
         attackCollider.enabled = false;
 
-        // Wait for remaining animation time before resetting
+        attackCollider.offset = originalOffset;
+        attackCollider.size = originalSize;
+
         float remainingTime = attackDurations[attackIndex] -
-                            (hitboxEnableDelays[attackIndex] + hitboxActiveTimes[attackIndex]);
+                           (hitboxEnableDelays[attackIndex] + hitboxActiveTimes[attackIndex]);
         if (remainingTime > 0) yield return new WaitForSeconds(remainingTime);
 
-        // Reset animator if no new attack started
-        if (Time.time - lastAttackTime >= attackDurations[attackIndex] - 0.1f)
-        {
-            animationController.SetAttackState(0);
-        }
+        IsAttacking = false;
+        lastAttackEndTime = Time.time;
+        animationController.SetAttackState(0);
     }
 
-    private void ResetAttack()
+    private void ResetCombo()
     {
         attackCount = 0;
-        isAttacking = false;
         animationController.SetAttackState(0);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!showGizmos || attackCollider == null || colliderOffsets == null || colliderSizes == null)
+            return;
+
+        Gizmos.color = Color.green;
+        Matrix4x4 originalMatrix = Gizmos.matrix;
+
+        for (int i = 0; i < Mathf.Min(colliderOffsets.Length, colliderSizes.Length); i++)
+        {
+            Gizmos.matrix = Matrix4x4.TRS(
+                transform.TransformPoint(colliderOffsets[i]),
+                transform.rotation,
+                transform.lossyScale
+            );
+            Gizmos.DrawWireCube(Vector3.zero, colliderSizes[i]);
+        }
+        Gizmos.matrix = originalMatrix;
     }
 }

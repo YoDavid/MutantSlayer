@@ -63,7 +63,7 @@ public class PlayerMovementController : MonoBehaviour
     private void HandleInput()
     {
         float move = 0f;
-        if (!playerAttackController.isAttacking)
+        if (!playerAttackController.IsAttacking)
         {
             if (Input.GetKey(KeyCode.A)) move = -1f;
             else if (Input.GetKey(KeyCode.D)) move = 1f;

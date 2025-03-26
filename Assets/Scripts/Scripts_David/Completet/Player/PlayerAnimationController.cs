@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerAnimationController : MonoBehaviour
@@ -18,8 +19,22 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetAttackState(int attackCount)
     {
-        animator.SetInteger("AttackCount", attackCount);
-        animator.SetBool("IsAttacking", attackCount > 0);
+        if (attackCount > 0)
+        {
+            animator.SetInteger("AttackCount", attackCount);
+            animator.SetBool("IsAttacking", true);
+        }
+        else
+        {
+            StartCoroutine(ResetAttackState());
+        }
+    }
+
+    private IEnumerator ResetAttackState()
+    {
+        yield return null;
+        animator.SetBool("IsAttacking", false);
+        animator.SetInteger("AttackCount", 0);
     }
 
     public void SetJumpState(bool isJumping)
