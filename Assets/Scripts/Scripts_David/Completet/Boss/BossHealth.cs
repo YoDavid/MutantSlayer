@@ -1,23 +1,51 @@
 using UnityEngine;
+using System.Collections;
 
 public class BossHealth : MonoBehaviour
 {
-    public int health;
+    [Header("Settings")]
+    [SerializeField] private int maxHealth = 500;
+    [SerializeField] private Color blinkColor = Color.white; // Customizable in Inspector
+    [SerializeField] private float blinkDuration = 0.1f;
+    [SerializeField] private int blinkCount = 3;
+
+    public int currentHealth;
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
+        currentHealth = maxHealth;
+    }
 
     public void TakeDamage(int damage)
     {
-        health -= damage;
-        Debug.Log("Boss took " + damage + " damage! Remaining health: " + health);
+        currentHealth -= damage;
+        StartCoroutine(BlinkEffect()); // Blink on hit
+        Debug.Log($"Boss took {damage} damage! Health: {currentHealth}/{maxHealth}");
 
-        if (health <= 0)
+        if (currentHealth <= 0)
         {
             Die();
         }
     }
 
-    void Die()
+    private IEnumerator BlinkEffect()
     {
-        Debug.Log("Boss Defeated!");
-        Destroy(gameObject); // Replace with death animation logic
+        for (int i = 0; i < blinkCount; i++)
+        {
+            spriteRenderer.color = blinkColor; // Flash red
+            yield return new WaitForSeconds(blinkDuration);
+            spriteRenderer.color = originalColor; // Revert
+            yield return new WaitForSeconds(blinkDuration);
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log("Boss defeated!");
+        Destroy(gameObject); // Replace with death animation later
     }
 }

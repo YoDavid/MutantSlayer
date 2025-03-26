@@ -2,14 +2,7 @@ using UnityEngine;
 
 public class SmallEnemyAttackCollider : MonoBehaviour
 {
-    [Header("Attack Settings")]
-    [SerializeField] private int attackDamage = 10;
-    [SerializeField] private float hitCooldown = 0.5f;
-
-    [Header("Collider Positioning")]
-    [SerializeField] private Vector2 rightFacingOffset = new Vector2(0.5f, 0);
-    [SerializeField] private Vector2 leftFacingOffset = new Vector2(-0.5f, 0);
-    [SerializeField] private bool autoFlipWithEnemy = true;
+    public SmallEnemyConfig config; // Reference to config
 
     private Collider2D attackCollider;
     private float lastHitTime;
@@ -20,7 +13,6 @@ public class SmallEnemyAttackCollider : MonoBehaviour
     {
         attackCollider = GetComponent<Collider2D>();
         enemySprite = GetComponentInParent<SpriteRenderer>();
-
         attackCollider.isTrigger = true;
         attackCollider.enabled = false;
 
@@ -38,32 +30,31 @@ public class SmallEnemyAttackCollider : MonoBehaviour
 
     private void UpdateColliderPosition()
     {
-        if (!autoFlipWithEnemy) return;
-
         bool isFacingLeft = enemySprite.flipX;
-        transform.localPosition = isFacingLeft ? leftFacingOffset : rightFacingOffset;
+        transform.localPosition = isFacingLeft ? config.leftFacingOffset : config.rightFacingOffset; // Now using config
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.name != "PlayerHurtbox") return;
-        if (playerHealth == null || Time.time < lastHitTime + hitCooldown) return;
-
+        if (playerHealth == null || Time.time < lastHitTime + config.hitCooldown) return; // Fixed
         DealDamage();
     }
+
 
     private void DealDamage()
     {
         lastHitTime = Time.time;
-        if (!playerHealth.IsPlayerInvulnerable()) playerHealth.TakeDamage(attackDamage);
+        if (!playerHealth.IsPlayerInvulnerable())
+            playerHealth.TakeDamage(config.attackDamage); // Now using config
     }
 
-    // For visual debugging
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.parent.position + (Vector3)rightFacingOffset, 0.1f);
+        Gizmos.DrawWireSphere(transform.parent.position + (Vector3)config.rightFacingOffset, 0.1f); // Fixed
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.parent.position + (Vector3)leftFacingOffset, 0.1f);
+        Gizmos.DrawWireSphere(transform.parent.position + (Vector3)config.leftFacingOffset, 0.1f); // Fixed
     }
 }

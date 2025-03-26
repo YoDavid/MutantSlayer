@@ -233,7 +233,7 @@ public class BossAI : MonoBehaviour
         else
         {
             // Decide attack based on health and distance
-            if (bossHealth.health > 50)
+            if (bossHealth.currentHealth > 50)
             {
                 if (distanceToPlayer < attackRange)
                 {

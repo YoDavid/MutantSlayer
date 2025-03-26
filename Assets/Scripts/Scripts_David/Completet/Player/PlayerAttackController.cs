@@ -8,28 +8,26 @@ public class PlayerAttackController : MonoBehaviour
     [Header("Attack Debugging")]
     [SerializeField, HideInInspector] private int attackCount = 0;
     [SerializeField, HideInInspector] private float lastAttackTime = 0f;
-    [SerializeField, HideInInspector] private bool isAttacking = false;
+    [SerializeField, HideInInspector] public bool isAttacking = false;
 
     [Header("Attack Settings")]
     [SerializeField] private float attackResetTime = 0.8f;
     [SerializeField] private float attackCooldownTime = 0.3f;
-    [SerializeField, Tooltip("Duration for each attack in the combo")] private float[] attackDurations = { 0.4f, 0.35f, 0.3f };
+    [SerializeField] private float[] attackDurations = { 0.4f, 0.35f, 0.3f };
+
+    [Header("Hitbox Timing (Per Attack)")]
+    [SerializeField] private float[] hitboxEnableDelays = { 0.2f, 0.15f, 0.1f }; // When hitbox activates
+    [SerializeField] private float[] hitboxActiveTimes = { 0.15f, 0.15f, 0.1f }; // How long hitbox stays active
 
     [Header("Attack Collider")]
     [SerializeField] private Collider2D attackCollider;
-    [SerializeField] private float hitboxEnableDelay = 0.1f;
-    [SerializeField] private float hitboxActiveTime = 0.2f;
 
     public bool IsAttacking => isAttacking;
 
     private void Awake()
     {
         animationController = GetComponent<PlayerAnimationController>();
-
-        if (attackCollider != null)
-        {
-            attackCollider.enabled = false;
-        }
+        if (attackCollider != null) attackCollider.enabled = false;
     }
 
     private void Update()
@@ -57,28 +55,36 @@ public class PlayerAttackController : MonoBehaviour
             attackCount = 0;
         }
 
+        int currentAttackIndex = attackCount;
         attackCount++;
         lastAttackTime = Time.time;
         isAttacking = true;
 
+        // Start animation and hitbox control
         animationController.SetAttackState(attackCount);
-
-        StartCoroutine(EnableHitboxWithDelay(hitboxEnableDelay, hitboxActiveTime));
-        StartCoroutine(ResetAnimatorAfterAttack(attackDurations[attackCount - 1]));
+        StartCoroutine(ControlAttackHitbox(currentAttackIndex));
     }
 
-    private IEnumerator EnableHitboxWithDelay(float delay, float duration)
+    private IEnumerator ControlAttackHitbox(int attackIndex)
     {
-        yield return new WaitForSeconds(delay);
+        // Wait for hitbox activation time (unique per attack)
+        yield return new WaitForSeconds(hitboxEnableDelays[attackIndex]);
+
+        // Enable hitbox for precise duration
         attackCollider.enabled = true;
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(hitboxActiveTimes[attackIndex]);
         attackCollider.enabled = false;
-    }
 
-    private IEnumerator ResetAnimatorAfterAttack(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        animationController.SetAttackState(0);
+        // Wait for remaining animation time before resetting
+        float remainingTime = attackDurations[attackIndex] -
+                            (hitboxEnableDelays[attackIndex] + hitboxActiveTimes[attackIndex]);
+        if (remainingTime > 0) yield return new WaitForSeconds(remainingTime);
+
+        // Reset animator if no new attack started
+        if (Time.time - lastAttackTime >= attackDurations[attackIndex] - 0.1f)
+        {
+            animationController.SetAttackState(0);
+        }
     }
 
     private void ResetAttack()

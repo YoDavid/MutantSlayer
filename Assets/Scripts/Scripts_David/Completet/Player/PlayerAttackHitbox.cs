@@ -2,27 +2,25 @@ using UnityEngine;
 
 public class PlayerAttackHitbox : MonoBehaviour
 {
-    [SerializeField] private int attackDamage = 10; // Set the damage per hit
-    private BossHealth bossHealth; // Cached reference to BossHealth
+    [Header("Attack Settings")]
+    [SerializeField] private int baseDamage = 10;
+    [SerializeField] private float hitCooldown = 0.3f;
+    [SerializeField] private float lastHitTime;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Debugging the tag to ensure it matches
-        Debug.Log("Collider entered: " + other.tag);
+        if (Time.time < lastHitTime + hitCooldown) return;
 
-        if (other.CompareTag("BossEnemy"))
+        // Handle both small enemies and bosses
+        if (other.TryGetComponent<SmallEnemyHealth>(out var enemyHealth))
         {
-            if (bossHealth == null) // If we haven't already cached the component
-            {
-                bossHealth = other.GetComponent<BossHealth>();
-                Debug.Log("BossHealth component found: " + (bossHealth != null)); // Debug if the BossHealth component was found
-            }
-
-            if (bossHealth != null)
-            {
-                Debug.Log("Hit the Boss!");
-                bossHealth.TakeDamage(attackDamage);
-            }
+            enemyHealth.TakeDamage(baseDamage);
+            lastHitTime = Time.time;
+        }
+        else if (other.TryGetComponent<BossHealth>(out var bossHealth))
+        {
+            bossHealth.TakeDamage(baseDamage);
+            lastHitTime = Time.time;
         }
     }
 }

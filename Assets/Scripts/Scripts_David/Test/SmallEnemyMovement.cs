@@ -2,24 +2,21 @@ using UnityEngine;
 
 public class SmallEnemyMovement : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 3f;
-    [SerializeField] private float walkingRange = 5f;
-
+    public SmallEnemyConfig config; // Reference to config
     private Rigidbody2D rb;
     private Transform player;
     private Vector2 spawnPosition;
     private Animator animator;
-    private SpriteRenderer spriteRenderer; // Reference to SpriteRenderer
+    private SpriteRenderer spriteRenderer;
 
-    public float WalkingRange => walkingRange;
+    public float WalkingRange => config.walkingRange; // Now using config
     public Vector2 SpawnPosition => spawnPosition;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>(); // Get the renderer
+        spriteRenderer = GetComponent<SpriteRenderer>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         spawnPosition = transform.position;
     }
@@ -27,8 +24,7 @@ public class SmallEnemyMovement : MonoBehaviour
     public void MoveToTarget(Vector2 targetPosition)
     {
         Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
-        rb.velocity = direction * moveSpeed;
-
+        rb.velocity = direction * config.moveSpeed; // Now using config
         UpdateSpriteFacing(direction);
         animator.SetBool("IsMoving", true);
     }
@@ -39,9 +35,10 @@ public class SmallEnemyMovement : MonoBehaviour
         animator.SetBool("IsMoving", false);
     }
 
+
     public bool IsPlayerInDetectionRange()
     {
-        return Vector2.Distance(transform.position, player.position) <= walkingRange;
+        return Vector2.Distance(transform.position, player.position) <= config.walkingRange; // Fixed
     }
 
     public bool HasReachedPosition(Vector2 targetPosition, float arrivalThreshold = 0.1f)
@@ -61,9 +58,10 @@ public class SmallEnemyMovement : MonoBehaviour
         }
     }
 
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(0, 0, 1, 0.2f);
-        Gizmos.DrawWireSphere(Application.isPlaying ? spawnPosition : transform.position, walkingRange);
+        Gizmos.DrawWireSphere(Application.isPlaying ? spawnPosition : transform.position, config.walkingRange); // Fixed
     }
 }

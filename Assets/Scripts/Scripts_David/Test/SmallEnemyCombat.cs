@@ -3,28 +3,18 @@ using System.Collections;
 
 public class SmallEnemyCombat : MonoBehaviour
 {
-    [Header("Timing Settings")]
-    [Tooltip("Delay before attack collider activates (for anticipation frames)")]
-    [SerializeField] private float attackDelay = 0.3f;
-
-    [Tooltip("Duration the attack collider stays active")]
-    [SerializeField] private float colliderActiveDuration = 0.15f;
-
-    [Header("Combat Settings")]
-    [SerializeField] private float attackRange = 1.5f;
-    [SerializeField] private float attackCooldown = 1f;
-
     [Header("Debug")]
     [SerializeField] private bool showGizmos = true;
+    public SmallEnemyConfig config;
 
     private Animator animator;
     private float lastAttackTime;
     private Transform player;
     private SmallEnemyAttackCollider attackCollider;
 
-    public bool CanAttack => Time.time >= lastAttackTime + attackCooldown;
+    public bool CanAttack => Time.time >= lastAttackTime + config.attackCooldown; // Now using config
     public bool IsAttacking { get; private set; }
-    public float AttackRange => attackRange;
+    public float AttackRange => config.attackRange; // Now using config
     public Transform Player => player;
 
     private void Awake()
@@ -33,6 +23,7 @@ public class SmallEnemyCombat : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
         attackCollider = GetComponentInChildren<SmallEnemyAttackCollider>(true);
     }
+
 
     private void Update()
     {
@@ -47,20 +38,15 @@ public class SmallEnemyCombat : MonoBehaviour
         lastAttackTime = Time.time;
         IsAttacking = true;
         animator.SetTrigger("Attack");
-
         StartCoroutine(AttackSequence());
     }
 
     private IEnumerator AttackSequence()
     {
-        // Anticipation phase
-        yield return new WaitForSeconds(attackDelay);
-
-        // Active hit frames
+        yield return new WaitForSeconds(config.attackDelay); // Now using config
         EnableAttackCollider();
-        yield return new WaitForSeconds(colliderActiveDuration);
+        yield return new WaitForSeconds(config.colliderActiveDuration); // Now using config
         DisableAttackCollider();
-
         IsAttacking = false;
     }
 
@@ -80,14 +66,15 @@ public class SmallEnemyCombat : MonoBehaviour
 
     public bool IsPlayerInAttackRange()
     {
-        return player != null && Vector2.Distance(transform.position, player.position) <= attackRange;
+        return player != null && Vector2.Distance(transform.position, player.position) <= config.attackRange; // Fixed
     }
+
 
     private void OnDrawGizmosSelected()
     {
         if (!showGizmos) return;
 
         Gizmos.color = new Color(1, 0, 0, 0.3f);
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, config.attackRange); // Fixed
     }
 }

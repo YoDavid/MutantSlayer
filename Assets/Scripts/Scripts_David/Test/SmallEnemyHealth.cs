@@ -1,36 +1,38 @@
+using System.Collections;
 using UnityEngine;
 
 public class SmallEnemyHealth : MonoBehaviour
 {
-    [SerializeField] private int maxHealth = 30;
+    public SmallEnemyConfig config;
     public int currentHealth;
     private Animator animator;
+    private SpriteRenderer spriteRenderer; // Added this line
+    private Color originalColor; // Added this line
 
     public event System.Action OnDeath;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        currentHealth = maxHealth;
+        spriteRenderer = GetComponent<SpriteRenderer>(); // Added this line
+        originalColor = spriteRenderer.color; // Added this line
+        currentHealth = config.maxHealth;
     }
-
     public void TakeDamage(int damage)
     {
+        // Apply damage
         currentHealth -= damage;
 
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-        else
-        {
-            animator.SetTrigger("Hurt");
-        }
+        // Visual feedback
+        StartCoroutine(BlinkEffect());
+
+        // Handle death
+        if (currentHealth <= 0) Die();
     }
+
 
     private void Die()
     {
-        animator.SetTrigger("Die");
         GetComponent<Collider2D>().enabled = false;
         OnDeath?.Invoke();
     }
@@ -38,5 +40,17 @@ public class SmallEnemyHealth : MonoBehaviour
     public void DestroyEnemy()
     {
         Destroy(gameObject);
+    }
+
+    private IEnumerator BlinkEffect()
+    {
+        for (int i = 0; i < config.enemyBlinkCount; i++)
+        {
+            spriteRenderer.color = config.enemyBlinkColor;
+            yield return new WaitForSeconds(config.enemyBlinkDuration);
+
+            spriteRenderer.color = originalColor;
+            yield return new WaitForSeconds(config.enemyBlinkDuration);
+        }
     }
 }

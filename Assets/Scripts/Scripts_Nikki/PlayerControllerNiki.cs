@@ -66,7 +66,7 @@ public class PlayerControllerNiki : MonoBehaviour
     private void HandleInput()
     {
         float move = 0f;
-        if (!playerAttackController.IsAttacking)
+        if (!playerAttackController.isAttacking)
         {
             if (Input.GetKey(KeyCode.A)) move = -1f;
             else if (Input.GetKey(KeyCode.D)) move = 1f;
