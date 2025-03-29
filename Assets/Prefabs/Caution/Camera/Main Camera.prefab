@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5935964887508393519}
   - component: {fileID: 5237804102926040271}
   - component: {fileID: 2376414341489296268}
+  - component: {fileID: 7981131432155767557}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -106,19 +107,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7596a4234e8daf64f9a1b60e2f7dc227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 1
   player: {fileID: 0}
-  BossEnemy: {fileID: 0}
-  combatDistanceThreshold: 40
-  combatCameraSize: 15
   boundsSize: {x: 20, y: 10}
   idleCenterTime: 3
   initialCenterSpeed: 0.25
   maxCenterSpeed: 2
   speedIncreaseRate: 1
+  enemyCenterSpeed: 5
   idleTimer: 3
-  cameraShake: {fileID: 0}
-  showGizmos: 0
+  cameraShake: {fileID: 2376414341489296268}
+  showGizmos: 1
 --- !u!114 &2376414341489296268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,23 +129,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d38aa663dc612554d98356c8c66ad219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shakeDuration: 0
-  minshakeMagnitude: 0
-  maxshakeMagnitude: 0
-  shakeMagnitude: 0
-  dampingSpeed: 0
-  comboShakeDuration: 0
-  comboMinShakeMagnitude: 0
-  comboMaxShakeMagnitude: 0
-  comboShakeMagnitude: 0
-  comboDampingSpeed: 0
-  aoeShakeDuration: 0
-  aoeMinShakeMagnitude: 0
-  aoeMaxShakeMagnitude: 0
-  aoeShakeMagnitude: 0
-  aoeDampingSpeed: 0
-  jumpSmashShakeDuration: 0
-  jumpSmashMinShakeMagnitude: 0
-  jumpSmashMaxShakeMagnitude: 0
-  jumpSmashShakeMagnitude: 0
-  jumpSmashDampingSpeed: 0
+  shakeDuration: 0.2
+  minshakeMagnitude: -1
+  maxshakeMagnitude: 1
+  shakeMagnitude: 1
+  dampingSpeed: 0.1
+  comboShakeDuration: 0.2
+  comboMinShakeMagnitude: -0.5
+  comboMaxShakeMagnitude: 0.5
+  comboShakeMagnitude: 1
+  comboDampingSpeed: 0.1
+  aoeShakeDuration: 0.2
+  aoeMinShakeMagnitude: -1
+  aoeMaxShakeMagnitude: 1
+  aoeShakeMagnitude: 1
+  aoeDampingSpeed: 0.1
+  jumpSmashShakeDuration: 1
+  jumpSmashMinShakeMagnitude: -2
+  jumpSmashMaxShakeMagnitude: 2
+  jumpSmashShakeMagnitude: 1
+  jumpSmashDampingSpeed: 0.1
+--- !u!114 &7981131432155767557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3598796034816624143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c848417ebbf1eb4ea5459fb6eec6096, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyTags:
+  - Enemy
+  - BossEnemy
+  regularEnemyDistance: 35
+  bossEnemyDistance: 55
+  defaultCameraSize: 10
+  combatCameraSize: 15
+  zoomSmoothTime: 0.3

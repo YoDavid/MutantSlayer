@@ -1,122 +1,109 @@
 ﻿using UnityEngine;
 
-public enum CameraState
-{
-    Combat,
-    Exploration
-}
-
 public class CameraDeadZoneFollow : MonoBehaviour
 {
-    [Header("Camera States")]
-    public CameraState currentState = CameraState.Exploration;
+    [Header("Player Reference")]
     public Transform player;
-    public Transform BossEnemy;
 
-    [Header("Combat Settings")]
-    public float combatDistanceThreshold;
-    [SerializeField] private float combatCameraSize;
+    [Header("Position Settings")]
+    [SerializeField] private float cameraZPosition = -10f;
 
     [Header("Dead Zone Settings")]
     public Vector2 boundsSize = new Vector2(20f, 10f);
 
-    [Header("Idle and Centering Settings")]
-    [SerializeField] private float idleCenterTime;
-    [SerializeField] private float initialCenterSpeed;
-    [SerializeField] private float maxCenterSpeed;
-    [SerializeField] private float speedIncreaseRate;
+    [Header("Behavior Settings")]
+    [SerializeField] private float idleCenterTime = 2f;
+    [SerializeField] private float initialCenterSpeed = 2f;
+    [SerializeField] private float maxCenterSpeed = 5f;
+    [SerializeField] private float speedIncreaseRate = 0.5f;
+    [SerializeField] private float enemyCenterSpeed = 5f;
 
-    [Header("Camera Management")]
-    private float defaultCameraSize;
-    private Camera cameraComponent;
+    [Header("Component References")]
+    [SerializeField] private CameraShake cameraShake;
+    [SerializeField] private EnemyProximityZoom proximityZoom;
+
+    [Header("Debug")]
+    [SerializeField] private bool showGizmos = false;
+
+    private Camera cam;
     private Vector3 lastPlayerPosition;
-    private float fixedZ;
-
-    [Header("Idle Tracking")]
-    [SerializeField] private float idleTimer;
-    private bool isIdle;
     private float currentCenterSpeed;
+    private float idleTimer;
+    private bool isIdle;
 
-    [Header("Camera Shake References")]
-    public CameraShake cameraShake; 
-
-    [Header("Debugging")]
-    public bool showGizmos = false;
-
-    void Start()
+    private void Awake()
     {
+        cam = GetComponent<Camera>();
         InitializeReferences();
     }
 
     private void InitializeReferences()
     {
-        cameraComponent = GetComponent<Camera>();
-        cameraShake = GetComponent<CameraShake>();
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null) player = playerObj.transform;
+        }
 
-        // Find player by tag
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        if (cameraShake == null) cameraShake = GetComponent<CameraShake>();
+        if (proximityZoom == null) proximityZoom = GetComponent<EnemyProximityZoom>();
 
-        player = playerObject.transform;
-            lastPlayerPosition = player.position;
-
-
-        defaultCameraSize = cameraComponent.orthographicSize;
-        fixedZ = transform.position.z;
+        lastPlayerPosition = player.position;
         currentCenterSpeed = initialCenterSpeed;
+        transform.position = new Vector3(player.position.x, player.position.y, cameraZPosition);
     }
 
-    void Update()
-    {
-        UpdateCameraState();
-        HandleCameraState();
-    }
-
-    private void UpdateCameraState()
+    private void Update()
     {
         if (player == null) return;
 
-        if (Vector2.Distance(player.position, BossEnemy.position) < combatDistanceThreshold)
-        {
-            currentState = CameraState.Combat;
-        }
-        else
-        {
-            currentState = CameraState.Exploration;
-        }
+        HandleCameraMovement();
     }
 
-    private void HandleCameraState()
+    private void HandleCameraMovement()
     {
-        switch (currentState)
+        if (proximityZoom != null && proximityZoom.AreEnemiesInRange())
         {
-            case CameraState.Combat:
-                HandleCombatCamera();
-                break;
-            case CameraState.Exploration:
-                HandleExplorationCamera();
-                break;
+            CenterOnPlayerImmediately();
+            return;
         }
+
+        ApplyDeadZoneBehavior();
     }
 
-    private void HandleCombatCamera()
+    private void CenterOnPlayerImmediately()
     {
-        cameraComponent.orthographicSize = Mathf.Lerp(cameraComponent.orthographicSize, combatCameraSize, Time.deltaTime * 2f);
-        Vector3 targetPosition = new Vector3(player.position.x, player.position.y, transform.position.z);
-        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 5f);
+        Vector3 target = new Vector3(
+            player.position.x,
+            transform.position.y, // Maintain current Y offset from EnemyProximityZoom
+            cameraZPosition
+        );
+        transform.position = Vector3.Lerp(
+            transform.position,
+            target,
+            enemyCenterSpeed * Time.deltaTime
+        );
+        lastPlayerPosition = player.position;
     }
 
-    private void HandleExplorationCamera()
+    private void ApplyDeadZoneBehavior()
     {
-        cameraComponent.orthographicSize = Mathf.Lerp(cameraComponent.orthographicSize, defaultCameraSize, Time.deltaTime * 2f);
-
         Vector3 camPos = transform.position;
-        Vector3 minBounds = new Vector3(camPos.x - boundsSize.x / 2, camPos.y - boundsSize.y / 2, camPos.z);
-        Vector3 maxBounds = new Vector3(camPos.x + boundsSize.x / 2, camPos.y + boundsSize.y / 2, camPos.z);
+        Vector3 minBounds = new Vector3(
+            camPos.x - boundsSize.x / 2,
+            camPos.y - boundsSize.y / 2,
+            camPos.z
+        );
+        Vector3 maxBounds = new Vector3(
+            camPos.x + boundsSize.x / 2,
+            camPos.y + boundsSize.y / 2,
+            camPos.z
+        );
+
+        UpdateIdleState();
 
         Vector3 newPos = camPos;
         Vector3 playerDelta = player.position - lastPlayerPosition;
-
-        UpdateIdleState();
 
         if (player.position.x < minBounds.x || player.position.x > maxBounds.x)
             newPos.x += playerDelta.x;
@@ -126,11 +113,18 @@ public class CameraDeadZoneFollow : MonoBehaviour
 
         if (isIdle)
         {
-            currentCenterSpeed = Mathf.Min(currentCenterSpeed + speedIncreaseRate * Time.deltaTime, maxCenterSpeed);
-            newPos = Vector3.Lerp(camPos, player.position, Time.deltaTime * currentCenterSpeed);
+            currentCenterSpeed = Mathf.Min(
+                currentCenterSpeed + speedIncreaseRate * Time.deltaTime,
+                maxCenterSpeed
+            );
+            newPos = Vector3.Lerp(
+                camPos,
+                new Vector3(player.position.x, player.position.y, cameraZPosition),
+                currentCenterSpeed * Time.deltaTime
+            );
         }
 
-        transform.position = new Vector3(newPos.x, newPos.y, fixedZ);
+        transform.position = new Vector3(newPos.x, newPos.y, cameraZPosition);
         lastPlayerPosition = player.position;
     }
 
@@ -138,7 +132,7 @@ public class CameraDeadZoneFollow : MonoBehaviour
     {
         Vector3 playerDelta = player.position - lastPlayerPosition;
 
-        if (playerDelta.magnitude > 0)
+        if (playerDelta.magnitude > 0.01f)
         {
             idleTimer = 0f;
             isIdle = false;
@@ -154,23 +148,13 @@ public class CameraDeadZoneFollow : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-        if (player == null || !showGizmos) return;
+        if (!showGizmos || player == null) return;
 
         Gizmos.color = Color.green;
-        Vector3 camPos = transform.position;
-        Vector3 topLeft = new Vector3(camPos.x - boundsSize.x / 2, camPos.y + boundsSize.y / 2, camPos.z);
-        Vector3 topRight = new Vector3(camPos.x + boundsSize.x / 2, camPos.y + boundsSize.y / 2, camPos.z);
-        Vector3 bottomLeft = new Vector3(camPos.x - boundsSize.x / 2, camPos.y - boundsSize.y / 2, camPos.z);
-        Vector3 bottomRight = new Vector3(camPos.x + boundsSize.x / 2, camPos.y - boundsSize.y / 2, camPos.z);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(player.position, combatDistanceThreshold);
-
-        Gizmos.DrawLine(topLeft, topRight);
-        Gizmos.DrawLine(topRight, bottomRight);
-        Gizmos.DrawLine(bottomRight, bottomLeft);
-        Gizmos.DrawLine(bottomLeft, topLeft);
+        Vector3 center = transform.position;
+        Vector3 size = new Vector3(boundsSize.x, boundsSize.y, 0.1f);
+        Gizmos.DrawWireCube(center, size);
     }
 }

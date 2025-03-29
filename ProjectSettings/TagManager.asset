@@ -9,6 +9,7 @@ TagManager:
   - Checkpoint
   - BossEnemy
   - PlayerHurtBox
+  - Enemy
   - SmallEnemy
   layers:
   - Default

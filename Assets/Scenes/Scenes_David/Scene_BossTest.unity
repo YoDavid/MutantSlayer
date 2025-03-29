@@ -513,43 +513,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1871402380 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3598796034816624143, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
-  m_PrefabInstance: {fileID: 1245595170853093064}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1871402385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1871402380}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d38aa663dc612554d98356c8c66ad219, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shakeDuration: 0.5
-  minshakeMagnitude: -1
-  maxshakeMagnitude: 1
-  shakeMagnitude: 1
-  dampingSpeed: 1
-  comboShakeDuration: 0.2
-  comboMinShakeMagnitude: -0.5
-  comboMaxShakeMagnitude: 0.5
-  comboShakeMagnitude: 1
-  comboDampingSpeed: 1
-  aoeShakeDuration: 0.1
-  aoeMinShakeMagnitude: -0.2
-  aoeMaxShakeMagnitude: 2
-  aoeShakeMagnitude: 1
-  aoeDampingSpeed: 1
-  jumpSmashShakeDuration: 0.5
-  jumpSmashMinShakeMagnitude: -3
-  jumpSmashMaxShakeMagnitude: 3
-  jumpSmashShakeMagnitude: 1
-  jumpSmashDampingSpeed: 1
 --- !u!70 &2120988558 stripped
 CapsuleCollider2D:
   m_CorrespondingSourceObject: {fileID: 6372703181808931048, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
@@ -568,21 +531,9 @@ PrefabInstance:
       value: Main Camera
       objectReference: {fileID: 0}
     - target: {fileID: 5237804102926040271, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
-      propertyPath: enemy
-      value: 
-      objectReference: {fileID: 5456802041306983705}
-    - target: {fileID: 5237804102926040271, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 7636191823830998340}
-    - target: {fileID: 5237804102926040271, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
-      propertyPath: maxshakeMagnitude
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5237804102926040271, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
-      propertyPath: minshakeMagnitude
-      value: -1
-      objectReference: {fileID: 0}
     - target: {fileID: 8229323256694479062, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -626,10 +577,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3598796034816624143, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1871402385}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
 --- !u!1001 &2941158115394705626
 PrefabInstance:
@@ -865,11 +813,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98ce6492f3df50e40a36ef9f658803a6, type: 3}
---- !u!4 &5456802041306983705 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4521181110832504628, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
-  m_PrefabInstance: {fileID: 2941158115394705626}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7636191823830998340 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6021447871000286383, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
