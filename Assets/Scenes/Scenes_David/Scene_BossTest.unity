@@ -639,6 +639,10 @@ PrefabInstance:
       propertyPath: playerHurtBoxCollider
       value: 
       objectReference: {fileID: 2120988558}
+    - target: {fileID: 3474446333802971887, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
+      propertyPath: blinkColor.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4859083063150938264, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
       propertyPath: m_Name
       value: MainBossHolder
@@ -655,6 +659,10 @@ PrefabInstance:
       propertyPath: playerHurtBoxCollider
       value: 
       objectReference: {fileID: 2120988558}
+    - target: {fileID: 5692445213269353086, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7848034137349715188, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
       propertyPath: playerHealth
       value: 
