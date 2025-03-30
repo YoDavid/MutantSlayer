@@ -51,11 +51,24 @@ public class BossComboAttackHitbox : MonoBehaviour
 
     private void FindPlayerReferences()
     {
-        GameObject player = GameObject.FindWithTag("Player");
+        if (playerHealth == null)
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null) playerHealth = player.GetComponent<PlayerHealth>();
+        }
 
-        GameObject playerHurtbox = GameObject.Find("PlayerHurtbox");
-        playerHealth = player.GetComponent<PlayerHealth>();
-     
+        // If not assigned in Inspector, try to find automatically
+        if (playerHurtBoxCollider == null)
+        {
+            GameObject hurtbox = GameObject.FindWithTag("PlayerHurtBox"); // Give your hurtbox this tag
+            if (hurtbox != null) playerHurtBoxCollider = hurtbox.GetComponent<Collider2D>();
+        }
+
+        // Final validation
+        if (playerHurtBoxCollider == null)
+        {
+            Debug.LogError("Player hurtbox collider not assigned or found!");
+        }
     }
 
     public void ActivateComboAttackCollider()

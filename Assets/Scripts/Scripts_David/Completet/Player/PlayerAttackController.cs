@@ -7,7 +7,6 @@ public class PlayerAttackController : MonoBehaviour
 
     [Header("Combo Settings")]
     [SerializeField] private float attackResetTime = 0.8f;
-    [SerializeField] private float attackCooldown = 0.3f;
     [SerializeField] private float[] attackDurations = { 0.4f, 0.35f, 0.3f };
 
     [Header("Hitbox Settings (Per Attack)")]

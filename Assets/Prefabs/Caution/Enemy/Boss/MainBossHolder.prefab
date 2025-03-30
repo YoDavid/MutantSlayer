@@ -730,7 +730,9 @@ MonoBehaviour:
   - 1.1
   - 1.9
   colliderShift: 33
+  attackCollider: {fileID: 0}
   playerHealth: {fileID: 0}
+  playerHurtBoxCollider: {fileID: 0}
 --- !u!1 &6219196809401831557
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,7 +1195,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f848983238a91d4458e8427f1103e2d0, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.31764707}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1397,4 +1399,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aae55d8bf34db7b45b5871023b20bdf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
+  maxHealth: 500
+  blinkColor: {r: 1, g: 1, b: 1, a: 1}
+  blinkDuration: 0.1
+  blinkCount: 3
+  currentHealth: 0

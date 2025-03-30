@@ -108,7 +108,7 @@ Transform:
   m_GameObject: {fileID: 4054908745697952195}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.4, y: -7, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -171,7 +171,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcae189407cbaea45b4d326c002427da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 10
+  baseDamage: 10
+  hitCooldown: 0.3
+  lastHitTime: 0
 --- !u!1 &7253434483809274145
 GameObject:
   m_ObjectHideFlags: 0
@@ -355,7 +357,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 8882437758783256304}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 9380b5f613c0e7b4f898b7660160cedd, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -405,18 +407,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2719a39845f576c4784b41e49344873d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCount: 0
-  lastAttackTime: 0
-  isAttacking: 0
-  attackResetTime: 0.8
-  attackCooldownTime: 0.3
+  attackResetTime: 3
   attackDurations:
   - 0.4
   - 0.35
   - 0.3
+  colliderOffsets:
+  - {x: 0.42, y: -9.74}
+  - {x: 5.24, y: -6.08}
+  - {x: 9.67, y: -8.71}
+  colliderSizes:
+  - {x: 29.9, y: 11.12}
+  - {x: 16.3, y: 23.8}
+  - {x: 22.28, y: 16.5}
+  hitboxEnableDelays:
+  - 0.15
+  - 0.15
+  - 0.1
+  hitboxActiveTimes:
+  - 0.15
+  - 0.2
+  - 0.3
   attackCollider: {fileID: 5562773795898690743}
-  hitboxEnableDelay: 0.1
-  hitboxActiveTime: 1
+  showGizmos: 0
 --- !u!114 &6739346586538796022
 MonoBehaviour:
   m_ObjectHideFlags: 0
