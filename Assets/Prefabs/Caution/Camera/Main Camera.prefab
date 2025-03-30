@@ -108,14 +108,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  cameraZPosition: -10
   boundsSize: {x: 20, y: 10}
   idleCenterTime: 3
   initialCenterSpeed: 0.25
   maxCenterSpeed: 2
   speedIncreaseRate: 1
   enemyCenterSpeed: 5
-  idleTimer: 3
   cameraShake: {fileID: 2376414341489296268}
+  proximityZoom: {fileID: 0}
   showGizmos: 1
 --- !u!114 &2376414341489296268
 MonoBehaviour:
@@ -161,11 +162,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c848417ebbf1eb4ea5459fb6eec6096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyTags:
-  - Enemy
-  - BossEnemy
-  regularEnemyDistance: 35
-  bossEnemyDistance: 55
-  defaultCameraSize: 10
-  combatCameraSize: 15
+  defaultProfile:
+    name: Default
+    enemyTag: 
+    detectionRange: 35
+    zoomSize: 5
+    yOffset: 0
+    gizmoColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  regularEnemyProfile:
+    name: Regular Enemy
+    enemyTag: Enemy
+    detectionRange: 35
+    zoomSize: 7
+    yOffset: 1
+    gizmoColor: {r: 1, g: 0, b: 0, a: 1}
+  bossEnemyProfile:
+    name: Boss Enemy
+    enemyTag: BossEnemy
+    detectionRange: 45
+    zoomSize: 9
+    yOffset: 2
+    gizmoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   zoomSmoothTime: 0.3
+  yOffsetSmoothTime: 0.2
+  showGizmos: 1
