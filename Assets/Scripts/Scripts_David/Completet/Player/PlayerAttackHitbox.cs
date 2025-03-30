@@ -12,7 +12,7 @@ public class PlayerAttackHitbox : MonoBehaviour
         if (Time.time < lastHitTime + hitCooldown) return;
 
         // Handle both small enemies and bosses
-        if (other.TryGetComponent<SmallEnemyHealth>(out var enemyHealth))
+        if (other.TryGetComponent<EnemyHealth>(out var enemyHealth))
         {
             enemyHealth.TakeDamage(baseDamage);
             lastHitTime = Time.time;

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 485563c2602e7f44ebb5e4d730c642da, type: 3}
+  m_Name: MediumEnemy_Config_Warm
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  moveSpeed: 3.5
+  walkingRange: 30
+  attackRange: 4.72
+  attackCooldown: 6
+  attackDelay: 1
+  colliderActiveDuration: 1
+  attackDamage: 10
+  hitCooldown: 0.5
+  enemyBlinkDuration: 0.1
+  enemyBlinkCount: 2
+  enemyBlinkColor: {r: 1, g: 1, b: 1, a: 1}
+  rightFacingColliderOffset: {x: -9, y: -3}
+  leftFacingColliderOffset: {x: 9, y: -3}
+  rightFacingOffset: {x: 15, y: 0}
+  leftFacingOffset: {x: -5, y: 0}
+  isWormEnemy: 1
+  hasDualAttack: 1
+  secondAttackDelay: 0.2
+  secondColliderActiveDuration: 0.3
+  secondRightFacingOffset: {x: 13, y: -0.3}
+  secondLeftFacingOffset: {x: -3.5, y: -0.3}
+  knockbackForce: 15
+  knockbackDirection: {x: 2.4, y: 1}

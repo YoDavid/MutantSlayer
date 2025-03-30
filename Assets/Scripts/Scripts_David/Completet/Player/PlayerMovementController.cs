@@ -87,14 +87,18 @@ public class PlayerMovementController : MonoBehaviour
     private void Move(float move)
     {
         HandleFlip(move);
-        float currentMoveSpeed = moveSpeed; // Store the original moveSpeed
 
-        if (isDashing)
+        // Calculate target speed with dash multiplier
+        float targetSpeed = move * (isDashing ? moveSpeed * dashMoveSpeedMultiplier : moveSpeed);
+
+        // Only adjust velocity if not experiencing strong knockback
+        if (Mathf.Abs(rb.velocity.x - targetSpeed) > 0.1f &&
+            Mathf.Abs(rb.velocity.x) < moveSpeed * 3f) // Knockback threshold
         {
-            currentMoveSpeed *= dashMoveSpeedMultiplier; // Apply the multiplier if dashing
+            // Smooth acceleration
+            float speedDiff = targetSpeed - rb.velocity.x;
+            rb.AddForce(Vector2.right * speedDiff * 15f); // Adjusted multiplier
         }
-
-        rb.velocity = new Vector2(move * currentMoveSpeed, rb.velocity.y);
     }
 
     private void HandleFlip(float move)
