@@ -87,6 +87,7 @@ public class BossComboAttackHitbox : MonoBehaviour
                 yield return new WaitForSeconds(waitTime);
 
             EnableCollider();
+            cameraShake.ShakeCameraComboAttack();
             yield return new WaitForSeconds(attackDuration);
             DisableCollider();
         }
@@ -107,7 +108,6 @@ public class BossComboAttackHitbox : MonoBehaviour
         if (isPlayerInRange && !playerHealth.IsPlayerInvulnerable())
         {
             playerHealth.TakeDamage(attackDamage);
-            cameraShake.ShakeCameraComboAttack();
         }
     }
 

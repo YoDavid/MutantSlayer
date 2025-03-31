@@ -8,6 +8,7 @@ public class BossHealth : MonoBehaviour
     [SerializeField] private Color blinkColor = Color.white; // Customizable in Inspector
     [SerializeField] private float blinkDuration = 0.1f;
     [SerializeField] private int blinkCount = 3;
+    private Coroutine blinkRoutine;
 
     public int currentHealth;
     private SpriteRenderer spriteRenderer;
@@ -23,13 +24,12 @@ public class BossHealth : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        StartCoroutine(BlinkEffect()); // Blink on hit
-        Debug.Log($"Boss took {damage} damage! Health: {currentHealth}/{maxHealth}");
 
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
+        if (blinkRoutine != null)
+            StopCoroutine(blinkRoutine); // Cancel previous blink
+        blinkRoutine = StartCoroutine(BlinkEffect());
+
+        if (currentHealth <= 0) Die();
     }
 
     private IEnumerator BlinkEffect()
