@@ -71,7 +71,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 15
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -109,14 +109,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   cameraZPosition: -10
-  boundsSize: {x: 20, y: 12.5}
+  boundsSize: {x: 15, y: 10}
   idleCenterTime: 3
   initialCenterSpeed: 0.25
   maxCenterSpeed: 2
   speedIncreaseRate: 1
   enemyCenterSpeed: 5
   cameraShake: {fileID: 2376414341489296268}
-  proximityZoom: {fileID: 0}
+  proximityZoom: {fileID: 7981131432155767557}
   showGizmos: 1
 --- !u!114 &2376414341489296268
 MonoBehaviour:
@@ -173,16 +173,17 @@ MonoBehaviour:
     name: Regular Enemy
     enemyTag: Enemy
     detectionRange: 35
-    zoomSize: 12
+    zoomSize: 11
     yOffset: 4
     gizmoColor: {r: 1, g: 0, b: 0, a: 1}
   bossEnemyProfile:
     name: Boss Enemy
     enemyTag: BossEnemy
-    detectionRange: 50
-    zoomSize: 15
-    yOffset: 6
+    detectionRange: 55
+    zoomSize: 17
+    yOffset: 10
     gizmoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   zoomSmoothTime: 0.3
   yOffsetSmoothTime: 0.2
   showGizmos: 1
+  player: {fileID: 0}

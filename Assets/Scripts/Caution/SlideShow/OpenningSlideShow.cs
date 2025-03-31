@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using TMPro;
 
 public class OpenningSlideShow : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class OpenningSlideShow : MonoBehaviour
     public Sprite[] images;
     public string[] texts;
     public Image imageComponent;
-    public Text textComponent;
+    public TMP_Text storyTextComponent; // Changed to TMP_Text
     public string nextSceneName = "GameScene"; // Default fallback
 
     [Header("Timing Settings")]
@@ -22,8 +23,8 @@ public class OpenningSlideShow : MonoBehaviour
     public bool playTransitionSound = true;
 
     [Header("UI References")]
-    public GameObject spacePrompt;
-    public GameObject skipPrompt;
+    public TMP_Text spacePromptText; // Changed to TMP_Text
+    public TMP_Text skipPromptText; // Changed to TMP_Text
 
     private int currentIndex = 0;
     private bool isFading = false;
@@ -48,6 +49,9 @@ public class OpenningSlideShow : MonoBehaviour
         {
             Debug.LogError("No slides configured!");
         }
+
+        blinkCoroutine = StartCoroutine(BlinkSpacePrompt());
+        StartCoroutine(BlinkSkipPrompt());
     }
 
     void OnDestroy()
@@ -61,13 +65,13 @@ public class OpenningSlideShow : MonoBehaviour
 
     private void Update()
     {
-        // Space advances slides
-        if (Input.GetKeyDown(KeyCode.Space) && !isFading)
+        if (isFading) return; // Block input during fade
+
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             AdvanceSlide();
         }
 
-        // Escape skips entire slideshow
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             SkipSlideshow();
@@ -102,17 +106,23 @@ public class OpenningSlideShow : MonoBehaviour
     private void ShowSlide(int index)
     {
         imageComponent.sprite = images[index];
-        textComponent.text = texts[index];
+        storyTextComponent.text = texts[index];
 
         // Reset alpha in case coming from fade
         var color = imageComponent.color;
         color.a = 1f;
         imageComponent.color = color;
-        textComponent.color = color;
+
+        var textColor = storyTextComponent.color;
+        textColor.a = 1f;
+        storyTextComponent.color = textColor;
     }
 
     private void SkipSlideshow()
     {
+        if (autoAdvanceCoroutine != null)
+            StopCoroutine(autoAdvanceCoroutine);
+
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayButtonClick();
@@ -152,7 +162,7 @@ public class OpenningSlideShow : MonoBehaviour
     {
         float elapsed = 0f;
         Color imageColor = imageComponent.color;
-        Color textColor = textComponent.color;
+        Color textColor = storyTextComponent.color;
 
         while (elapsed < fadeDuration)
         {
@@ -161,7 +171,7 @@ public class OpenningSlideShow : MonoBehaviour
             imageColor.a = alpha;
             textColor.a = alpha;
             imageComponent.color = imageColor;
-            textComponent.color = textColor;
+            storyTextComponent.color = textColor;
 
             elapsed += Time.deltaTime;
             yield return null;
@@ -171,7 +181,7 @@ public class OpenningSlideShow : MonoBehaviour
         imageColor.a = endAlpha;
         textColor.a = endAlpha;
         imageComponent.color = imageColor;
-        textComponent.color = textColor;
+        storyTextComponent.color = textColor;
     }
 
     private IEnumerator AutoAdvance()
@@ -187,9 +197,21 @@ public class OpenningSlideShow : MonoBehaviour
     {
         while (true)
         {
-            if (spacePrompt != null)
+            if (spacePromptText != null)
             {
-                spacePrompt.SetActive(!spacePrompt.activeSelf);
+                spacePromptText.enabled = !spacePromptText.enabled;
+            }
+            yield return new WaitForSeconds(spacePromptBlinkRate);
+        }
+    }
+
+    private IEnumerator BlinkSkipPrompt()
+    {
+        while (true)
+        {
+            if (skipPromptText != null)
+            {
+                skipPromptText.enabled = !skipPromptText.enabled;
             }
             yield return new WaitForSeconds(spacePromptBlinkRate);
         }

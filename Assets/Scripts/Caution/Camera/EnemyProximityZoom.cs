@@ -53,6 +53,9 @@ public class EnemyProximityZoom : MonoBehaviour
     [SerializeField] private float yOffsetSmoothTime = 0.2f;
     [SerializeField] private bool showGizmos = true;
 
+    [Header("Player Reference")] // NEW: Add player reference
+    public Transform player;
+
     private Camera cam;
     private List<Transform> allEnemies = new List<Transform>();
     private List<Transform> allBosses = new List<Transform>();
@@ -66,11 +69,27 @@ public class EnemyProximityZoom : MonoBehaviour
     private void Awake()
     {
         cam = GetComponent<Camera>();
+
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+                player = playerObj.transform;
+        }
+
         originalZ = transform.position.z;
+
         InitializeDefaults();
         FindAllEnemies();
         CheckInitialZoom();
+
+        transform.position = new Vector3(
+            transform.position.x,
+            transform.position.y,
+            originalZ
+        );
     }
+
 
     private void InitializeDefaults()
     {
@@ -200,17 +219,25 @@ public class EnemyProximityZoom : MonoBehaviour
         Vector3 pos = transform.position;
         float newY = Mathf.SmoothDamp(
             pos.y,
-            targetYOffset,
+            player.position.y + targetYOffset, // Apply offset relative to player
             ref yOffsetVelocity,
             yOffsetSmoothTime
         );
-        transform.position = new Vector3(pos.x, newY, originalZ);
+        transform.position = new Vector3(
+            pos.x, // Keep X (controlled by CameraDeadZoneFollow)
+            newY,
+            originalZ // Keep Z at -10
+        );
     }
 
     private void ApplyImmediateYOffset()
     {
         Vector3 pos = transform.position;
-        transform.position = new Vector3(pos.x, targetYOffset, originalZ);
+        transform.position = new Vector3(
+            pos.x,
+            player.position.y + targetYOffset, // Immediate Y adjustment
+            originalZ
+        );
     }
 
     public void RegisterEnemy(Transform enemy, bool isBoss = false)

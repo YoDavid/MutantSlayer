@@ -57,8 +57,8 @@ public class BossAttackManager : MonoBehaviour
         cameraShake = FindObjectOfType<CameraShake>();
         comboAttackHitbox = transform.Find("BossComboAttackCollider")?.GetComponent<BossComboAttackHitbox>();
         spitSpawnPoint = transform.Find("Spit_Position_Instantiaion");
-        bossAOEAttack = GetComponentInChildren<BossAOEAttack>(); 
-
+        bossAOEAttack = GetComponentInChildren<BossAOEAttack>();
+        cameraShake = Camera.main?.GetComponent<CameraShake>();
     }
 
     private void Update()
@@ -116,12 +116,24 @@ public class BossAttackManager : MonoBehaviour
     private IEnumerator InstantiateSpitAfterDelay()
     {
         yield return new WaitForSeconds(spitDelay);
+
+        // 1. Instantiate the projectile first
         GameObject spit = Instantiate(spitParticlePrefab, spitSpawnPoint.position, Quaternion.identity);
-        SpitProjectile spitProjectile = spit.GetComponent<SpitProjectile>();
+        SpitProjectile spitProjectile = spit.GetComponent<SpitProjectile>(); // Get the component
 
-        spitProjectile.SetDirection(bossAI.isFacingLeft);
+        // 2. Calculate direction and set it
+        bool isFacingLeft = transform.position.x > bossAI.player.position.x;
+        if (spitProjectile != null)
+        {
+            spitProjectile.SetDirection(isFacingLeft);
 
-        StartCoroutine(MoveProjectile(spit, bossAI.isFacingLeft ? Vector2.left : Vector2.right));
+            // 3. Start moving the projectile
+            StartCoroutine(MoveProjectile(spit, isFacingLeft ? Vector2.left : Vector2.right));
+        }
+        else
+        {
+            Debug.LogError("SpitProjectile component missing on spit prefab!");
+        }
     }
 
     private IEnumerator MoveProjectile(GameObject projectile, Vector2 direction)
@@ -186,16 +198,13 @@ public class BossAttackManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.2f);
         bossAI.SetAttacking(false);
-        float distanceToPlayer = Vector2.Distance(bossAI.transform.position, bossAI.player.position);
-        bossAI.currentState = (distanceToPlayer < bossAI.attackRange) ? BossState.Idle : BossState.Moving;
-        bossAI.attackCooldownTimer = Random.Range(bossAI.minAttackTime, bossAI.maxAttackTime);
     }
 
     private void ResetJumpState()
     {
+        isJumpingSmash = false; // Reset early
         bossAI.SetAttacking(false);
-        bossAI.currentState = BossState.Idle; 
-        bossAI.attackCooldownTimer = Random.Range(bossAI.minAttackTime, bossAI.maxAttackTime);
+        bossAI.currentState = BossState.Idle;
     }
 
     private void CalculateJumpParameters()

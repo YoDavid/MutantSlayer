@@ -34,6 +34,19 @@ public class CameraDeadZoneFollow : MonoBehaviour
     private void Awake()
     {
         cam = GetComponent<Camera>();
+
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null) player = playerObj.transform;
+        }
+
+        transform.position = new Vector3(
+            player.position.x,
+            player.position.y,
+            cameraZPosition
+        );
+
         InitializeReferences();
     }
 
@@ -73,11 +86,13 @@ public class CameraDeadZoneFollow : MonoBehaviour
 
     private void CenterOnPlayerImmediately()
     {
+        // Only modify X position (let EnemyProximityZoom handle Y)
         Vector3 target = new Vector3(
             player.position.x,
-            transform.position.y, // Maintain current Y offset from EnemyProximityZoom
+            transform.position.y, // Keep current Y (controlled by EnemyProximityZoom)
             cameraZPosition
         );
+
         transform.position = Vector3.Lerp(
             transform.position,
             target,
@@ -89,27 +104,17 @@ public class CameraDeadZoneFollow : MonoBehaviour
     private void ApplyDeadZoneBehavior()
     {
         Vector3 camPos = transform.position;
-        Vector3 minBounds = new Vector3(
-            camPos.x - boundsSize.x / 2,
-            camPos.y - boundsSize.y / 2,
-            camPos.z
-        );
-        Vector3 maxBounds = new Vector3(
-            camPos.x + boundsSize.x / 2,
-            camPos.y + boundsSize.y / 2,
-            camPos.z
-        );
+        Vector3 minBounds = new Vector3(camPos.x - boundsSize.x / 2, -Mathf.Infinity, camPos.z); // No Y bounds
+        Vector3 maxBounds = new Vector3(camPos.x + boundsSize.x / 2, Mathf.Infinity, camPos.z); // No Y bounds
 
         UpdateIdleState();
 
-        Vector3 newPos = camPos;
+        float newX = camPos.x;
         Vector3 playerDelta = player.position - lastPlayerPosition;
 
+        // Only check X-axis bounds (ignore Y)
         if (player.position.x < minBounds.x || player.position.x > maxBounds.x)
-            newPos.x += playerDelta.x;
-
-        if (player.position.y < minBounds.y || player.position.y > maxBounds.y)
-            newPos.y += playerDelta.y;
+            newX += playerDelta.x;
 
         if (isIdle)
         {
@@ -117,14 +122,15 @@ public class CameraDeadZoneFollow : MonoBehaviour
                 currentCenterSpeed + speedIncreaseRate * Time.deltaTime,
                 maxCenterSpeed
             );
-            newPos = Vector3.Lerp(
-                camPos,
-                new Vector3(player.position.x, player.position.y, cameraZPosition),
+            newX = Mathf.Lerp(
+                camPos.x,
+                player.position.x,
                 currentCenterSpeed * Time.deltaTime
             );
         }
 
-        transform.position = new Vector3(newPos.x, newPos.y, cameraZPosition);
+        // Apply only X movement (Y remains controlled by EnemyProximityZoom)
+        transform.position = new Vector3(newX, transform.position.y, cameraZPosition);
         lastPlayerPosition = player.position;
     }
 

@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 4522055283833947079}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -157,7 +157,7 @@ Transform:
   m_GameObject: {fileID: 7581843074618719690}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.55, z: 0}
+  m_LocalPosition: {x: 0, y: -22, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -335,15 +335,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2719a39845f576c4784b41e49344873d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCount: 0
-  lastAttackTime: 0
-  isAttacking: 0
   attackResetTime: 0.8
-  attackCooldownTime: 0.3
   attackDurations:
   - 0.4
   - 0.35
   - 0.3
+  colliderOffsets:
+  - {x: 0.42, y: -9.74}
+  - {x: 5.24, y: -6.08}
+  - {x: 9.67, y: -8.71}
+  colliderSizes:
+  - {x: 29.9, y: 11.12}
+  - {x: 16.3, y: 23.8}
+  - {x: 22.28, y: 16.5}
+  hitboxEnableDelays:
+  - 0.15
+  - 0.15
+  - 0.1
+  hitboxActiveTimes:
+  - 0.15
+  - 0.2
+  - 0.3
+  attackCollider: {fileID: 0}
+  showGizmos: 1
 --- !u!114 &4522055283833947079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -358,22 +372,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGrounded: 0
   isDashing: 0
-  isCollidingWithWall: 0
   moveSpeed: 12
-  dashDistance: 5
+  dashMoveSpeedMultiplier: 2.4
+  dashSpeed: 25
   dashDuration: 0.2
   dashCooldown: 1
+  dashKey: 304
   jumpForce: 12
   maxJumpTime: 0.35
   jumpCancelRate: 0.5
-  dashKey: 304
   groundCheckPoint: {fileID: 5595685045659387767}
   groundCheckDistance: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  wallSlideSpeed: 9.8
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 128
   gravityScale: 2.5
+  drawGizmos: 0

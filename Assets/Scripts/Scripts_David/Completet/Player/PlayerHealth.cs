@@ -28,7 +28,6 @@ public class PlayerHealth : MonoBehaviour
             return; 
 
         currentHealth -= damage;
-        Debug.Log("Player took " + damage + " damage! Remaining health: " + currentHealth);
 
         if (damageBlink != null)
         {
