@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Health Settings")]
     public int maxHealth = 100; 
-    [SerializeField] private int currentHealth;
+    public int currentHealth;
 
     [Header("Player Status")]
     public bool isDead = false; 
@@ -12,6 +13,8 @@ public class PlayerHealth : MonoBehaviour
     private PlayerDamageBlink damageBlink;
     private PlayerMovementController playerMovement;                                            
     private PlayerHurtbox playerHurtbox;
+
+    public event Action<int> OnHealthChanged;
 
 
     void Start()
@@ -28,6 +31,7 @@ public class PlayerHealth : MonoBehaviour
             return; 
 
         currentHealth -= damage;
+        OnHealthChanged?.Invoke(currentHealth); // Notify listeners
 
         if (damageBlink != null)
         {
@@ -44,6 +48,12 @@ public class PlayerHealth : MonoBehaviour
     {
       
         return playerMovement.isDashing;
+    }
+
+    public void Heal(int amount)
+    {
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        OnHealthChanged?.Invoke(currentHealth);
     }
 
     private void Die()

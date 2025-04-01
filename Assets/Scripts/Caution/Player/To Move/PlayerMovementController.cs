@@ -20,7 +20,6 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private float dashSpeed = 25f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
-    [SerializeField] private KeyCode dashKey = KeyCode.LeftShift;
 
     [Header("Jump Settings")]
     [SerializeField] private float jumpForce = 8f;
@@ -77,8 +76,7 @@ public class PlayerMovementController : MonoBehaviour
             ContinueJump();
         if (Input.GetKeyUp(KeyCode.Space) && isJumping)
             CancelJump();
-
-        if (Input.GetKeyDown(dashKey) && Time.time - lastDashTime > dashCooldown)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time - lastDashTime > dashCooldown)
             Dash();
 
         playerAnimationController.UpdateAnimationStates(move, isGrounded, isDashing);

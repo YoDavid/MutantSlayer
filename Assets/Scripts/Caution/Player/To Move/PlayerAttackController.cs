@@ -56,7 +56,7 @@ public class PlayerAttackController : MonoBehaviour
             ResetCombo();
         }
 
-        if (Input.GetKeyDown(KeyCode.X) && CanAttack())
+        if (Input.GetMouseButtonDown(0) && CanAttack())
         {
             PerformAttack();
 
