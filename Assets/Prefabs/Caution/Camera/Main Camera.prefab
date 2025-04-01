@@ -71,7 +71,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 15
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -109,14 +109,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   cameraZPosition: -10
-  boundsSize: {x: 20, y: 10}
+  boundsSize: {x: 15, y: 10}
   idleCenterTime: 3
   initialCenterSpeed: 0.25
   maxCenterSpeed: 2
   speedIncreaseRate: 1
   enemyCenterSpeed: 5
   cameraShake: {fileID: 2376414341489296268}
-  proximityZoom: {fileID: 0}
+  proximityZoom: {fileID: 7981131432155767557}
   showGizmos: 1
 --- !u!114 &2376414341489296268
 MonoBehaviour:
@@ -131,8 +131,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shakeDuration: 0.2
-  minshakeMagnitude: -1
-  maxshakeMagnitude: 1
+  minshakeMagnitude: -0.8
+  maxshakeMagnitude: 0.8
   shakeMagnitude: 1
   dampingSpeed: 0.1
   comboShakeDuration: 0.2
@@ -146,8 +146,8 @@ MonoBehaviour:
   aoeShakeMagnitude: 1
   aoeDampingSpeed: 0.1
   jumpSmashShakeDuration: 1
-  jumpSmashMinShakeMagnitude: -2
-  jumpSmashMaxShakeMagnitude: 2
+  jumpSmashMinShakeMagnitude: -1.3
+  jumpSmashMaxShakeMagnitude: 1.3
   jumpSmashShakeMagnitude: 1
   jumpSmashDampingSpeed: 0.1
 --- !u!114 &7981131432155767557
@@ -165,24 +165,25 @@ MonoBehaviour:
   defaultProfile:
     name: Default
     enemyTag: 
-    detectionRange: 35
-    zoomSize: 5
-    yOffset: 0
+    detectionRange: 0
+    zoomSize: 10
+    yOffset: 3
     gizmoColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   regularEnemyProfile:
     name: Regular Enemy
     enemyTag: Enemy
     detectionRange: 35
-    zoomSize: 7
-    yOffset: 1
+    zoomSize: 11
+    yOffset: 4
     gizmoColor: {r: 1, g: 0, b: 0, a: 1}
   bossEnemyProfile:
     name: Boss Enemy
     enemyTag: BossEnemy
-    detectionRange: 45
-    zoomSize: 9
-    yOffset: 2
+    detectionRange: 55
+    zoomSize: 17
+    yOffset: 10
     gizmoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   zoomSmoothTime: 0.3
   yOffsetSmoothTime: 0.2
   showGizmos: 1
+  player: {fileID: 0}
