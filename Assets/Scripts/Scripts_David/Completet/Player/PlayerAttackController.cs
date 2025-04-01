@@ -30,8 +30,8 @@ public class PlayerAttackController : MonoBehaviour
     [SerializeField] private bool showGizmos = true;
 
     private int attackCount;
-    private float lastAttackTime;
-    private float lastAttackEndTime;
+    [SerializeField] private float lastAttackTime;
+    [SerializeField] private float lastAttackEndTime;
     private Vector2 originalOffset;
     private Vector2 originalSize;
     private Coroutine currentAttackRoutine;
@@ -59,13 +59,13 @@ public class PlayerAttackController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.X) && CanAttack())
         {
             PerformAttack();
+
         }
     }
 
     private bool CanAttack()
     {
-        return !IsAttacking &&
-               (attackCount == 0 || Time.time - lastAttackEndTime <= attackResetTime);
+        return !IsAttacking && (attackCount == 0 || Time.time - lastAttackEndTime <= attackResetTime);
     }
 
     private void PerformAttack()
@@ -78,6 +78,7 @@ public class PlayerAttackController : MonoBehaviour
         lastAttackTime = Time.time;
         IsAttacking = true;
         attackCount++;
+        Debug.Log(attackCount);
 
         if (currentAttackRoutine != null)
         {
@@ -108,12 +109,22 @@ public class PlayerAttackController : MonoBehaviour
 
         IsAttacking = false;
         lastAttackEndTime = Time.time;
-        animationController.SetAttackState(0);
+
+        // Only reset animation state if not the final attack
+        if (attackIndex < attackDurations.Length - 1)
+        {
+            animationController.SetAttackState(0);
+        }
+        else 
+        {
+            ResetCombo();
+        }
     }
 
     private void ResetCombo()
     {
         attackCount = 0;
+        Debug.Log("ResetCombo");
         animationController.SetAttackState(0);
     }
 
