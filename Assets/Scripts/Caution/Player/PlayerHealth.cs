@@ -31,7 +31,13 @@ public class PlayerHealth : MonoBehaviour
             return; 
 
         currentHealth -= damage;
-        OnHealthChanged?.Invoke(currentHealth); // Notify listeners
+        OnHealthChanged?.Invoke(currentHealth);
+
+        if (DamagePopUp.Instance != null)
+        {
+            Vector3 popupPosition = transform.position + Vector3.up * 1.8f; 
+            DamagePopUp.Instance.CreateDamageText( damage, popupPosition,   isPlayer: true,   isBoss: false);
+        }
 
         if (damageBlink != null)
         {

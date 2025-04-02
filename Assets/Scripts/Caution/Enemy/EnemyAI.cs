@@ -9,6 +9,7 @@ public class EnemyAI : MonoBehaviour
     private EnemyCombat combat;
     private EnemyHealth health;
 
+
     private void Awake()
     {
         movement = GetComponent<EnemyMovement>();
@@ -16,6 +17,7 @@ public class EnemyAI : MonoBehaviour
         health = GetComponent<EnemyHealth>();
 
         health.OnDeath += HandleEnemyDeath;
+        currentState = EnemyBehaviorState.Idle;
     }
 
     private void Update()
@@ -48,6 +50,9 @@ public class EnemyAI : MonoBehaviour
         {
             TransitionToState(EnemyBehaviorState.Chasing);
         }
+        else if (movement.patrolSettings.enablePatrol) // Add patrol check
+        {
+        }
     }
 
     private void UpdateChasingBehavior()
@@ -56,7 +61,8 @@ public class EnemyAI : MonoBehaviour
         {
             TransitionToState(EnemyBehaviorState.Attacking);
         }
-        else if (!movement.IsPlayerInDetectionRange())
+        else if (!movement.IsPlayerInDetectionRange() ||
+                !movement.IsPlayerWithinChaseBounds()) // Add boundary check
         {
             TransitionToState(EnemyBehaviorState.ReturningHome);
         }
@@ -66,6 +72,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+
     private void UpdateAttackingBehavior()
     {
         if (!combat.IsPlayerInAttackRange())
@@ -74,18 +81,18 @@ public class EnemyAI : MonoBehaviour
         }
         else if (combat.CanAttack)
         {
-            movement.StopMovement(); // Add this line
+            movement.StopMovement();
             combat.ExecuteAttack();
         }
     }
-
     private void UpdateReturningBehavior()
     {
         if (movement.HasReachedPosition(movement.SpawnPosition))
         {
             TransitionToState(EnemyBehaviorState.Idle);
         }
-        else if (movement.IsPlayerInDetectionRange())
+        else if (movement.IsPlayerInDetectionRange() &&
+                movement.IsPlayerWithinChaseBounds())
         {
             TransitionToState(EnemyBehaviorState.Chasing);
         }
@@ -106,6 +113,7 @@ public class EnemyAI : MonoBehaviour
         }
 
         currentState = newState;
+        // Debug.Log($"Enemy state changed to: {currentState}"); // Optional debug
     }
 
     private void HandleEnemyDeath()
