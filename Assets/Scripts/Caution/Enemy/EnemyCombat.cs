@@ -49,8 +49,7 @@ public class EnemyCombat : MonoBehaviour
         if (config.hasDualAttack && cameraShake != null)
         {
             cameraShake.ShakeCamera();
-            // OR use custom worm shake if available:
-            // cameraShake.ShakeCameraWormAttack();
+         
         }
 
         attackCollider.SetAttackPhase(true);
