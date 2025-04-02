@@ -4,32 +4,44 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     public EnemyConfig config;
-    public int currentHealth;
+    public int currentHealth { get; private set; } // Encapsulated with public get
     private Animator animator;
-    private SpriteRenderer spriteRenderer; // Added this line
-    private Color originalColor; // Added this line
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
 
+    // Events
     public event System.Action OnDeath;
+    public event System.Action<int> OnHealthChanged; // Added for health bar updates
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>(); // Added this line
-        originalColor = spriteRenderer.color; // Added this line
-        currentHealth = config.maxHealth;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
+        InitializeHealth();
     }
+
+    private void InitializeHealth()
+    {
+        currentHealth = config.maxHealth;
+        OnHealthChanged?.Invoke(currentHealth); // Initialize health bar
+    }
+
     public void TakeDamage(int damage)
     {
-        // Apply damage
-        currentHealth -= damage;
+        if (currentHealth <= 0) return;
 
-        // Visual feedback
+        currentHealth -= damage;
+        currentHealth = Mathf.Max(0, currentHealth);
+
+        // ADD THIS LINE FOR DAMAGE POPUP:
+        DamagePopUp.Instance?.CreateDamageText(damage, transform.position + Vector3.up * 1.5f, isPlayer: false, isBoss: false);
+
+        OnHealthChanged?.Invoke(currentHealth);
         StartCoroutine(BlinkEffect());
 
-        // Handle death
         if (currentHealth <= 0) Die();
     }
-
 
     private void Die()
     {
@@ -39,7 +51,7 @@ public class EnemyHealth : MonoBehaviour
 
     public void DestroyEnemy()
     {
-        Destroy(gameObject);
+        Destroy(gameObject); // HealthBar will be destroyed automatically as child
     }
 
     private IEnumerator BlinkEffect()

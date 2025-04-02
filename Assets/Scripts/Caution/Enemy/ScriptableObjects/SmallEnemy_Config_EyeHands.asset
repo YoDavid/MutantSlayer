@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 485563c2602e7f44ebb5e4d730c642da, type: 3}
   m_Name: SmallEnemy_Config_EyeHands
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 1000
   moveSpeed: 5
   walkingRange: 17
   attackRange: 5
@@ -28,6 +28,7 @@ MonoBehaviour:
   leftFacingColliderOffset: {x: -0.5, y: -6}
   rightFacingOffset: {x: 5.5, y: 0}
   leftFacingOffset: {x: -15.5, y: 0}
+  isWormEnemy: 0
   hasDualAttack: 0
   secondAttackDelay: 0.5
   secondColliderActiveDuration: 0.2
