@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerHealth : HealthSystem
 {
@@ -7,41 +8,53 @@ public class PlayerHealth : HealthSystem
 
     [Header("Player Settings")]
     [SerializeField] private int playerMaxHealth = 100;
+    [SerializeField] private float invulnerabilityTime = 0.5f;
 
-    private PlayerDamageBlink damageBlink;
     private PlayerMovementController playerMovement;
     private PlayerHurtbox playerHurtbox;
+    private PlayerAnimationController playerAnimation;
+    private bool isInvulnerable = false;
 
     protected override void Awake()
     {
         MaxHealth = playerMaxHealth;
         base.Awake();
-        damageBlink = GetComponent<PlayerDamageBlink>();
         playerMovement = GetComponent<PlayerMovementController>();
         playerHurtbox = GetComponentInChildren<PlayerHurtbox>();
+        playerAnimation = GetComponent<PlayerAnimationController>();
     }
 
     public override void TakeDamage(int damage, bool isCritical = false)
     {
-        if (isDead || playerHurtbox == null || !playerHurtbox.enabled) return;
+        if (isDead || isInvulnerable || playerHurtbox == null || !playerHurtbox.enabled) return;
 
         base.TakeDamage(damage, isCritical);
 
+        // Visual feedback and hit stun
+        playerAnimation.TriggerTakenHit();
         DamagePopUp.Instance?.CreateDamageText(
             damage, transform.position + Vector3.up * 1.8f,
             isPlayer: true, isBoss: false, isCritical);
 
-        damageBlink?.TriggerBlinkEffect();
+        StartCoroutine(InvulnerabilityFrame());
+    }
+
+    private IEnumerator InvulnerabilityFrame()
+    {
+        isInvulnerable = true;
+        yield return new WaitForSeconds(invulnerabilityTime);
+        isInvulnerable = false;
     }
 
     protected override void Die()
     {
         isDead = true;
+        playerAnimation.enabled = false;
         base.Die();
         Debug.Log("Player died!");
     }
 
-    public bool IsPlayerInvulnerable() => playerMovement.isDashing;
+    public bool IsPlayerInvulnerable() => playerMovement.isDashing || isInvulnerable;
 
     public void Heal(int amount)
     {

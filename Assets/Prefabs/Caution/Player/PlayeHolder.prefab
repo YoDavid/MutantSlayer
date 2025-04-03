@@ -171,9 +171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcae189407cbaea45b4d326c002427da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseDamage: 10
+  damageConfig: {fileID: 11400000, guid: cde08a794acf3c64e8b3a4d85f8e6165, type: 2}
   hitCooldown: 0.3
-  lastHitTime: 0
 --- !u!1 &7253434483809274145
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,6 +306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseOffset: {x: -1, y: -5, z: -10}
   followSharpness: 15
+  snapAllTransitions: 1
   idleOffset: {x: 0, y: 0, z: -10}
   runOffset: {x: 4, y: -0.6, z: -10}
   jumpOffset: {x: 3.2, y: 0.8, z: -10}
@@ -315,6 +315,32 @@ MonoBehaviour:
   attack1Offset: {x: 3, y: -2.15, z: -10}
   attack2Offset: {x: 0.6, y: -3.3, z: -10}
   attack3Offset: {x: 6, y: -3, z: -10}
+  takenHitOffset: {x: 0.9, y: -3, z: -10}
+  hitFreezeDuration: 0.4
+  hitRecoveryCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8882437758783256304
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,7 +358,6 @@ GameObject:
   - component: {fileID: 2616876883140300564}
   - component: {fileID: 6739346586538796022}
   - component: {fileID: 2342704723376403555}
-  - component: {fileID: 5212431474995818848}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -399,7 +424,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 9d27478ed5f6b4f47962432d3caae8f8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -506,6 +531,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36dcf8e930e23eb4d8f1ed75af6058eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitStunDuration: 0.3
 --- !u!114 &2616876883140300564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -523,14 +549,16 @@ MonoBehaviour:
   - 0.3
   - 0.35
   - 0.3
+  requireGrounded: 1
+  cancelAttackIfAirborne: 1
   colliderOffsets:
-  - {x: 0.42, y: -9.74}
-  - {x: 5.24, y: -6.08}
-  - {x: 9.67, y: -8.71}
+  - {x: 6.93, y: -8.36}
+  - {x: 6.78, y: -6.08}
+  - {x: 13.7, y: -7.3}
   colliderSizes:
-  - {x: 29.9, y: 11.12}
-  - {x: 16.3, y: 23.8}
-  - {x: 22.28, y: 16.5}
+  - {x: 11.1, y: 7.95}
+  - {x: 8.6, y: 19.4}
+  - {x: 11.7, y: 13}
   hitboxEnableDelays:
   - 0.15
   - 0.15
@@ -540,7 +568,7 @@ MonoBehaviour:
   - 0.2
   - 0.3
   attackCollider: {fileID: 5562773795898690743}
-  showGizmos: 0
+  showGizmos: 1
   lastAttackTime: 0
   lastAttackEndTime: 0
 --- !u!114 &6739346586538796022
@@ -562,6 +590,7 @@ MonoBehaviour:
   dashSpeed: 12
   dashDuration: 0.8
   dashCooldown: 1
+  dashJumpCooldown: 0.2
   jumpForce: 15
   maxJumpTime: 0.35
   jumpCancelRate: 0.5
@@ -572,6 +601,7 @@ MonoBehaviour:
     m_Bits: 8
   gravityScale: 4
   drawGizmos: 1
+  lastDashTime: -999
 --- !u!114 &2342704723376403555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -584,23 +614,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7840b6f265762c14e8e785d06370f85f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10000
-  currentHealth: 0
+  _maxHealth: 1000
+  damageBlinkDuration: 0.1
+  damageBlinkColor: {r: 0.6886792, g: 0, b: 0, a: 0.8}
   isDead: 0
---- !u!114 &5212431474995818848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8882437758783256304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 838ebb01ba3ce9846ab861d744a91039, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blinkDuration: 0.1
-  blinkCount: 1
+  playerMaxHealth: 1000
+  invulnerabilityTime: 0.2
 --- !u!1 &9043775258710831573
 GameObject:
   m_ObjectHideFlags: 0

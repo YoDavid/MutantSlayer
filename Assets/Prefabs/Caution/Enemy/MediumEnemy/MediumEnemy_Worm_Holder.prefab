@@ -143,7 +143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8e35ff2d45d34143ba2337e2094ee7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: e4e06320e66f69a4082b02d80ba8fee1, type: 2}
+  enemyConfig: {fileID: 11400000, guid: e4e06320e66f69a4082b02d80ba8fee1, type: 2}
+  damageConfig: {fileID: 11400000, guid: 941fb4442b574b940ac7d5e53fd6a246, type: 2}
   isFirstAttackActive: 1
 --- !u!1 &2546787503606013545
 GameObject:
@@ -717,7 +718,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d44edbf095293946881f64c4927f32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHealth: 100
+  damageBlinkDuration: 0.1
+  damageBlinkColor: {r: 1, g: 0, b: 0, a: 1}
   config: {fileID: 11400000, guid: e4e06320e66f69a4082b02d80ba8fee1, type: 2}
+  overrideHealth: 0
+  customMaxHealth: 30
 --- !u!114 &7349595776294256227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -738,6 +744,7 @@ MonoBehaviour:
     patrolSpeed: 1.5
     idleTimeAtEdges: 1
   maxChaseRangeFromBounds: 2
+  minDistanceFromPlayer: 0.5
 --- !u!1 &7265441888880981570
 GameObject:
   m_ObjectHideFlags: 0

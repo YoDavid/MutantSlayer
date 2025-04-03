@@ -43,6 +43,7 @@ public class PlayerAttackController : MonoBehaviour
     private Coroutine currentAttackRoutine;
 
     public bool IsAttacking { get; private set; }
+    private bool isAttackEnabled = true;
 
     private void Awake()
     {
@@ -75,9 +76,20 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
+    public void SetAttackEnabled(bool enabled)
+    {
+        isAttackEnabled = enabled;
+        if (!enabled && IsAttacking)
+        {
+            CancelCurrentAttack();
+        }
+    }
+
+
     private bool CanAttack()
     {
-        return !IsAttacking &&
+        return isAttackEnabled &&
+               !IsAttacking &&
                (attackCount == 0 || Time.time - lastAttackEndTime <= attackResetTime) &&
                (!requireGrounded || IsGrounded());
     }

@@ -9,6 +9,7 @@ public class HitTimeController : MonoBehaviour
     [SerializeField][Range(0, 1)] private float critTimeScale = 0.5f;
     [SerializeField] private float bossDurationMultiplier = 1.5f;
     [SerializeField] private float bossSlowMultiplier = 0.7f;
+    [SerializeField] private float delayBeforeEffect = 0.2f; // New delay parameter
 
     [Header("References")]
     [SerializeField] private PlayerAttackHitbox attackHitbox;
@@ -49,11 +50,15 @@ public class HitTimeController : MonoBehaviour
             if (isCritical) timeScale *= bossSlowMultiplier;
         }
 
-        currentTimeEffect = StartCoroutine(ExecuteTimeEffect(duration, timeScale));
+        currentTimeEffect = StartCoroutine(ExecuteTimeEffectWithDelay(duration, timeScale));
     }
 
-    private IEnumerator ExecuteTimeEffect(float duration, float timeScale)
+    private IEnumerator ExecuteTimeEffectWithDelay(float duration, float timeScale)
     {
+        // Wait for the delay before applying time effect
+        yield return new WaitForSecondsRealtime(delayBeforeEffect);
+
+        // Now apply the time effect
         Time.timeScale = timeScale;
         yield return new WaitForSecondsRealtime(duration);
         Time.timeScale = 1f;
