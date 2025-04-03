@@ -14,12 +14,16 @@ public class PlayerMovementController : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float dashMoveSpeedMultiplier = 2.4f; // Add this variable
+    [SerializeField] private float dashMoveSpeedMultiplier = 2.4f;
 
     [Header("Dash Settings")]
     [SerializeField] private float dashSpeed = 25f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
+
+    [Header("Dash Jump Settings")]
+    [SerializeField] private float dashJumpCooldown = 0.2f;
+    private float lastDashEndTime = -999f;
 
     [Header("Jump Settings")]
     [SerializeField] private float jumpForce = 8f;
@@ -34,14 +38,14 @@ public class PlayerMovementController : MonoBehaviour
     [Header("Gravity Settings")]
     [SerializeField] private float gravityScale = 2.5f;
 
-    // New toggle for gizmos visibility
     [Header("Gizmos Settings")]
     public bool drawGizmos = false;
 
-    private float lastDashTime = -999f;
+    [SerializeField] private float lastDashTime = -999f;
     private int facingDirection = 1;
     private bool isJumping = false;
     private float jumpTimeCounter;
+    private bool isMovementEnabled = true;
 
     private void Awake()
     {
@@ -49,7 +53,7 @@ public class PlayerMovementController : MonoBehaviour
         rb.gravityScale = gravityScale;
         playerAnimationController = GetComponent<PlayerAnimationController>();
         playerAttackController = GetComponent<PlayerAttackController>();
-        playerHurtbox = GetComponentInChildren<PlayerHurtbox>(); // Ensure this points to the PlayerHurtbox
+        playerHurtbox = GetComponentInChildren<PlayerHurtbox>();
     }
 
     private void Update()
@@ -61,6 +65,8 @@ public class PlayerMovementController : MonoBehaviour
 
     private void HandleInput()
     {
+        if (!isMovementEnabled) return;
+
         float move = 0f;
         if (!playerAttackController.IsAttacking)
         {
@@ -70,32 +76,39 @@ public class PlayerMovementController : MonoBehaviour
 
         Move(move);
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && CanJumpAfterDash())
             StartJump();
         if (Input.GetKey(KeyCode.Space) && isJumping)
             ContinueJump();
         if (Input.GetKeyUp(KeyCode.Space) && isJumping)
             CancelJump();
-        if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time - lastDashTime > dashCooldown)
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) &&
+            Time.time - lastDashTime > dashCooldown &&
+            !isJumping &&
+            isGrounded)
+        {
             Dash();
+        }
 
         playerAnimationController.UpdateAnimationStates(move, isGrounded, isDashing);
+    }
+
+    private bool CanJumpAfterDash()
+    {
+        return !isDashing && (lastDashEndTime < 0 || Time.time - lastDashEndTime >= dashJumpCooldown);
     }
 
     private void Move(float move)
     {
         HandleFlip(move);
-
-        // Calculate target speed with dash multiplier
         float targetSpeed = move * (isDashing ? moveSpeed * dashMoveSpeedMultiplier : moveSpeed);
 
-        // Only adjust velocity if not experiencing strong knockback
         if (Mathf.Abs(rb.velocity.x - targetSpeed) > 0.1f &&
-            Mathf.Abs(rb.velocity.x) < moveSpeed * 3f) // Knockback threshold
+            Mathf.Abs(rb.velocity.x) < moveSpeed * 3f)
         {
-            // Smooth acceleration
             float speedDiff = targetSpeed - rb.velocity.x;
-            rb.AddForce(Vector2.right * speedDiff * 15f); // Adjusted multiplier
+            rb.AddForce(Vector2.right * speedDiff * 15f);
         }
     }
 
@@ -138,13 +151,12 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Dash()
     {
-        if (isDashing) return; // Prevent multiple dashes
+        if (isDashing || isJumping || !isGrounded) return;
 
         isDashing = true;
         lastDashTime = Time.time;
 
         playerHurtbox.SetInvincible(true);
-
         rb.velocity = new Vector2(facingDirection * dashSpeed, rb.velocity.y);
         StartCoroutine(StopDash());
     }
@@ -154,9 +166,18 @@ public class PlayerMovementController : MonoBehaviour
         yield return new WaitForSeconds(dashDuration);
 
         playerHurtbox.SetInvincible(false);
-
         rb.velocity = new Vector2(0, rb.velocity.y);
         isDashing = false;
+        lastDashEndTime = Time.time;
+    }
+
+    public void SetMovementEnabled(bool enabled)
+    {
+        isMovementEnabled = enabled;
+        if (!enabled)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
     }
 
     private void CheckIfGrounded()
@@ -166,18 +187,11 @@ public class PlayerMovementController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (drawGizmos) // Check if drawing is enabled
+        if (drawGizmos && groundCheckPoint != null)
         {
-            // Draw the ground check point
-            if (groundCheckPoint != null)
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawSphere(groundCheckPoint.position, 0.1f); // Draw a small sphere at the ground check point
-
-                // Draw the ground check distance
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(groundCheckPoint.position, groundCheckPoint.position + Vector3.down * groundCheckDistance); // Draw a line for the ground check distance
-            }
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(groundCheckPoint.position, 0.1f);
+            Gizmos.DrawLine(groundCheckPoint.position, groundCheckPoint.position + Vector3.down * groundCheckDistance);
         }
     }
 }

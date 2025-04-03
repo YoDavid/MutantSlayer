@@ -1,70 +1,64 @@
-using System;
 using UnityEngine;
+using System.Collections;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : HealthSystem
 {
-    [Header("Health Settings")]
-    public int maxHealth = 100; 
-    public int currentHealth;
-
     [Header("Player Status")]
-    public bool isDead = false; 
+    public bool isDead = false;
 
-    private PlayerDamageBlink damageBlink;
-    private PlayerMovementController playerMovement;                                            
+    [Header("Player Settings")]
+    [SerializeField] private int playerMaxHealth = 100;
+    [SerializeField] private float invulnerabilityTime = 0.5f;
+
+    private PlayerMovementController playerMovement;
     private PlayerHurtbox playerHurtbox;
+    private PlayerAnimationController playerAnimation;
+    private bool isInvulnerable = false;
 
-    public event Action<int> OnHealthChanged;
-
-
-    void Start()
+    protected override void Awake()
     {
-        currentHealth = maxHealth;
-        damageBlink = GetComponent<PlayerDamageBlink>();
-        playerMovement = GetComponent<PlayerMovementController>(); 
+        MaxHealth = playerMaxHealth;
+        base.Awake();
+        playerMovement = GetComponent<PlayerMovementController>();
         playerHurtbox = GetComponentInChildren<PlayerHurtbox>();
+        playerAnimation = GetComponent<PlayerAnimationController>();
     }
 
-    public void TakeDamage(int damage)
+    public override void TakeDamage(int damage, bool isCritical = false)
     {
-        if (isDead || playerHurtbox == null || !playerHurtbox.enabled)
-            return; 
+        if (isDead || isInvulnerable || playerHurtbox == null || !playerHurtbox.enabled) return;
 
-        currentHealth -= damage;
-        OnHealthChanged?.Invoke(currentHealth);
+        base.TakeDamage(damage, isCritical);
 
-        if (DamagePopUp.Instance != null)
-        {
-            Vector3 popupPosition = transform.position + Vector3.up * 1.8f; 
-            DamagePopUp.Instance.CreateDamageText( damage, popupPosition,   isPlayer: true,   isBoss: false);
-        }
+        // Visual feedback and hit stun
+        playerAnimation.TriggerTakenHit();
+        DamagePopUp.Instance?.CreateDamageText(
+            damage, transform.position + Vector3.up * 1.8f,
+            isPlayer: true, isBoss: false, isCritical);
 
-        if (damageBlink != null)
-        {
-            damageBlink.TriggerBlinkEffect();
-        }
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
+        StartCoroutine(InvulnerabilityFrame());
     }
 
-    public bool IsPlayerInvulnerable()
+    private IEnumerator InvulnerabilityFrame()
     {
-      
-        return playerMovement.isDashing;
+        isInvulnerable = true;
+        yield return new WaitForSeconds(invulnerabilityTime);
+        isInvulnerable = false;
     }
+
+    protected override void Die()
+    {
+        isDead = true;
+        playerAnimation.enabled = false;
+        base.Die();
+        Debug.Log("Player died!");
+    }
+
+    public bool IsPlayerInvulnerable() => playerMovement.isDashing || isInvulnerable;
 
     public void Heal(int amount)
     {
-        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
-        OnHealthChanged?.Invoke(currentHealth);
-    }
-
-    private void Die()
-    {
-        isDead = true;
-        Debug.Log("Player died!");
+        CurrentHealth = Mathf.Min(CurrentHealth + amount, MaxHealth);
+        OnHealthChanged?.Invoke(CurrentHealth);
     }
 }

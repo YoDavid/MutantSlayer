@@ -4,7 +4,8 @@ using UnityEngine;
 public class SpitProjectile : MonoBehaviour
 {
     [Header("Projectile Settings")]
-    [SerializeField] private int damage = 10; // Damage to the player on collision
+    public DamageConfig damageConfig; // NEW: Replaces damage
+    private DamageDealer damageDealer; // NEW
     [SerializeField] private float speed = 5f; // Speed of the projectile, exposed to the Inspector
 
     // These will be assigned during runtime
@@ -53,6 +54,8 @@ public class SpitProjectile : MonoBehaviour
     {
         // Start the shrinking coroutine
         StartCoroutine(ShrinkProjectile());
+        damageDealer = gameObject.AddComponent<DamageDealer>(); // NEW
+        damageDealer.config = damageConfig; // NEW
     }
 
     private void Update()
@@ -83,15 +86,13 @@ public class SpitProjectile : MonoBehaviour
     // Detect collision with player hurtbox
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision == playerHurtBoxCollider) // Check if it collides with the player's hurtbox
+        if (collision == playerHurtBoxCollider)
         {
-            // Apply damage to the player if the hurtbox is hit
             if (playerHealth != null)
             {
-                playerHealth.TakeDamage(damage);
+                var (damage, isCritical) = damageDealer.CalculateDamage(); // NEW
+                playerHealth.TakeDamage(damage, isCritical); // MODIFIED
             }
-
-            // Destroy the projectile on collision
             Destroy(gameObject);
         }
     }

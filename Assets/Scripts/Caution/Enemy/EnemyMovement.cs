@@ -24,6 +24,8 @@ public class EnemyMovement : MonoBehaviour
     [Header("Combat Chase Limits")]
     [Tooltip("How far beyond patrol bounds enemy can chase")]
     public float maxChaseRangeFromBounds = 2f;
+    [Tooltip("Minimum distance to maintain from player")]
+    public float minDistanceFromPlayer = 0.5f;
 
     // Private variables
     private Rigidbody2D rb;
@@ -110,6 +112,16 @@ public class EnemyMovement : MonoBehaviour
         float clampedX = Mathf.Clamp(targetPosition.x, WorldChaseLeft, WorldChaseRight);
         targetPosition = new Vector2(clampedX, spawnPosition.y);
 
+        // Calculate distance to player
+        float distanceToPlayer = Vector2.Distance(transform.position, targetPosition);
+
+        // If we're too close to the player, stop moving
+        if (distanceToPlayer <= minDistanceFromPlayer)
+        {
+            StopMovement();
+            return;
+        }
+
         Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
         rb.velocity = direction * config.moveSpeed;
         UpdateSpriteFacing(direction);
@@ -185,5 +197,9 @@ public class EnemyMovement : MonoBehaviour
         // Draw detection range (blue)
         Gizmos.color = new Color(0, 0, 1, 0.1f);
         Gizmos.DrawWireSphere(transform.position, config.walkingRange);
+
+        // Draw minimum distance (magenta)
+        Gizmos.color = new Color(1, 0, 1, 0.2f);
+        Gizmos.DrawWireSphere(transform.position, minDistanceFromPlayer);
     }
 }

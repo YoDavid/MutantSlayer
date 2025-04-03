@@ -1,0 +1,55 @@
+using System.Collections;
+using UnityEngine;
+
+public class HealthSystem : MonoBehaviour
+{
+    [Header("Health Settings")]
+    [SerializeField] private int _maxHealth = 100; // Serialized backing field
+    public int MaxHealth 
+    {
+        get => _maxHealth;
+        set {
+            _maxHealth = Mathf.Max(1, value); // Ensure never zero/negative
+            if (Application.isPlaying) 
+            {
+                CurrentHealth = Mathf.Min(CurrentHealth, _maxHealth);
+            }
+        }
+    }
+    public int CurrentHealth { get; protected set; }
+
+    [Header("Damage Effects")]
+    public float damageBlinkDuration = 0.1f;
+    public Color damageBlinkColor = Color.red;
+
+    protected SpriteRenderer spriteRenderer;
+    protected Color originalColor;
+
+    public System.Action OnDeath;
+    public System.Action<int> OnHealthChanged;
+
+    protected virtual void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null) originalColor = spriteRenderer.color;
+        CurrentHealth = MaxHealth;
+    }
+
+    public virtual void TakeDamage(int damage, bool isCritical = false)
+    {
+        CurrentHealth = Mathf.Max(0, CurrentHealth - damage);
+        OnHealthChanged?.Invoke(CurrentHealth);
+        StartCoroutine(BlinkEffect());
+        if (CurrentHealth <= 0) Die();
+    }
+
+    protected virtual void Die() => OnDeath?.Invoke();
+
+    protected virtual IEnumerator BlinkEffect()
+    {
+        if (spriteRenderer == null) yield break;
+        spriteRenderer.color = damageBlinkColor;
+        yield return new WaitForSeconds(damageBlinkDuration);
+        spriteRenderer.color = originalColor;
+    }
+}

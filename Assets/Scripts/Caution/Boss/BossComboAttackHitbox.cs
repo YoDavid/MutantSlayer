@@ -5,7 +5,8 @@ using UnityEngine;
 public class BossComboAttackHitbox : MonoBehaviour
 {
     [Header("Attack Settings")]
-    [SerializeField] private int attackDamage;
+    public DamageConfig damageConfig;
+    private DamageDealer damageDealer; 
     [SerializeField] private float attackDuration;
     [SerializeField] private float[] attackTimings;
 
@@ -25,6 +26,8 @@ public class BossComboAttackHitbox : MonoBehaviour
     private void Awake()
     {
         InitializeComponents();
+        damageDealer = gameObject.AddComponent<DamageDealer>(); // NEW
+        damageDealer.config = damageConfig; // NEW
     }
 
     private void Start()
@@ -107,7 +110,9 @@ public class BossComboAttackHitbox : MonoBehaviour
     {
         if (isPlayerInRange && !playerHealth.IsPlayerInvulnerable())
         {
-            playerHealth.TakeDamage(attackDamage);
+            var (damage, isCritical) = damageDealer.CalculateDamage(); // NEW
+            playerHealth.TakeDamage(damage, isCritical); // MODIFIED
+            cameraShake?.ShakeCameraComboAttack(); // Moved here from ActivateComboWithIntervals
         }
     }
 
