@@ -22,7 +22,7 @@ public class BossHealth : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, bool isCritical = false)
     {
         currentHealth -= damage;
 
@@ -30,14 +30,14 @@ public class BossHealth : MonoBehaviour
         {
             DamagePopUp.Instance.CreateDamageText(
                 damage,
-                transform.position + popupOffset, // Uses boss-specific height
+                transform.position + popupOffset,
                 isPlayer: false,
-                isBoss: true // Critical: This triggers red boss text
+                isBoss: true,
+                isCritical: isCritical // Add this new parameter
             );
         }
 
-        if (blinkRoutine != null)
-            StopCoroutine(blinkRoutine); // Cancel previous blink
+        if (blinkRoutine != null) StopCoroutine(blinkRoutine);
         blinkRoutine = StartCoroutine(BlinkEffect());
 
         if (currentHealth <= 0) Die();

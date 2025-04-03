@@ -22,7 +22,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-        if (health.currentHealth <= 0) return;
+        if (health.CurrentHealth <= 0) return;
 
         switch (currentState)
         {

@@ -38,15 +38,9 @@ public class DamagePopUp : MonoBehaviour
     }
 
 
-    public void CreateDamageText(int damage, Vector3 basePosition, bool isPlayer = false, bool isBoss = false)
+    public void CreateDamageText(int damage, Vector3 position, bool isPlayer, bool isBoss, bool isCritical = false)
     {
-        if (popUpPrefab == null)
-        {
-            Debug.LogError("PopUp prefab not assigned!", this);
-            return;
-        }
 
-        // Calculate spawn position with randomness
         float spawnHeight = isPlayer ? playerSpawnHeight : (isBoss ? bossSpawnHeight : regularEnemies);
         Vector3 randomOffset = new Vector3(
             Random.Range(-horizontalRandomness, horizontalRandomness),
@@ -54,7 +48,7 @@ public class DamagePopUp : MonoBehaviour
             0
         );
 
-        Vector3 spawnPosition = basePosition +
+        Vector3 spawnPosition = position +
                               Vector3.up * spawnHeight +
                               randomOffset;
 

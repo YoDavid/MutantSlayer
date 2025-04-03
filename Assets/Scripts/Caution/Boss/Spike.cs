@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class Spike : MonoBehaviour
 {
-    [SerializeField] private int attackDamage = 10; // Damage dealt by this spike
+    public DamageConfig damageConfig; // NEW: Replaces attackDamage
+    private DamageDealer damageDealer; // NEW
     [SerializeField] private Collider2D spikeCollider; // Collider for this spike
     [SerializeField] private Collider2D playerHurtBoxCollider; // Reference to the player's hurtbox collider
     [SerializeField] private PlayerHealth playerHealth; // Reference to the player's health
@@ -37,6 +38,8 @@ public class Spike : MonoBehaviour
         {
             Debug.LogError("Player not found in scene.", this);
         }
+        damageDealer = gameObject.AddComponent<DamageDealer>(); // NEW
+        damageDealer.config = damageConfig; // NEW
 
     }
 
@@ -51,10 +54,10 @@ public class Spike : MonoBehaviour
 
     private void ApplyDamage()
     {
-        // Apply damage if the player is not invulnerable
         if (playerHealth != null && !playerHealth.IsPlayerInvulnerable())
         {
-            playerHealth.TakeDamage(attackDamage);
+            var (damage, isCritical) = damageDealer.CalculateDamage(); // NEW
+            playerHealth.TakeDamage(damage, isCritical); // MODIFIED
         }
     }
 

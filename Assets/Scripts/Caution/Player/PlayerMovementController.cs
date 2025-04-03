@@ -76,8 +76,15 @@ public class PlayerMovementController : MonoBehaviour
             ContinueJump();
         if (Input.GetKeyUp(KeyCode.Space) && isJumping)
             CancelJump();
-        if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time - lastDashTime > dashCooldown)
+
+        // Only allow dash if not jumping and grounded
+        if (Input.GetKeyDown(KeyCode.LeftShift) &&
+            Time.time - lastDashTime > dashCooldown &&
+            !isJumping &&
+            isGrounded)
+        {
             Dash();
+        }
 
         playerAnimationController.UpdateAnimationStates(move, isGrounded, isDashing);
     }
@@ -138,7 +145,7 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Dash()
     {
-        if (isDashing) return; // Prevent multiple dashes
+        if (isDashing || isJumping || !isGrounded) return;
 
         isDashing = true;
         lastDashTime = Time.time;
@@ -148,6 +155,7 @@ public class PlayerMovementController : MonoBehaviour
         rb.velocity = new Vector2(facingDirection * dashSpeed, rb.velocity.y);
         StartCoroutine(StopDash());
     }
+
 
     private IEnumerator StopDash()
     {

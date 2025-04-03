@@ -4,12 +4,13 @@ using UnityEngine;
 public class BossJumpAttackHitbox : MonoBehaviour
 {
     [Header("Attack Settings")]
-    [SerializeField] private int attackDamage = 20;
+    public DamageConfig damageConfig; 
+    private DamageDealer damageDealer;
     [SerializeField] private float attackDuration = 0.5f;
     [SerializeField] private float activationDelay = 0.2f;
 
     [Header("Collider Settings")]
-    [SerializeField] private float colliderShift; // Set this value in the inspector to determine how much to shift the collider
+    [SerializeField] private float colliderShift;
     private Collider2D attackCollider;
     private Vector2 originalOffset;
 
@@ -36,6 +37,8 @@ public class BossJumpAttackHitbox : MonoBehaviour
     {
         attackCollider = GetComponent<Collider2D>();
         cameraShake = FindAnyObjectByType<CameraShake>();
+        damageDealer = gameObject.AddComponent<DamageDealer>();
+        damageDealer.config = damageConfig;
     }
 
     private void SetupCollider()
@@ -109,7 +112,9 @@ public class BossJumpAttackHitbox : MonoBehaviour
     {
         if (isPlayerInRange && !playerHealth.IsPlayerInvulnerable())
         {
-            playerHealth.TakeDamage(attackDamage);
+            var (damage, isCritical) = damageDealer.CalculateDamage();
+
+            playerHealth.TakeDamage(damage, isCritical);
             cameraShake.ShakeCameraJumpSmashAttack();
         }
     }

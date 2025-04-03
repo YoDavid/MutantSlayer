@@ -16,8 +16,8 @@ public class UIPlayerHealthBar : MonoBehaviour
         if (playerHealth == null)
             playerHealth = FindObjectOfType<PlayerHealth>();
 
-        healthSlider.maxValue = playerHealth.maxHealth;
-        healthSlider.value = playerHealth.maxHealth;
+        healthSlider.maxValue = playerHealth.MaxHealth;
+        healthSlider.value = playerHealth.MaxHealth;
     }
 
     private void Update()
@@ -26,11 +26,11 @@ public class UIPlayerHealthBar : MonoBehaviour
 
         // Smooth health updates
         healthSlider.value = Mathf.Lerp(healthSlider.value,
-                                      playerHealth.currentHealth,
+                                      playerHealth.CurrentHealth,
                                       10f * Time.deltaTime);
 
         // Color change based on health
-        float healthPercent = (float)playerHealth.currentHealth / playerHealth.maxHealth;
+        float healthPercent = (float)playerHealth.CurrentHealth / playerHealth.MaxHealth;
         fillImage.color = Color.Lerp(criticalColor,
                                    healthyColor,
                                    healthPercent / colorChangeThreshold);

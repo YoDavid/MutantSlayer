@@ -513,7 +513,7 @@ Transform:
   m_GameObject: {fileID: 7234279108582347050}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.23, y: 1.32, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -731,6 +731,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   config: {fileID: 11400000, guid: e4e06320e66f69a4082b02d80ba8fee1, type: 2}
+  patrolSettings:
+    enablePatrol: 1
+    patrolLeftBound: -7.89
+    patrolRightBound: 12.28
+    patrolSpeed: 1.5
+    idleTimeAtEdges: 1
+  maxChaseRangeFromBounds: 2
 --- !u!1 &7265441888880981570
 GameObject:
   m_ObjectHideFlags: 0

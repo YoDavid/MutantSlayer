@@ -161,5 +161,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b352b29cec90cc48a811af1e04fa107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damageConfig: {fileID: 11400000, guid: 3735da783bc33c846b228722332daf2c, type: 2}
   speed: 50
+  playerHealth: {fileID: 0}
+  playerHurtBoxCollider: {fileID: 0}
+  shrinkDuration: 3
+  initialScale: {x: 1, y: 1, z: 1}
+  minScale: {x: 0, y: 0, z: 0}

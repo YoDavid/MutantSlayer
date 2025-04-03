@@ -4,10 +4,16 @@ using UnityEngine;
 public class PlayerAttackController : MonoBehaviour
 {
     private PlayerAnimationController animationController;
+    private PlayerMovementController movementController; // New reference
 
     [Header("Combo Settings")]
     [SerializeField] private float attackResetTime = 0.8f;
     [SerializeField] private float[] attackDurations = { 0.4f, 0.35f, 0.3f };
+
+    [Header("Ground Requirements")]
+    [SerializeField] private bool requireGrounded = true;
+    [SerializeField] private bool cancelAttackIfAirborne = true;
+
 
     [Header("Hitbox Settings (Per Attack)")]
     [SerializeField]
@@ -41,6 +47,7 @@ public class PlayerAttackController : MonoBehaviour
     private void Awake()
     {
         animationController = GetComponent<PlayerAnimationController>();
+        movementController = GetComponent<PlayerMovementController>();
         if (attackCollider != null)
         {
             originalOffset = attackCollider.offset;
@@ -59,13 +66,25 @@ public class PlayerAttackController : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && CanAttack())
         {
             PerformAttack();
+        }
 
+        // Cancel attack if player jumps mid-attack
+        if (IsAttacking && cancelAttackIfAirborne && !IsGrounded())
+        {
+            CancelCurrentAttack();
         }
     }
 
     private bool CanAttack()
     {
-        return !IsAttacking && (attackCount == 0 || Time.time - lastAttackEndTime <= attackResetTime);
+        return !IsAttacking &&
+               (attackCount == 0 || Time.time - lastAttackEndTime <= attackResetTime) &&
+               (!requireGrounded || IsGrounded());
+    }
+
+    private bool IsGrounded()
+    {
+        return movementController != null && movementController.isGrounded;
     }
 
     private void PerformAttack()
@@ -73,36 +92,43 @@ public class PlayerAttackController : MonoBehaviour
         if (attackCount >= attackDurations.Length)
         {
             ResetCombo();
+            return;
         }
 
         lastAttackTime = Time.time;
         IsAttacking = true;
         attackCount++;
-        Debug.Log(attackCount);
+
+        animationController.SetAttackState(attackCount); 
 
         if (currentAttackRoutine != null)
         {
             StopCoroutine(currentAttackRoutine);
         }
-
-        attackCollider.offset = colliderOffsets[attackCount - 1];
-        attackCollider.size = colliderSizes[attackCount - 1];
-
-        animationController.SetAttackState(attackCount);
         currentAttackRoutine = StartCoroutine(ExecuteAttack(attackCount - 1));
     }
 
     private IEnumerator ExecuteAttack(int attackIndex)
     {
+        // Wait for hitbox activation delay
         yield return new WaitForSeconds(hitboxEnableDelays[attackIndex]);
-        attackCollider.enabled = true;
 
-        yield return new WaitForSeconds(hitboxActiveTimes[attackIndex]);
-        attackCollider.enabled = false;
+        // Only activate hitbox if still grounded (if required)
+        if (!requireGrounded || IsGrounded())
+        {
+            attackCollider.offset = colliderOffsets[attackIndex];
+            attackCollider.size = colliderSizes[attackIndex];
+            attackCollider.enabled = true;
 
+            yield return new WaitForSeconds(hitboxActiveTimes[attackIndex]);
+            attackCollider.enabled = false;
+        }
+
+        // Reset collider regardless
         attackCollider.offset = originalOffset;
         attackCollider.size = originalSize;
 
+        // Wait for remaining animation time
         float remainingTime = attackDurations[attackIndex] -
                            (hitboxEnableDelays[attackIndex] + hitboxActiveTimes[attackIndex]);
         if (remainingTime > 0) yield return new WaitForSeconds(remainingTime);
@@ -110,15 +136,30 @@ public class PlayerAttackController : MonoBehaviour
         IsAttacking = false;
         lastAttackEndTime = Time.time;
 
-        // Only reset animation state if not the final attack
+        // Combo continuation logic
         if (attackIndex < attackDurations.Length - 1)
         {
-            animationController.SetAttackState(0);
+            animationController.SetAttackState(0); 
         }
-        else 
+        else
         {
             ResetCombo();
         }
+    }
+
+    private void CancelCurrentAttack()
+    {
+        if (currentAttackRoutine != null)
+        {
+            StopCoroutine(currentAttackRoutine);
+        }
+
+        attackCollider.enabled = false;
+        attackCollider.offset = originalOffset;
+        attackCollider.size = originalSize;
+
+        IsAttacking = false;
+        animationController.SetAttackState(0);
     }
 
     private void ResetCombo()
