@@ -181,9 +181,15 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 40fa9a50b0b4fdf4da108efec1d8e4ea, type: 3}
     volume: 1
   - name: button_hover
-    clip: {fileID: 8300000, guid: 2b1adce36e7e6a949a258b153549d9ed, type: 3}
+    clip: {fileID: 8300000, guid: 72df4c81dd3e76c439e392534b98c9ea, type: 3}
     volume: 1
   - name: slide_transition
+    clip: {fileID: 8300000, guid: 298fe5dcf2c8f7e499ff6f8fce40890f, type: 3}
+    volume: 1
+  - name: menu_open
+    clip: {fileID: 8300000, guid: 298fe5dcf2c8f7e499ff6f8fce40890f, type: 3}
+    volume: 1
+  - name: menu_close
     clip: {fileID: 8300000, guid: 298fe5dcf2c8f7e499ff6f8fce40890f, type: 3}
     volume: 1
   musicLibrary:

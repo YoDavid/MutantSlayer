@@ -11,7 +11,6 @@ public class ForceMouseHidden : MonoBehaviour
 
     private void Update()
     {
-        // Continuously enforce in case other systems try to show it
         if (Cursor.visible || Cursor.lockState != CursorLockMode.Locked)
         {
             LockAndHideMouse();

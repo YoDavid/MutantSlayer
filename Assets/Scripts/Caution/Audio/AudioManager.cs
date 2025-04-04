@@ -43,7 +43,6 @@ public class AudioManager : MonoBehaviour
 
     private void InitializeDictionaries()
     {
-        // SFX initialization
         sfxLookup.Clear();
         foreach (var sound in sfxLibrary)
         {
@@ -135,7 +134,12 @@ public class AudioManager : MonoBehaviour
         }
 
         musicSource.Stop();
-        musicSource.volume = 1f; // Reset volume
+        musicSource.volume = 1f;
+    }
+
+    public void SetMusicVolume(float volume)
+    {
+        musicSource.volume = Mathf.Clamp(volume, 0f, 1f);
     }
 
     // SFX methods remain unchanged
@@ -150,4 +154,6 @@ public class AudioManager : MonoBehaviour
     public void PlayButtonClick() => PlaySFX("button_click");
     public void PlayButtonHover() => PlaySFX("button_hover");
     public void PlaySlideTransition() => PlaySFX("slide_transition");
+    public void PlayMenuOpen() => PlaySFX("menu_open");
+    public void PlayMenuClose() => PlaySFX("menu_close");
 }

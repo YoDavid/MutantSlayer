@@ -2,23 +2,27 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class MainMenuButton : MonoBehaviour,  ISelectHandler,  IDeselectHandler
+public class MenuButton : MonoBehaviour,  ISelectHandler,  IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Visuals")]
     [SerializeField] private Image targetImage;
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color highlightedColor = Color.yellow;
+    [SerializeField] private float fadeDuration = 0.1f;
 
     [Header("References")]
-    public Button Button;
+    public Button button;
+
+    public void OnPointerEnter(PointerEventData eventData) => Select();
+    public void OnPointerExit(PointerEventData eventData) => Deselect();
 
     private bool _isSelected = false;
 
     private void Awake()
     {
-        if (Button == null) Button = GetComponent<Button>();
+        if (button == null) button = GetComponent<Button>();
         if (targetImage == null) targetImage = GetComponent<Image>();
-        Button.transition = Selectable.Transition.None;
+        button.transition = Selectable.Transition.None;
         targetImage.color = normalColor;
     }
 

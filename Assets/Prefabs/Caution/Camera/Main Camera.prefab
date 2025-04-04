@@ -136,13 +136,13 @@ MonoBehaviour:
   shakeMagnitude: 1
   dampingSpeed: 0.1
   comboShakeDuration: 0.2
-  comboMinShakeMagnitude: -0.5
-  comboMaxShakeMagnitude: 0.5
+  comboMinShakeMagnitude: -0.2
+  comboMaxShakeMagnitude: 0.2
   comboShakeMagnitude: 1
   comboDampingSpeed: 0.1
   aoeShakeDuration: 0.2
-  aoeMinShakeMagnitude: -1
-  aoeMaxShakeMagnitude: 1
+  aoeMinShakeMagnitude: -0.5
+  aoeMaxShakeMagnitude: 0.5
   aoeShakeMagnitude: 1
   aoeDampingSpeed: 0.1
   jumpSmashShakeDuration: 1
