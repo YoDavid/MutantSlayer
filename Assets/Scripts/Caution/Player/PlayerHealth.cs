@@ -5,9 +5,6 @@ public class PlayerHealth : HealthSystem
 {
     [Header("Player Status")]
     public bool isDead = false;
-
-    [Header("Player Settings")]
-    [SerializeField] private int playerMaxHealth = 100;
     [SerializeField] private float invulnerabilityTime = 0.5f;
 
     private PlayerMovementController playerMovement;
@@ -17,7 +14,7 @@ public class PlayerHealth : HealthSystem
 
     protected override void Awake()
     {
-        MaxHealth = playerMaxHealth;
+        // No need to set MaxHealth here - it's set in the inspector
         base.Awake();
         playerMovement = GetComponent<PlayerMovementController>();
         playerHurtbox = GetComponentInChildren<PlayerHurtbox>();
@@ -30,7 +27,6 @@ public class PlayerHealth : HealthSystem
 
         base.TakeDamage(damage, isCritical);
 
-        // Visual feedback and hit stun
         playerAnimation.TriggerTakenHit();
         DamagePopUp.Instance?.CreateDamageText(
             damage, transform.position + Vector3.up * 1.8f,
@@ -48,9 +44,13 @@ public class PlayerHealth : HealthSystem
 
     protected override void Die()
     {
+        if (isDead) return;
+
         isDead = true;
         playerAnimation.enabled = false;
+        playerMovement.enabled = false;
         base.Die();
+       
         Debug.Log("Player died!");
     }
 
@@ -58,7 +58,7 @@ public class PlayerHealth : HealthSystem
 
     public void Heal(int amount)
     {
-        CurrentHealth = Mathf.Min(CurrentHealth + amount, MaxHealth);
+        CurrentHealth += amount;
         OnHealthChanged?.Invoke(CurrentHealth);
     }
 }

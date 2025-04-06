@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 485563c2602e7f44ebb5e4d730c642da, type: 3}
   m_Name: SmallEnemy_Config_EyeHands
   m_EditorClassIdentifier: 
-  maxHealth: 1000
+  maxHealth: 100
   moveSpeed: 5
   walkingRange: 17
   attackRange: 5
-  attackCooldown: 3
+  minAttackCooldown: 2.5
+  maxAttackCooldown: 5
   attackDelay: 1.5
   colliderActiveDuration: 0.5
   attackDamage: 10

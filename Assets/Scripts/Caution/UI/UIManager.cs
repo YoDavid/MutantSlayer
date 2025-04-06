@@ -6,6 +6,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject hud;
     [SerializeField] private PauseMenuController pauseMenu;
     [SerializeField] private GameOverMenuController gameOverMenu;
+    [SerializeField] private PlayerHealth playerHealth;
 
     private void Awake()
     {
@@ -14,7 +15,36 @@ public class UIManager : MonoBehaviour
         if (!gameOverMenu) gameOverMenu = transform.Find("Canvas/GameOverMenu")?.GetComponent<GameOverMenuController>();
 
         SetHUDVisible(true);
-        if (gameOverMenu != null) gameOverMenu.SetVisible(false);
+        if (gameOverMenu != null) gameOverMenu.gameObject.SetActive(false);
+    }
+
+    private void Start()
+    {
+        if (playerHealth != null)
+        {
+            playerHealth.OnDeath += HandlePlayerDeath;
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && (gameOverMenu == null || !gameOverMenu.IsVisible))
+        {
+            TogglePauseMenu();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (playerHealth != null)
+        {
+            playerHealth.OnDeath -= HandlePlayerDeath;
+        }
+    }
+
+    private void HandlePlayerDeath()
+    {
+        ShowGameOver();
     }
 
     public void SetHUDVisible(bool visible)
@@ -33,6 +63,10 @@ public class UIManager : MonoBehaviour
     public void ShowGameOver()
     {
         SetHUDVisible(false);
-        if (gameOverMenu != null) gameOverMenu.SetVisible(true);
+        if (gameOverMenu != null)
+        {
+            gameOverMenu.gameObject.SetActive(true);
+            gameOverMenu.StartGameOverSequence();
+        }
     }
 }

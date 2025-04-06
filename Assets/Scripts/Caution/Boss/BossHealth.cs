@@ -11,6 +11,8 @@ public class BossHealth : MonoBehaviour
     [SerializeField] private Vector3 popupOffset = new Vector3(0, 2f, 0);
     private Coroutine blinkRoutine;
 
+    [SerializeField] private GameObject bloodSplashPrefab;
+
     public int currentHealth;
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
@@ -56,7 +58,11 @@ public class BossHealth : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("Boss defeated!");
-        Destroy(gameObject); // Replace with death animation later
+        if (bloodSplashPrefab != null)
+        {
+            Instantiate(bloodSplashPrefab, transform.position, Quaternion.identity);
+        }
+
+        Destroy(gameObject); 
     }
 }

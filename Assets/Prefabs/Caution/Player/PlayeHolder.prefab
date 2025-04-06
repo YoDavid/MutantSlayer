@@ -614,11 +614,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7840b6f265762c14e8e785d06370f85f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 1000
+  _maxHealth: 1
+  _currentHealth: 0
+  bloodSplashPrefab: {fileID: 4501868321521990437, guid: 361828f1cec2e764e8d1417f686a9f47, type: 3}
   damageBlinkDuration: 0.1
   damageBlinkColor: {r: 0.6886792, g: 0, b: 0, a: 0.8}
   isDead: 0
-  playerMaxHealth: 1000
   invulnerabilityTime: 0.2
 --- !u!1 &9043775258710831573
 GameObject:

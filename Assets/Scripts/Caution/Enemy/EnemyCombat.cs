@@ -9,12 +9,13 @@ public class EnemyCombat : MonoBehaviour
 
     private Animator animator;
     private float lastAttackTime;
+    private float currentAttackCooldown;
     private Transform player;
     private EnemyAttackCollider attackCollider;
     private EnemyMovement movement;
     private CameraShake cameraShake;
 
-    public bool CanAttack => Time.time >= lastAttackTime + config.attackCooldown;
+    public bool CanAttack => Time.time >= lastAttackTime + currentAttackCooldown;
     public bool IsAttacking { get; private set; }
     public float AttackRange => config.attackRange;
     public Transform Player => player;
@@ -26,11 +27,15 @@ public class EnemyCombat : MonoBehaviour
         attackCollider = GetComponentInChildren<EnemyAttackCollider>(true);
         movement = GetComponent<EnemyMovement>();
         cameraShake = Camera.main.GetComponent<CameraShake>();
+
+        // Initialize first cooldown
+        currentAttackCooldown = config.GetRandomAttackCooldown();
     }
 
     public void ExecuteAttack()
     {
         lastAttackTime = Time.time;
+        currentAttackCooldown = config.GetRandomAttackCooldown(); // Set a new cooldown every attack
         IsAttacking = true;
         animator.SetTrigger("Attack");
         StartCoroutine(AttackSequence());
@@ -38,18 +43,14 @@ public class EnemyCombat : MonoBehaviour
 
     private IEnumerator AttackSequence()
     {
-        // Lock movement at start
         movement.LockMovement();
         IsAttacking = true;
 
-        // First attack
         yield return new WaitForSeconds(config.attackDelay);
 
-        // Only shake camera if this is a worm enemy
         if (config.hasDualAttack && cameraShake != null)
         {
             cameraShake.ShakeCamera();
-         
         }
 
         attackCollider.SetAttackPhase(true);
@@ -57,7 +58,6 @@ public class EnemyCombat : MonoBehaviour
         yield return new WaitForSeconds(config.colliderActiveDuration);
         attackCollider.DisableAttackCollider();
 
-        // Second attack (worm only)
         if (config.hasDualAttack)
         {
             yield return new WaitForSeconds(config.secondAttackDelay);
@@ -67,7 +67,6 @@ public class EnemyCombat : MonoBehaviour
             attackCollider.DisableAttackCollider();
         }
 
-        // Unlock movement at end
         IsAttacking = false;
         movement.UnlockMovement();
     }

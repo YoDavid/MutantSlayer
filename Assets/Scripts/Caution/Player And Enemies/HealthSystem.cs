@@ -4,19 +4,30 @@ using UnityEngine;
 public class HealthSystem : MonoBehaviour
 {
     [Header("Health Settings")]
-    [SerializeField] private int _maxHealth = 100; // Serialized backing field
-    public int MaxHealth 
+    [SerializeField] protected int _maxHealth = 100;
+    [SerializeField] protected int _currentHealth; 
+
+    [Header("Death Effects")]
+    [SerializeField] private GameObject bloodSplashPrefab;
+
+    public int MaxHealth
     {
         get => _maxHealth;
-        set {
-            _maxHealth = Mathf.Max(1, value); // Ensure never zero/negative
-            if (Application.isPlaying) 
+        set
+        {
+            _maxHealth = Mathf.Max(1, value);
+            if (Application.isPlaying)
             {
                 CurrentHealth = Mathf.Min(CurrentHealth, _maxHealth);
             }
         }
     }
-    public int CurrentHealth { get; protected set; }
+
+    public int CurrentHealth
+    {
+        get => _currentHealth;
+        protected set => _currentHealth = Mathf.Clamp(value, 0, _maxHealth);
+    }
 
     [Header("Damage Effects")]
     public float damageBlinkDuration = 0.1f;
@@ -32,18 +43,24 @@ public class HealthSystem : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null) originalColor = spriteRenderer.color;
-        CurrentHealth = MaxHealth;
+        CurrentHealth = _maxHealth; // Initialize with serialized value
     }
 
     public virtual void TakeDamage(int damage, bool isCritical = false)
     {
-        CurrentHealth = Mathf.Max(0, CurrentHealth - damage);
+        CurrentHealth -= damage;
         OnHealthChanged?.Invoke(CurrentHealth);
         StartCoroutine(BlinkEffect());
         if (CurrentHealth <= 0) Die();
     }
 
-    protected virtual void Die() => OnDeath?.Invoke();
+    protected virtual void Die()
+    {
+      
+        Instantiate(bloodSplashPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+        OnDeath?.Invoke();
+    }
 
     protected virtual IEnumerator BlinkEffect()
     {

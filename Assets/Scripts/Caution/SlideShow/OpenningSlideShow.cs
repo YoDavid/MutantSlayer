@@ -10,8 +10,8 @@ public class OpenningSlideShow : MonoBehaviour
     public Sprite[] images;
     public string[] texts;
     public Image imageComponent;
-    public TMP_Text storyTextComponent; // Changed to TMP_Text
-    public string nextSceneName = "GameScene"; // Default fallback
+    public TMP_Text storyTextComponent;
+    public string nextSceneName = "GameScene";
 
     [Header("Timing Settings")]
     public float fadeDuration = 0.5f;
@@ -23,8 +23,8 @@ public class OpenningSlideShow : MonoBehaviour
     public bool playTransitionSound = true;
 
     [Header("UI References")]
-    public TMP_Text spacePromptText; // Changed to TMP_Text
-    public TMP_Text skipPromptText; // Changed to TMP_Text
+    public TMP_Text spacePromptText; // SPACE Key prompt
+    public TMP_Text skipPromptText;  // ESC Key prompt (not blinking)
 
     private int currentIndex = 0;
     private bool isFading = false;
@@ -49,14 +49,10 @@ public class OpenningSlideShow : MonoBehaviour
         {
             Debug.LogError("No slides configured!");
         }
-
-        blinkCoroutine = StartCoroutine(BlinkSpacePrompt());
-        StartCoroutine(BlinkSkipPrompt());
     }
 
     void OnDestroy()
     {
-        // Stop music when leaving slideshow (optional)
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.StopMusic();
@@ -65,7 +61,7 @@ public class OpenningSlideShow : MonoBehaviour
 
     private void Update()
     {
-        if (isFading) return; // Block input during fade
+        if (isFading) return;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -88,7 +84,6 @@ public class OpenningSlideShow : MonoBehaviour
         }
         else
         {
-            // Play transition sound if enabled
             if (playTransitionSound && AudioManager.Instance != null)
             {
                 AudioManager.Instance.PlaySlideTransition();
@@ -96,7 +91,7 @@ public class OpenningSlideShow : MonoBehaviour
 
             StartCoroutine(FadeAndChangeSlide());
 
-            // Reset auto-advance timer
+            // Restart auto-advance if not at the end
             if (autoAdvanceCoroutine != null)
                 StopCoroutine(autoAdvanceCoroutine);
             autoAdvanceCoroutine = StartCoroutine(AutoAdvance());
@@ -108,7 +103,6 @@ public class OpenningSlideShow : MonoBehaviour
         imageComponent.sprite = images[index];
         storyTextComponent.text = texts[index];
 
-        // Reset alpha in case coming from fade
         var color = imageComponent.color;
         color.a = 1f;
         imageComponent.color = color;
@@ -127,6 +121,7 @@ public class OpenningSlideShow : MonoBehaviour
         {
             AudioManager.Instance.PlayButtonClick();
         }
+
         LoadNextScene();
     }
 
@@ -134,11 +129,7 @@ public class OpenningSlideShow : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(nextSceneName))
         {
-            SceneManager.LoadScene(nextSceneName);
-        }
-        else
-        {
-            Debug.LogError("Next scene name not specified!");
+            SceneLoader.Instance.LoadSceneWithFade(nextSceneName);
         }
     }
 
@@ -146,40 +137,35 @@ public class OpenningSlideShow : MonoBehaviour
     {
         isFading = true;
 
-        // Fade out
-        yield return StartCoroutine(Fade(1f, 0f));
-
-        // Change content
+        yield return StartCoroutine(FadeCurrentSlide(1f, 0f)); // Fade out
         ShowSlide(currentIndex);
-
-        // Fade in
-        yield return StartCoroutine(Fade(0f, 1f));
+        yield return StartCoroutine(FadeCurrentSlide(0f, 1f)); // Fade in
 
         isFading = false;
     }
 
-    private IEnumerator Fade(float startAlpha, float endAlpha)
+    private IEnumerator FadeCurrentSlide(float from, float to)
     {
         float elapsed = 0f;
+
         Color imageColor = imageComponent.color;
         Color textColor = storyTextComponent.color;
 
         while (elapsed < fadeDuration)
         {
-            float alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / fadeDuration);
+            float t = elapsed / fadeDuration;
+            imageColor.a = Mathf.Lerp(from, to, t);
+            textColor.a = Mathf.Lerp(from, to, t);
 
-            imageColor.a = alpha;
-            textColor.a = alpha;
             imageComponent.color = imageColor;
             storyTextComponent.color = textColor;
 
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
             yield return null;
         }
 
-        // Ensure final alpha is set
-        imageColor.a = endAlpha;
-        textColor.a = endAlpha;
+        imageColor.a = to;
+        textColor.a = to;
         imageComponent.color = imageColor;
         storyTextComponent.color = textColor;
     }
@@ -200,18 +186,6 @@ public class OpenningSlideShow : MonoBehaviour
             if (spacePromptText != null)
             {
                 spacePromptText.enabled = !spacePromptText.enabled;
-            }
-            yield return new WaitForSeconds(spacePromptBlinkRate);
-        }
-    }
-
-    private IEnumerator BlinkSkipPrompt()
-    {
-        while (true)
-        {
-            if (skipPromptText != null)
-            {
-                skipPromptText.enabled = !skipPromptText.enabled;
             }
             yield return new WaitForSeconds(spacePromptBlinkRate);
         }

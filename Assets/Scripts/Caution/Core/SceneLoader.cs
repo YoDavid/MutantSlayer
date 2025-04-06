@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
 
@@ -9,32 +8,88 @@ public class SceneLoader : MonoBehaviour
 
     [Header("Loading Screen")]
     [SerializeField] private GameObject loadingScreen;
-    [SerializeField] private Slider progressBar;
     [SerializeField] private float minLoadTime = 1f;
+
+    [Header("Fade Settings")]
+    [SerializeField] private CanvasGroup fadeOverlay;
+    [SerializeField] private float fadeDuration = 0.5f;
+
+    private bool isTransitioningScene = false;  // Flag to prevent multiple scene loads
 
     private void Awake()
     {
+        // Singleton pattern with proper persistence
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            loadingScreen.SetActive(false);
+
+            // Initialize fade overlay
+            if (fadeOverlay != null)
+            {
+                fadeOverlay.alpha = 0;
+                fadeOverlay.gameObject.SetActive(false);
+            }
+
+            // Initialize loading screen
+            if (loadingScreen != null)
+            {
+                loadingScreen.SetActive(false);
+            }
         }
         else
         {
             Destroy(gameObject);
+            return;
         }
     }
 
-    public void LoadScene(string sceneName)
+    public void LoadSceneWithFade(string sceneName)
     {
-        if (!DoesSceneExist(sceneName))
+        // Prevent loading if transition is already in progress
+        if (isTransitioningScene) return;
+
+        // Start coroutine to fade and load the scene
+        StartCoroutine(FadeAndLoadScene(sceneName));
+    }
+
+    private IEnumerator FadeAndLoadScene(string sceneName)
+    {
+        isTransitioningScene = true;  // Mark that a transition is in progress
+
+        // Fade out
+        if (fadeOverlay != null)
         {
-            Debug.LogError($"Scene '{sceneName}' not in build settings!");
-            return;
+            fadeOverlay.gameObject.SetActive(true);
+            yield return StartCoroutine(Fade(0, 1, fadeDuration));
         }
 
-        StartCoroutine(LoadSceneAsync(sceneName));
+        // Load scene
+        yield return StartCoroutine(LoadSceneAsync(sceneName));
+
+        // Fade in (optional)
+        if (fadeOverlay != null)
+        {
+            yield return StartCoroutine(Fade(1, 0, fadeDuration));
+            fadeOverlay.gameObject.SetActive(false);
+        }
+
+        isTransitioningScene = false;  // Mark that transition is complete
+    }
+
+    public IEnumerator Fade(float from, float to, float duration)
+    {
+        float elapsed = 0f;
+        fadeOverlay.alpha = from;
+
+        while (elapsed < duration)
+        {
+            fadeOverlay.alpha = Mathf.Lerp(from, to, elapsed / duration);
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        fadeOverlay.alpha = to;
     }
 
     private IEnumerator LoadSceneAsync(string sceneName)
@@ -45,7 +100,6 @@ public class SceneLoader : MonoBehaviour
         }
 
         loadingScreen.SetActive(true);
-        progressBar.value = 0f;
         float elapsedTime = 0f;
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
@@ -54,8 +108,6 @@ public class SceneLoader : MonoBehaviour
         while (!operation.isDone)
         {
             elapsedTime += Time.unscaledDeltaTime;
-            float progress = Mathf.Clamp01(operation.progress / 0.9f);
-            progressBar.value = progress;
 
             if (operation.progress >= 0.9f && elapsedTime >= minLoadTime)
             {

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public abstract class BaseMenuController : MonoBehaviour
 {
@@ -10,13 +11,8 @@ public abstract class BaseMenuController : MonoBehaviour
     [SerializeField] protected KeyCode selectKey = KeyCode.Return;
     [SerializeField] protected MenuButton[] menuButtons;
 
-    [Header("Transition Settings")]
-    [SerializeField] protected float buttonClickDelay = 0.3f;
-    [SerializeField] protected CanvasGroup fadeOverlay;
-    [SerializeField] protected float fadeDuration = 0.5f;
-
     protected int currentIndex = 0;
-    protected bool isTransitioning = false;
+    protected bool isTransitioning = false;  // Prevent fast repeated inputs
     protected float lastInputTime;
 
     protected virtual void Awake()
@@ -46,47 +42,30 @@ public abstract class BaseMenuController : MonoBehaviour
 
     protected void LoadScene(string sceneName)
     {
-        StartCoroutine(LoadSceneRoutine(sceneName));
-    }
-
-    private IEnumerator LoadSceneRoutine(string sceneName)
-    {
-        if (fadeOverlay != null)
+        if (SceneLoader.Instance != null && !isTransitioning)  // Ensure no transition is active
         {
-            yield return StartCoroutine(FadeScreen(1f));
+            SceneLoader.Instance.LoadSceneWithFade(sceneName);
+            isTransitioning = true;  // Mark as transitioning when the scene load starts
         }
-        yield return new WaitForSeconds(buttonClickDelay);
-        SceneLoader.Instance.LoadScene(sceneName);
-    }
-
-    protected IEnumerator FadeScreen(float targetAlpha)
-    {
-        float startAlpha = fadeOverlay.alpha;
-        float elapsed = 0f;
-
-        while (elapsed < fadeDuration)
+        else
         {
-            fadeOverlay.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / fadeDuration);
-            elapsed += Time.deltaTime;
-            yield return null;
+            Debug.LogError("SceneLoader instance is null or transition is active!");
+            SceneManager.LoadScene(sceneName);
         }
-        fadeOverlay.alpha = targetAlpha;
     }
 
     protected virtual void Update()
     {
-        if (isTransitioning) return;
+        if (isTransitioning) return;  // Ignore input during transitions
         HandleKeyboardNavigation();
     }
 
     protected virtual void HandleKeyboardNavigation()
     {
-        // Use unscaledTime for pause menu compatibility
         if (Time.unscaledTime < lastInputTime + inputRepeatDelay) return;
 
         if (Input.GetKeyDown(upKey) || Input.GetKeyDown(downKey))
         {
-            // Force sound play even if repeating
             AudioManager.Instance.PlayButtonHover();
             lastInputTime = Time.unscaledTime;
 
@@ -100,26 +79,17 @@ public abstract class BaseMenuController : MonoBehaviour
         }
     }
 
-    protected virtual void Navigate(int direction)
-    {
-        AudioManager.Instance.PlayButtonHover();
-        StartCoroutine(TransitionToButton(currentIndex + direction));
-        lastInputTime = Time.time;
-    }
-
     protected virtual IEnumerator TransitionToButton(int newIndex)
     {
-        isTransitioning = true;
+        isTransitioning = true;  // Prevent any other transitions while one is ongoing
+
         newIndex = Mathf.Clamp(newIndex, 0, menuButtons.Length - 1);
 
-        // Deselect current button
         menuButtons[currentIndex].Deselect();
-
-        // Select new button
         menuButtons[newIndex].Select();
-
         currentIndex = newIndex;
-        isTransitioning = false;
+
+        isTransitioning = false;  // Enable transition again after it is finished
 
         yield return null;
     }

@@ -418,6 +418,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 100
+  _currentHealth: 0
+  bloodSplashPrefab: {fileID: 4501868321521990437, guid: 361828f1cec2e764e8d1417f686a9f47, type: 3}
   damageBlinkDuration: 0.1
   damageBlinkColor: {r: 1, g: 0, b: 0, a: 1}
   config: {fileID: 11400000, guid: 381bf157cb8e54749af0658368dc3e25, type: 2}
@@ -477,12 +479,13 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 381bf157cb8e54749af0658368dc3e25, type: 2}
   patrolSettings:
     enablePatrol: 1
-    patrolLeftBound: -3
-    patrolRightBound: 3
+    patrolLeftBound: -10
+    patrolRightBound: 10
     patrolSpeed: 1.5
     idleTimeAtEdges: 1
   maxChaseRangeFromBounds: 0
-  minDistanceFromPlayer: 0.5
+  minDistanceFromPlayer: 4
+  playerPositionCheckInterval: 0.2
 --- !u!1 &6225374632767969069
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,7 +522,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 20}
+  m_SizeDelta: {x: 90, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &517135442149503366
 MonoBehaviour:

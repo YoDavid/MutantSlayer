@@ -42,8 +42,6 @@ public class PauseMenuController : BaseMenuController
 
         SetVisible(false);
 
-        SceneLoader.Instance.LoadScene("Scene_MainMenu");
-
-        Debug.Log("MainMenu button pressed - Scene load initiated");
+        SceneLoader.Instance.LoadSceneWithFade("Scene_MainMenu");
     }
 }

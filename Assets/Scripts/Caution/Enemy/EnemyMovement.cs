@@ -26,6 +26,8 @@ public class EnemyMovement : MonoBehaviour
     public float maxChaseRangeFromBounds = 2f;
     [Tooltip("Minimum distance to maintain from player")]
     public float minDistanceFromPlayer = 0.5f;
+    [Tooltip("How often to check player position (seconds)")]
+    public float playerPositionCheckInterval = 0.2f; // New: Interval for position checks
 
     // Private variables
     private Rigidbody2D rb;
@@ -36,6 +38,7 @@ public class EnemyMovement : MonoBehaviour
     private float currentIdleTime;
     private bool isMovingRight = true;
     private bool isInCombat = false;
+    private float nextPositionCheckTime; // New: Timer for position checks
 
     // World-space boundary properties
     private float WorldPatrolLeft => spawnPosition.x + patrolSettings.patrolLeftBound;
@@ -59,22 +62,36 @@ public class EnemyMovement : MonoBehaviour
     {
         if (MovementLocked) return;
 
-        if (IsPlayerInDetectionRange() && IsPlayerWithinChaseBounds())
+        // Check player position at intervals
+        if (Time.time >= nextPositionCheckTime)
         {
-            isInCombat = true;
+            nextPositionCheckTime = Time.time + playerPositionCheckInterval;
+            UpdateCombatState();
+        }
+
+        if (isInCombat)
+        {
             MoveToTarget(player.position);
+        }
+        else if (patrolSettings.enablePatrol)
+        {
+            PatrolBehavior();
         }
         else
         {
-            isInCombat = false;
-            if (patrolSettings.enablePatrol)
-            {
-                PatrolBehavior();
-            }
-            else
-            {
-                StopMovement();
-            }
+            StopMovement();
+        }
+    }
+
+    private void UpdateCombatState()
+    {
+        bool wasInCombat = isInCombat;
+        isInCombat = IsPlayerInDetectionRange() && IsPlayerWithinChaseBounds();
+
+        // If just entered combat, immediately update facing
+        if (isInCombat && !wasInCombat)
+        {
+            UpdateFacingTowardsPlayer();
         }
     }
 
@@ -115,10 +132,11 @@ public class EnemyMovement : MonoBehaviour
         // Calculate distance to player
         float distanceToPlayer = Vector2.Distance(transform.position, targetPosition);
 
-        // If we're too close to the player, stop moving
+        // If we're too close to the player, stop moving but keep facing them
         if (distanceToPlayer <= minDistanceFromPlayer)
         {
             StopMovement();
+            UpdateFacingTowardsPlayer(); // Keep facing player even when not moving
             return;
         }
 
@@ -126,6 +144,12 @@ public class EnemyMovement : MonoBehaviour
         rb.velocity = direction * config.moveSpeed;
         UpdateSpriteFacing(direction);
         animator.SetBool("IsMoving", true);
+    }
+
+    private void UpdateFacingTowardsPlayer()
+    {
+        Vector2 directionToPlayer = (player.position - transform.position).normalized;
+        UpdateSpriteFacing(directionToPlayer);
     }
 
     public void StopMovement()
