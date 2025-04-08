@@ -5531,6 +5531,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: MediumEnemy_Worm_Holder
       objectReference: {fileID: 0}
+    - target: {fileID: 3190148712002356827, guid: daa08edc004a74c4db7550cbb414f660, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 194.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3190148712002356827, guid: daa08edc004a74c4db7550cbb414f660, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5515630186935372459, guid: daa08edc004a74c4db7550cbb414f660, type: 3}
+      propertyPath: m_SortingLayer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5515630186935372459, guid: daa08edc004a74c4db7550cbb414f660, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 568015659
+      objectReference: {fileID: 0}
+    - target: {fileID: 5597741193712879363, guid: daa08edc004a74c4db7550cbb414f660, type: 3}
+      propertyPath: bloodSplashPrefab
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15094,6 +15114,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 940601995675961421, guid: 0a0abe3cf031b084c9a3b5eabdcd3088, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 188.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 940601995675961421, guid: 0a0abe3cf031b084c9a3b5eabdcd3088, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 996393316932767764, guid: 0a0abe3cf031b084c9a3b5eabdcd3088, type: 3}
       propertyPath: m_LocalPosition.x
       value: -291.3
@@ -15137,6 +15165,18 @@ PrefabInstance:
     - target: {fileID: 5115027788374852257, guid: 0a0abe3cf031b084c9a3b5eabdcd3088, type: 3}
       propertyPath: m_Name
       value: SmallEnemy_EyeHands_Holder
+      objectReference: {fileID: 0}
+    - target: {fileID: 5446531244986750302, guid: 0a0abe3cf031b084c9a3b5eabdcd3088, type: 3}
+      propertyPath: bloodSplashPrefab
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6456177439351116058, guid: 0a0abe3cf031b084c9a3b5eabdcd3088, type: 3}
+      propertyPath: m_SortingLayer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6456177439351116058, guid: 0a0abe3cf031b084c9a3b5eabdcd3088, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 568015659
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -23343,11 +23383,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3850116916199796031, guid: 989fdf540c6a42747b16ebe4d3ad4488, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -104.6
+      value: -546.6
       objectReference: {fileID: 0}
     - target: {fileID: 3850116916199796031, guid: 989fdf540c6a42747b16ebe4d3ad4488, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 214.4
+      value: 206.3
       objectReference: {fileID: 0}
     - target: {fileID: 5774445196328097331, guid: 989fdf540c6a42747b16ebe4d3ad4488, type: 3}
       propertyPath: m_LocalPosition.x
