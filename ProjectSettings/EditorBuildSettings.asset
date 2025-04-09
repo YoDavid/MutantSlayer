@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Caution/Scenes_Dev/Scene_MainMenu.unity
+    path: Assets/David/Scenes/Scene_MainMenu.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Caution/Scenes_Dev/Scene_SlideShow.unity
+    path: Assets/David/Scenes/Scene_SlideShow.unity
     guid: 4c1f4f5832ad4814cb213887f89922a3
   - enabled: 1
-    path: Assets/Scenes/Caution/Scenes_Game/Scene_Game.unity
+    path: Assets/David/Scenes/Scene_Game.unity
     guid: 420c23eb31c1a4a40bea265a1b6fa622
   m_configObjects: {}
