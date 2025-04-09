@@ -4,28 +4,29 @@ using UnityEngine;
 
 public class BackgroundController : MonoBehaviour
 {
-    private float startPos, length;
     public GameObject cam;
-    public float parallaxEffect;
+    private float startPosX, startPosY , length;
+    public float parallaxEffectX, parallaxEffectY;
 
     private void Start()
     {
-        startPos = transform.position.x;
+        startPosX = transform.position.x;
         length = GetComponent<SpriteRenderer>().bounds.size.x;
     }
     private void FixedUpdate()
     {
-        float distance = cam.transform.position.x * parallaxEffect;
-        float movement = cam.transform.position.x * (1 - parallaxEffect);
-
-        transform.position = new Vector3(startPos + distance, transform.position.y, transform.position.z);
-        if (movement > startPos + length)
+        float distance = cam.transform.position.x * parallaxEffectX;
+        float distanceY = cam.transform.position.y * parallaxEffectY;
+        transform.position = new Vector3(startPosX + distance, startPosY + distanceY, transform.position.z);
+        
+        float movement = cam.transform.position.x * (1 - parallaxEffectX);
+        if (movement > startPosX + length)
         {
-            startPos += length;
+            startPosX += length;
         }
-        else if (movement < startPos - length)
+        else if (movement < startPosX - length)
         {
-            startPos -= length;
+            startPosX -= length;
         }
     }
 }
