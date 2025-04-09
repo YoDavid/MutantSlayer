@@ -5,10 +5,10 @@ public class HealthSystem : MonoBehaviour
 {
     [Header("Health Settings")]
     [SerializeField] protected int _maxHealth = 100;
-    [SerializeField] protected int _currentHealth; 
+    [SerializeField] protected int _currentHealth;
 
     [Header("Death Effects")]
-    [SerializeField] private GameObject bloodSplashPrefab;
+    [SerializeField] private GameObject bloodSplashPrefab;  // Keep here
 
     public int MaxHealth
     {
@@ -56,7 +56,6 @@ public class HealthSystem : MonoBehaviour
 
     protected virtual void Die()
     {
-      
         Instantiate(bloodSplashPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
         OnDeath?.Invoke();

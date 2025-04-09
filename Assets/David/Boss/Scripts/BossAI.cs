@@ -14,9 +14,9 @@ public class BossAI : MonoBehaviour
     public bool isFacingLeft;
 
     [Header("Attack Range Definitions")]
-    public float attackRange; // Melee attack range
-    [SerializeField] private float rangedAttackRange; // Ranged attack range
-    [SerializeField] private float aoeAttackRange; // AOE attack range
+    public float attackRange; 
+    [SerializeField] private float rangedAttackRange;
+    [SerializeField] private float aoeAttackRange; 
     [SerializeField] private float walkingRange;
     [SerializeField] private float jumpingAttackRange;
 
