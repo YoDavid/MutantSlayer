@@ -9,14 +9,26 @@ public class CameraDeadZoneFollow : MonoBehaviour
     [SerializeField] private float cameraZPosition = -10f;
 
     [Header("Dead Zone Settings")]
+    [Tooltip("Size of the dead zone where player can move without camera following")]
     public Vector2 boundsSize = new Vector2(20f, 10f);
 
     [Header("Behavior Settings")]
+    [Tooltip("Time before camera starts centering on idle player")]
     [SerializeField] private float idleCenterTime = 2f;
+    [Tooltip("Initial speed when starting to center on player")]
     [SerializeField] private float initialCenterSpeed = 2f;
+    [Tooltip("Maximum speed when centering on player")]
     [SerializeField] private float maxCenterSpeed = 5f;
+    [Tooltip("How quickly centering speed increases")]
     [SerializeField] private float speedIncreaseRate = 0.5f;
+    [Tooltip("Speed when centering due to enemies")]
     [SerializeField] private float enemyCenterSpeed = 5f;
+
+    [Header("Teleport Detection")]
+    [Tooltip("Minimum distance to consider movement a teleport")]
+    [SerializeField] private float teleportDistanceThreshold = 5f;
+    [Tooltip("Maximum time window to detect teleport movement")]
+    [SerializeField] private float teleportTimeThreshold = 0.5f;
 
     [Header("Component References")]
     [SerializeField] private CameraShake cameraShake;
@@ -30,6 +42,8 @@ public class CameraDeadZoneFollow : MonoBehaviour
     private float currentCenterSpeed;
     private float idleTimer;
     private bool isIdle;
+    private float movementTimer;
+    private Vector3 previousPlayerPosition;
 
     private void Awake()
     {
@@ -62,7 +76,9 @@ public class CameraDeadZoneFollow : MonoBehaviour
         if (proximityZoom == null) proximityZoom = GetComponent<EnemyProximityZoom>();
 
         lastPlayerPosition = player.position;
+        previousPlayerPosition = player.position;
         currentCenterSpeed = initialCenterSpeed;
+        movementTimer = 0f;
         transform.position = new Vector3(player.position.x, player.position.y, cameraZPosition);
     }
 
@@ -70,7 +86,31 @@ public class CameraDeadZoneFollow : MonoBehaviour
     {
         if (player == null) return;
 
+        HandleTeleportDetection();
         HandleCameraMovement();
+    }
+
+    private void HandleTeleportDetection()
+    {
+        movementTimer += Time.deltaTime;
+
+        float distanceMoved = Vector3.Distance(player.position, previousPlayerPosition);
+        if (distanceMoved > teleportDistanceThreshold && movementTimer < teleportTimeThreshold)
+        {
+            CenterOnPlayerImmediately();
+            ResetTeleportDetection();
+        }
+
+        if (movementTimer >= teleportTimeThreshold)
+        {
+            ResetTeleportDetection();
+        }
+    }
+
+    private void ResetTeleportDetection()
+    {
+        movementTimer = 0f;
+        previousPlayerPosition = player.position;
     }
 
     private void HandleCameraMovement()
@@ -86,7 +126,6 @@ public class CameraDeadZoneFollow : MonoBehaviour
 
     private void CenterOnPlayerImmediately()
     {
-        // Only modify X position (let EnemyProximityZoom handle Y)
         Vector3 target = new Vector3(
             player.position.x,
             transform.position.y, // Keep current Y (controlled by EnemyProximityZoom)
@@ -104,15 +143,14 @@ public class CameraDeadZoneFollow : MonoBehaviour
     private void ApplyDeadZoneBehavior()
     {
         Vector3 camPos = transform.position;
-        Vector3 minBounds = new Vector3(camPos.x - boundsSize.x / 2, -Mathf.Infinity, camPos.z); // No Y bounds
-        Vector3 maxBounds = new Vector3(camPos.x + boundsSize.x / 2, Mathf.Infinity, camPos.z); // No Y bounds
+        Vector3 minBounds = new Vector3(camPos.x - boundsSize.x / 2, -Mathf.Infinity, camPos.z);
+        Vector3 maxBounds = new Vector3(camPos.x + boundsSize.x / 2, Mathf.Infinity, camPos.z);
 
         UpdateIdleState();
 
         float newX = camPos.x;
         Vector3 playerDelta = player.position - lastPlayerPosition;
 
-        // Only check X-axis bounds (ignore Y)
         if (player.position.x < minBounds.x || player.position.x > maxBounds.x)
             newX += playerDelta.x;
 
@@ -129,7 +167,6 @@ public class CameraDeadZoneFollow : MonoBehaviour
             );
         }
 
-        // Apply only X movement (Y remains controlled by EnemyProximityZoom)
         transform.position = new Vector3(newX, transform.position.y, cameraZPosition);
         lastPlayerPosition = player.position;
     }
