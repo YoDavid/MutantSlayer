@@ -1205,8 +1205,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 568015659
+  m_SortingLayer: 7
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: f848983238a91d4458e8427f1103e2d0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1415,4 +1415,5 @@ MonoBehaviour:
   blinkDuration: 0.1
   blinkCount: 3
   popupOffset: {x: 0, y: -1.5, z: 0}
+  bloodSplashPrefab: {fileID: 4501868321521990437, guid: 361828f1cec2e764e8d1417f686a9f47, type: 3}
   currentHealth: 0

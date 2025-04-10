@@ -719,6 +719,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 100
+  _currentHealth: 0
+  bloodSplashPrefab: {fileID: 4501868321521990437, guid: 361828f1cec2e764e8d1417f686a9f47, type: 3}
   damageBlinkDuration: 0.1
   damageBlinkColor: {r: 1, g: 0, b: 0, a: 1}
   config: {fileID: 11400000, guid: e4e06320e66f69a4082b02d80ba8fee1, type: 2}
@@ -745,6 +747,7 @@ MonoBehaviour:
     idleTimeAtEdges: 1
   maxChaseRangeFromBounds: 2
   minDistanceFromPlayer: 0.5
+  playerPositionCheckInterval: 0.2
 --- !u!1 &7265441888880981570
 GameObject:
   m_ObjectHideFlags: 0
