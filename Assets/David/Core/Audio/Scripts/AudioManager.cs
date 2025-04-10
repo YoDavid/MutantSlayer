@@ -12,20 +12,34 @@ public class AudioManager : MonoBehaviour
         public string name;
         public AudioClip clip;
         [Range(0f, 1f)] public float volume = 1f;
+        [Range(0.1f, 3f)] public float pitch = 1f;
+    }
+
+    [System.Serializable]
+    public class AudioCategory
+    {
+        public string name;
+        public AudioSource source;
+        public List<Sound> sounds = new List<Sound>();
+        [HideInInspector] public Dictionary<string, Sound> soundDict;
     }
 
     [Header("Audio Sources")]
-    [SerializeField] private AudioSource sfxSource;
+    [SerializeField]
+    private AudioCategory[] categories = {
+        new AudioCategory { name = "UI" },
+        new AudioCategory { name = "Environment" },
+        new AudioCategory { name = "Player" },
+        new AudioCategory { name = "Enemies" },
+        new AudioCategory { name = "Boss" }
+    };
+
+    [Header("Music")]
     [SerializeField] private AudioSource musicSource;
-
-    [Header("Sound Libraries")]
-    [SerializeField] private List<Sound> sfxLibrary = new List<Sound>();
-    [SerializeField] private List<Sound> musicLibrary = new List<Sound>();
-
-    private Dictionary<string, AudioClip> sfxLookup = new Dictionary<string, AudioClip>();
-    private Dictionary<string, Sound> musicLookup = new Dictionary<string, Sound>();
+    [SerializeField] private List<Sound> musicTracks = new List<Sound>();
+    private Dictionary<string, Sound> musicDict = new Dictionary<string, Sound>();
     private string currentMusic;
-    private float fadeDuration = 1.5f;
+    private const float musicFadeDuration = 1.5f;
 
     private void Awake()
     {
@@ -33,7 +47,7 @@ public class AudioManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            InitializeDictionaries();
+            InitializeAudioSystem();
         }
         else
         {
@@ -41,27 +55,65 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private void InitializeDictionaries()
+    private void InitializeAudioSystem()
     {
-        sfxLookup.Clear();
-        foreach (var sound in sfxLibrary)
+        // Initialize music
+        foreach (var track in musicTracks)
         {
-            if (!sfxLookup.ContainsKey(sound.name))
-                sfxLookup.Add(sound.name, sound.clip);
+            if (!musicDict.ContainsKey(track.name))
+            {
+                musicDict.Add(track.name, track);
+            }
         }
 
-        // Music initialization
-        musicLookup.Clear();
-        foreach (var track in musicLibrary)
+        // Initialize SFX categories
+        foreach (var category in categories)
         {
-            if (!musicLookup.ContainsKey(track.name))
-                musicLookup.Add(track.name, track);
+            category.soundDict = new Dictionary<string, Sound>();
+            foreach (var sound in category.sounds)
+            {
+                if (!category.soundDict.ContainsKey(sound.name))
+                {
+                    category.soundDict.Add(sound.name, sound);
+                }
+            }
+        }
+    }
+
+    public void PlaySFX(string categoryName, string soundName, float volumeMultiplier = 1f, float pitchMultiplier = 1f)
+    {
+        foreach (var category in categories)
+        {
+            if (category.name == categoryName)
+            {
+                if (category.soundDict.TryGetValue(soundName, out Sound sound))
+                {
+                    category.source.pitch = sound.pitch * pitchMultiplier;
+                    category.source.PlayOneShot(sound.clip, sound.volume * volumeMultiplier);
+                    return;
+                }
+                Debug.LogWarning($"Sound '{soundName}' not found in category '{categoryName}'");
+                return;
+            }
+        }
+        Debug.LogWarning($"Category '{categoryName}' not found!");
+    }
+
+    public void StopCategory(string categoryName)
+    {
+        foreach (var category in categories)
+        {
+            if (category.name == categoryName)
+            {
+                category.source.Stop();
+                return;
+            }
         }
     }
 
     public void PlayMusic(string trackName, bool forceRestart = false)
     {
-        if (musicLookup.TryGetValue(trackName, out Sound track))
+        if (musicDict.TryGetValue(trackName, out Sound track))
         {
             if (!forceRestart && currentMusic == trackName) return;
 
@@ -72,33 +124,34 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator FadeMusic(Sound newTrack)
     {
+        // Fade out current track
         float startVolume = musicSource.volume;
         float elapsed = 0f;
 
-        // Fade out current music
-        while (elapsed < fadeDuration)
+        while (elapsed < musicFadeDuration)
         {
-            musicSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / fadeDuration);
+            musicSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / musicFadeDuration);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         // Switch track
         musicSource.clip = newTrack.clip;
+        musicSource.volume = 0f;
         musicSource.loop = true;
         musicSource.Play();
 
-        // Fade in new music
+        // Fade in new track
         elapsed = 0f;
-        while (elapsed < fadeDuration)
+        while (elapsed < musicFadeDuration)
         {
-            musicSource.volume = Mathf.Lerp(0f, newTrack.volume, elapsed / fadeDuration);
+            musicSource.volume = Mathf.Lerp(0f, newTrack.volume, elapsed / musicFadeDuration);
             elapsed += Time.deltaTime;
             yield return null;
         }
     }
 
-    public void UpdateMusicByLocation(float xPosition)
+    public void UpdateMusicByPosition(float xPosition)
     {
         string trackName = xPosition switch
         {
@@ -118,23 +171,11 @@ public class AudioManager : MonoBehaviour
 
     public void StopMusic()
     {
-        StartCoroutine(FadeOutMusic());
-    }
-
-    private IEnumerator FadeOutMusic()
-    {
-        float startVolume = musicSource.volume;
-        float elapsed = 0f;
-
-        while (elapsed < fadeDuration)
+        if (musicSource.isPlaying)
         {
-            musicSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / fadeDuration);
-            elapsed += Time.deltaTime;
-            yield return null;
+            musicSource.Stop();
+            currentMusic = null;
         }
-
-        musicSource.Stop();
-        musicSource.volume = 1f;
     }
 
     public void SetMusicVolume(float volume)
@@ -142,18 +183,22 @@ public class AudioManager : MonoBehaviour
         musicSource.volume = Mathf.Clamp(volume, 0f, 1f);
     }
 
-    // SFX methods remain unchanged
-    public void PlaySFX(string soundName, float volume = 1f)
+    public void SetCategoryVolume(string categoryName, float volume)
     {
-        if (sfxLookup.TryGetValue(soundName, out AudioClip clip))
+        foreach (var category in categories)
         {
-            sfxSource.PlayOneShot(clip, volume);
+            if (category.name == categoryName)
+            {
+                category.source.volume = Mathf.Clamp(volume, 0f, 1f);
+                return;
+            }
         }
     }
 
-    public void PlayButtonClick() => PlaySFX("button_click");
-    public void PlayButtonHover() => PlaySFX("button_hover");
-    public void PlaySlideTransition() => PlaySFX("slide_transition");
-    public void PlayMenuOpen() => PlaySFX("menu_open");
-    public void PlayMenuClose() => PlaySFX("menu_close");
+
+    public void PlayButtonClick() => PlaySFX("UI", "button_click");
+    public void PlayButtonHover() => PlaySFX("UI", "button_hover");
+    public void PlaySlideTransition() => PlaySFX("UI", "slide_transition");
+    public void PlayMenuOpen() => PlaySFX("UI", "menu_open");
+    public void PlayMenuClose() => PlaySFX("UI", "menu_close");
 }

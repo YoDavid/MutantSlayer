@@ -36,7 +36,7 @@ public class PauseMenuController : BaseMenuController
 
     public void OnMainMenuPressed()
     {
-        AudioManager.Instance.PlayButtonClick();
+        //AudioManager.Instance.PlayButtonClick();
 
         Time.timeScale = 1f;
 
