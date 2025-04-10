@@ -151,6 +151,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: MediumEnemy_Worm_Holder (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: maxChaseRangeFromBounds
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: patrolSettings.patrolLeftBound
+      value: -40.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: patrolSettings.patrolRightBound
+      value: 18.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalPosition.x
       value: 947.6101
@@ -190,6 +202,10 @@ PrefabInstance:
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208359173995624287, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -417,6 +433,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: MediumEnemy_Worm_Holder (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: maxChaseRangeFromBounds
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: patrolSettings.patrolRightBound
+      value: 46.3
+      objectReference: {fileID: 0}
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalPosition.x
       value: 919.5199
@@ -456,6 +480,10 @@ PrefabInstance:
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208359173995624287, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.67
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -614,7 +642,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: maxChaseRangeFromBounds
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolSpeed
@@ -622,11 +650,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolLeftBound
-      value: -11
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolRightBound
-      value: 11
+      value: 75.8
       objectReference: {fileID: 0}
     - target: {fileID: 2848325300631737720, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -650,7 +678,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -213.5
+      value: -214.27
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -747,11 +775,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6021447871000286383, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2145
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6021447871000286383, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -432
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6163233028793770750, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_SortingLayer
@@ -882,7 +910,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: maxChaseRangeFromBounds
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolSpeed
@@ -890,11 +918,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolLeftBound
-      value: -11
+      value: -79.2
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolRightBound
-      value: 11
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2848325300631737720, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -914,11 +942,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 980.1
+      value: 975.17
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -213.5
+      value: -214.29
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1120,6 +1148,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: MediumEnemy_Worm_Holder
       objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: maxChaseRangeFromBounds
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: patrolSettings.patrolLeftBound
+      value: -18.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: patrolSettings.patrolRightBound
+      value: 19.7
+      objectReference: {fileID: 0}
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalPosition.x
       value: 230.43552
@@ -1159,6 +1199,10 @@ PrefabInstance:
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208359173995624287, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.45
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1246,7 +1290,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: maxChaseRangeFromBounds
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolSpeed
@@ -1254,11 +1298,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolLeftBound
-      value: -11
+      value: -60
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolRightBound
-      value: 11
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2848325300631737720, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1532,7 +1576,7 @@ Transform:
   m_GameObject: {fileID: 646856362}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -401.5, y: -110.2, z: 0}
+  m_LocalPosition: {x: -564.57, y: -113.51, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1715,7 +1759,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: maxChaseRangeFromBounds
-      value: 1
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolSpeed
@@ -1723,11 +1767,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolLeftBound
-      value: -11
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolRightBound
-      value: 11
+      value: 46.77
       objectReference: {fileID: 0}
     - target: {fileID: 2848325300631737720, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1736,6 +1780,10 @@ PrefabInstance:
     - target: {fileID: 2848325300631737720, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3016576325088695008, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.79
       objectReference: {fileID: 0}
     - target: {fileID: 3248375310025752595, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_SortingLayer
@@ -2152,7 +2200,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -107.7
+      value: -108.6
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2339,7 +2387,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: maxChaseRangeFromBounds
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolSpeed
@@ -2347,11 +2395,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolLeftBound
-      value: -11
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolRightBound
-      value: 11
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2848325300631737720, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2360,6 +2408,14 @@ PrefabInstance:
     - target: {fileID: 2848325300631737720, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3016576325088695008, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 3016576325088695008, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.01
       objectReference: {fileID: 0}
     - target: {fileID: 3248375310025752595, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_SortingLayer
@@ -2677,7 +2733,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: maxChaseRangeFromBounds
-      value: 1
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolSpeed
@@ -2685,11 +2741,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolLeftBound
-      value: -11
+      value: -6
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolRightBound
-      value: 11
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2848325300631737720, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2698,6 +2754,10 @@ PrefabInstance:
     - target: {fileID: 2848325300631737720, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3016576325088695008, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.76
       objectReference: {fileID: 0}
     - target: {fileID: 3248375310025752595, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_SortingLayer
@@ -2713,7 +2773,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -225.1
+      value: -226.36
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3162,13 +3222,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: MediumEnemy_Worm_Holder (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: maxChaseRangeFromBounds
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: patrolSettings.patrolLeftBound
+      value: -8.52
+      objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: patrolSettings.patrolRightBound
+      value: 18.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalPosition.x
       value: 301.6068
       objectReference: {fileID: 0}
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -144.7365
+      value: -145.4
       objectReference: {fileID: 0}
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3462,13 +3534,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: MediumEnemy_Worm_Holder (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: maxChaseRangeFromBounds
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: patrolSettings.patrolLeftBound
+      value: -65.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7349595776294256227, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: patrolSettings.patrolRightBound
+      value: 6.4
+      objectReference: {fileID: 0}
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalPosition.x
       value: 968.5471
       objectReference: {fileID: 0}
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -260.12012
+      value: -261.07
       objectReference: {fileID: 0}
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3501,6 +3585,10 @@ PrefabInstance:
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9208359173995624287, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4142,6 +4230,10 @@ PrefabInstance:
     - target: {fileID: 3409681107119742651, guid: 77b3e776f82b6a94ebc6d60c2eb5d140, type: 3}
       propertyPath: m_Name
       value: LevelContainers
+      objectReference: {fileID: 0}
+    - target: {fileID: 3409681107119742651, guid: 77b3e776f82b6a94ebc6d60c2eb5d140, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3541795668713476958, guid: 77b3e776f82b6a94ebc6d60c2eb5d140, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4863,6 +4955,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9183092018340770042, guid: 77b3e776f82b6a94ebc6d60c2eb5d140, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 3108161763189088771, guid: 77b3e776f82b6a94ebc6d60c2eb5d140, type: 3}
@@ -4998,7 +5094,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: maxChaseRangeFromBounds
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolSpeed
@@ -5006,11 +5102,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolLeftBound
-      value: -11
+      value: -7.79
       objectReference: {fileID: 0}
     - target: {fileID: 2470467694308827178, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: patrolSettings.patrolRightBound
-      value: 11
+      value: 5.16
       objectReference: {fileID: 0}
     - target: {fileID: 2848325300631737720, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -5030,11 +5126,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1106.1
+      value: 1113.97
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -298.9
+      value: -299.31
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.z
