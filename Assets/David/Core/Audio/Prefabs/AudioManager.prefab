@@ -716,11 +716,15 @@ MonoBehaviour:
     sounds:
     - name: blood_particles_death_sound
       clip: {fileID: 8300000, guid: a9084681bd042ab4699afe08172862f0, type: 3}
-      volume: 0.5
+      volume: 0.4
       pitch: 1
   - name: Player
     source: {fileID: 743618483834653189}
-    sounds: []
+    sounds:
+    - name: take_hit
+      clip: {fileID: 8300000, guid: 626523139f0f25b4b9b32f194695504b, type: 3}
+      volume: 1
+      pitch: 1
   - name: Enemies
     source: {fileID: 4473733131193264158}
     sounds: []

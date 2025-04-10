@@ -209,14 +209,17 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-
+    //                UI 
     public void PlayButtonClick() => PlaySFX("UI", "button_click");
     public void PlayButtonHover() => PlaySFX("UI", "button_hover");
     public void PlaySlideTransition() => PlaySFX("UI", "slide_transition");
     public void PlayMenuOpen() => PlaySFX("UI", "menu_open");
     public void PlayMenuClose() => PlaySFX("UI", "menu_close");
 
-
+    //               Environment
     public void PlayBloodParticlesDeathSound() => PlaySFX("Environment", "blood_particles_death_sound");
+
+    //               Player
+    public void PlayPlayerTakeHit() => PlaySFX("Player", "take_hit");
 
 }
