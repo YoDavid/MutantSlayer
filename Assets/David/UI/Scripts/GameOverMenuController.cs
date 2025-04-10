@@ -65,9 +65,10 @@ public class GameOverMenuController : BaseMenuController
 
     private IEnumerator GameOverSequence()
     {
-        // Fade in the panel
+        // Make sure the fadeInPanel is active
         if (fadeInPanel != null)
         {
+            fadeInPanel.gameObject.SetActive(true); // Make it active before fading
             yield return StartCoroutine(FadePanel(0f, 1f, panelFadeDuration));
         }
 
@@ -89,6 +90,7 @@ public class GameOverMenuController : BaseMenuController
 
         SetVisible(true);
     }
+
 
     private IEnumerator FadePanel(float startAlpha, float endAlpha, float duration)
     {

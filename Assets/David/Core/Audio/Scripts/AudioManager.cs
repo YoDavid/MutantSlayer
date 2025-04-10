@@ -24,6 +24,9 @@ public class AudioManager : MonoBehaviour
         [HideInInspector] public Dictionary<string, Sound> soundDict;
     }
 
+    [SerializeField] private float musicFadeDuration = 0.5f;
+
+
     [Header("Audio Sources")]
     [SerializeField]
     private AudioCategory[] categories = {
@@ -39,7 +42,6 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private List<Sound> musicTracks = new List<Sound>();
     private Dictionary<string, Sound> musicDict = new Dictionary<string, Sound>();
     private string currentMusic;
-    private const float musicFadeDuration = 1.5f;
 
     private void Awake()
     {
@@ -88,15 +90,22 @@ public class AudioManager : MonoBehaviour
             {
                 if (category.soundDict.TryGetValue(soundName, out Sound sound))
                 {
+
+                    // Log the volume being played for this sound
+                    float effectiveVolume = sound.volume * volumeMultiplier;
+
+                    // Immediately play the sound
+                    category.source.PlayOneShot(sound.clip, effectiveVolume);
                     category.source.pitch = sound.pitch * pitchMultiplier;
-                    category.source.PlayOneShot(sound.clip, sound.volume * volumeMultiplier);
                     return;
                 }
-                Debug.LogWarning($"Sound '{soundName}' not found in category '{categoryName}'");
+                else
+                {
+                    Debug.LogWarning($"Sound '{soundName}' not found in category '{categoryName}'");
+                }
                 return;
             }
         }
-        Debug.LogWarning($"Category '{categoryName}' not found!");
     }
 
     public void StopCategory(string categoryName)
@@ -124,7 +133,7 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator FadeMusic(Sound newTrack)
     {
-        // Fade out current track
+
         float startVolume = musicSource.volume;
         float elapsed = 0f;
 
@@ -135,21 +144,26 @@ public class AudioManager : MonoBehaviour
             yield return null;
         }
 
-        // Switch track
-        musicSource.clip = newTrack.clip;
         musicSource.volume = 0f;
+
+        musicSource.clip = newTrack.clip;
         musicSource.loop = true;
         musicSource.Play();
 
-        // Fade in new track
+
         elapsed = 0f;
+
         while (elapsed < musicFadeDuration)
         {
             musicSource.volume = Mathf.Lerp(0f, newTrack.volume, elapsed / musicFadeDuration);
             elapsed += Time.deltaTime;
             yield return null;
         }
+
+        musicSource.volume = newTrack.volume;
     }
+
+
 
     public void UpdateMusicByPosition(float xPosition)
     {
@@ -201,4 +215,8 @@ public class AudioManager : MonoBehaviour
     public void PlaySlideTransition() => PlaySFX("UI", "slide_transition");
     public void PlayMenuOpen() => PlaySFX("UI", "menu_open");
     public void PlayMenuClose() => PlaySFX("UI", "menu_close");
+
+
+    public void PlayBloodParticlesDeathSound() => PlaySFX("Environment", "blood_particles_death_sound");
+
 }

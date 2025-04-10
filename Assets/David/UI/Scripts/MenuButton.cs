@@ -28,6 +28,11 @@ public class MenuButton : MonoBehaviour,  ISelectHandler,  IDeselectHandler, IPo
 
     public void Select(bool fromEventSystem = false)
     {
+        if (targetImage == null)
+        {
+            Debug.LogError($"[MenuButton] targetImage is null on {gameObject.name} during Select().");
+        }
+
         if (_isSelected) return;
 
         _isSelected = true;

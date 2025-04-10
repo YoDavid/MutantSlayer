@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
 
         SetHUDVisible(true);
         if (gameOverMenu != null) gameOverMenu.gameObject.SetActive(false);
+        playerHealth = FindAnyObjectByType<PlayerHealth>();
     }
 
     private void Start()

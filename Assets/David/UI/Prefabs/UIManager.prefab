@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1086494973077991567}
   - component: {fileID: 1074782708849858664}
   - component: {fileID: 5515223087459916027}
+  - component: {fileID: 5503047388229596887}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -27,15 +28,15 @@ RectTransform:
   m_GameObject: {fileID: 206193581427607833}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5.1056385, y: 5.1056385, z: 5.1056385}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5030791610735788333}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 3.053, y: -7.625}
+  m_SizeDelta: {x: 303.85, y: 128.63}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1074782708849858664
 CanvasRenderer:
@@ -58,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -75,6 +76,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &5503047388229596887
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 206193581427607833}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &302583074786419726
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,7 +344,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -75}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &358504965374541688
@@ -1409,7 +1422,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5030791610735788333
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1451,9 +1464,7 @@ MonoBehaviour:
   menuButtons:
   - {fileID: 3179446047189225585}
   - {fileID: 2670871211811476059}
-  buttonClickDelay: 0.3
-  fadeOverlay: {fileID: 5245181443263121811, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
-  fadeDuration: 0.5
+  timeSlowDuration: 1.5
   fadeOutDuration: 1
   delayBeforeTextAnimation: 0.5
   textFadeInDuration: 1
@@ -1461,9 +1472,11 @@ MonoBehaviour:
   minScale: 0.5
   maxScale: 1.2
   delayAfterTextAnimation: 0.5
+  panelFadeDuration: 1
   youDiedTextCanvasGroup: {fileID: 8718005387496665273}
   youDiedTextTransform: {fileID: 3009965751678881060}
-  buttonsParent: {fileID: 0}
+  buttonsParent: {fileID: 356259107323380178}
+  fadeInPanel: {fileID: 5503047388229596887}
 --- !u!1 &3274793186069623585
 GameObject:
   m_ObjectHideFlags: 0
@@ -1600,9 +1613,6 @@ MonoBehaviour:
   - {fileID: 5080520340669581294}
   - {fileID: 3259151881313104043}
   - {fileID: 262660834366222519}
-  buttonClickDelay: 0.3
-  fadeOverlay: {fileID: 5245181443263121811, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
-  fadeDuration: 0.5
   optionsMenu: {fileID: 0}
   pauseTimeScale: 0
 --- !u!1 &3951853209361579336
