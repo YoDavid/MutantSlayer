@@ -220,6 +220,6 @@ public class AudioManager : MonoBehaviour
     public void PlayBloodParticlesDeathSound() => PlaySFX("Environment", "blood_particles_death_sound");
 
     //               Player
-    public void PlayPlayerTakeHit() => PlaySFX("Player", "take_hit");
+    public void PlayPlayerTakeHit() => PlaySFX("Player", "take_hit");   // make random takehit sounds 
 
 }
