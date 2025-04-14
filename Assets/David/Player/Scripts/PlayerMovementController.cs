@@ -183,6 +183,7 @@ public class PlayerMovementController : MonoBehaviour
     private void CheckIfGrounded()
     {
         isGrounded = Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckDistance, groundLayer);
+        playerAnimationController.SetGroundedState(isGrounded);
     }
 
     private void OnDrawGizmos()

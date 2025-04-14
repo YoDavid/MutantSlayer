@@ -28,13 +28,32 @@ public class PlayerHealth : HealthSystem
         base.TakeDamage(damage, isCritical);
 
         playerAnimation.TriggerTakenHit();
-        AudioManager.Instance.PlayPlayerTakeHit();   // Adjust to random takhit sound
+        PlayRandomTakeHitSound(); // <-- Random sound here
         DamagePopUp.Instance?.CreateDamageText(
             damage, transform.position + Vector3.up * 1.8f,
             isPlayer: true, isBoss: false, isCritical);
 
         StartCoroutine(InvulnerabilityFrame());
     }
+
+    private void PlayRandomTakeHitSound()
+    {
+        int rand = Random.Range(1, 4);
+        switch (rand)
+        {
+            case 1:
+                AudioManager.Instance.PlayPlayer_TakeHit01();
+                break;
+            case 2:
+                AudioManager.Instance.PlayPlayer_TakeHit02();
+                break;
+            case 3:
+                AudioManager.Instance.PlayPlayer_TakeHit03();
+                break;
+        }
+    }
+
+
 
     private IEnumerator InvulnerabilityFrame()
     {
