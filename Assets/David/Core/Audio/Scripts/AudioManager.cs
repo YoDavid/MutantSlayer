@@ -163,8 +163,6 @@ public class AudioManager : MonoBehaviour
         musicSource.volume = newTrack.volume;
     }
 
-
-
     public void UpdateMusicByPosition(float xPosition)
     {
         string trackName = xPosition switch
@@ -220,6 +218,23 @@ public class AudioManager : MonoBehaviour
     public void PlayBloodParticlesDeathSound() => PlaySFX("Environment", "blood_particles_death_sound");
 
     //               Player
-    public void PlayPlayerTakeHit() => PlaySFX("Player", "take_hit");   // make random takehit sounds 
+    public void PlayPlayer_TakeHit01() => PlaySFX("Player", "take_hit_01");   // make random takehit sounds 
+    public void PlayPlayer_TakeHit02() => PlaySFX("Player", "take_hit_02");   // make random takehit sounds 
+    public void PlayPlayer_TakeHit03() => PlaySFX("Player", "take_hit_03");   // make random takehit sounds 
+
+
+    public void PlaySlash_Hit01() => PlaySFX("Player", "slash_hit_01");   
+    public void PlaySlash_Hit02() => PlaySFX("Player", "slash_hit_02");   
+    public void PlaySlash_Hit03() => PlaySFX("Player", "slash_hit_03");   
+    public void PlaySlash_Hit04() => PlaySFX("Player", "slash_hit_04");   
+
+    //               Enemies
+    public void PlayMediumEnemyScream() => PlaySFX("Enemies", "scream_medium_enemy");
+    public void PlayMediumEnemyLastScream() => PlaySFX("Enemies", "last_scream_medium_enemy");
+    public void PlayMediumEnemyTakeHit() => PlaySFX("Enemies", "takehit_medium_enemy");
+
+    public void PlaySmallEnemyScream() => PlaySFX("Enemies", "scream_small_enemy");
+    public void PlaySmallEnemyTakeHit() => PlaySFX("Enemies", "takehit_small_enemy");
+    public void PlaySmallEnemyLastScream() => PlaySFX("Enemies", "last_scream_small_enemy");
 
 }

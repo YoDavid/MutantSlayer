@@ -173,6 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageConfig: {fileID: 11400000, guid: cde08a794acf3c64e8b3a4d85f8e6165, type: 2}
   hitCooldown: 0.3
+  hitParticlePrefab: {fileID: 7083328916205589662, guid: 5c10bf981bb4654419448c8c69696181, type: 3}
 --- !u!1 &7253434483809274145
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,7 +549,7 @@ MonoBehaviour:
   attackDurations:
   - 0.3
   - 0.35
-  - 0.3
+  - 0.4
   requireGrounded: 1
   cancelAttackIfAirborne: 1
   colliderOffsets:

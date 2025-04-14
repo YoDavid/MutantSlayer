@@ -14,10 +14,10 @@ public class EnemyConfig : ScriptableObject
     public float attackRange = 1.5f;
 
     [Tooltip("Minimum time between attacks.")]
-    public float minAttackCooldown = 1f;
+    public float minAttackCooldown = 3f;
 
     [Tooltip("Maximum time between attacks.")]
-    public float maxAttackCooldown = 3f;
+    public float maxAttackCooldown = 5f;
 
     public float attackDelay = 0.3f;
     public float colliderActiveDuration = 0.15f;
@@ -49,7 +49,6 @@ public class EnemyConfig : ScriptableObject
     public float knockbackForce = 5f;
     public Vector2 knockbackDirection = new Vector2(1f, 0.3f);
 
-    // Call this when you want a new randomized cooldown
     public float GetRandomAttackCooldown()
     {
         return Random.Range(minAttackCooldown, maxAttackCooldown);

@@ -9,6 +9,14 @@ public class EnemyAI : MonoBehaviour
     private EnemyCombat combat;
     private EnemyHealth health;
 
+    private AudioManager audioManager;
+
+    // --- New variables exposed to inspector ---
+    [SerializeField] private float screamDistanceThreshold = 6f;
+    [SerializeField] private float screamCooldownDuration = 15f; 
+    private float lastScreamTime = -15f;
+
+    [SerializeField] private Transform playerTransform;
 
     private void Awake()
     {
@@ -18,11 +26,19 @@ public class EnemyAI : MonoBehaviour
 
         health.OnDeath += HandleEnemyDeath;
         currentState = EnemyBehaviorState.Idle;
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null) playerTransform = player.transform;
+
+        GameObject audioObj = GameObject.Find("AudioManager");
+        if (audioObj != null) audioManager = audioObj.GetComponent<AudioManager>();
     }
 
     private void Update()
     {
         if (health.CurrentHealth <= 0) return;
+
+        CheckAndPlayScream();
 
         switch (currentState)
         {
@@ -50,9 +66,6 @@ public class EnemyAI : MonoBehaviour
         {
             TransitionToState(EnemyBehaviorState.Chasing);
         }
-        else if (movement.patrolSettings.enablePatrol) // Add patrol check
-        {
-        }
     }
 
     private void UpdateChasingBehavior()
@@ -62,7 +75,7 @@ public class EnemyAI : MonoBehaviour
             TransitionToState(EnemyBehaviorState.Attacking);
         }
         else if (!movement.IsPlayerInDetectionRange() ||
-                !movement.IsPlayerWithinChaseBounds()) // Add boundary check
+                 !movement.IsPlayerWithinChaseBounds())
         {
             TransitionToState(EnemyBehaviorState.ReturningHome);
         }
@@ -71,7 +84,6 @@ public class EnemyAI : MonoBehaviour
             movement.MoveToTarget(combat.Player.position);
         }
     }
-
 
     private void UpdateAttackingBehavior()
     {
@@ -85,6 +97,7 @@ public class EnemyAI : MonoBehaviour
             combat.ExecuteAttack();
         }
     }
+
     private void UpdateReturningBehavior()
     {
         if (movement.HasReachedPosition(movement.SpawnPosition))
@@ -92,7 +105,7 @@ public class EnemyAI : MonoBehaviour
             TransitionToState(EnemyBehaviorState.Idle);
         }
         else if (movement.IsPlayerInDetectionRange() &&
-                movement.IsPlayerWithinChaseBounds())
+                 movement.IsPlayerWithinChaseBounds())
         {
             TransitionToState(EnemyBehaviorState.Chasing);
         }
@@ -113,7 +126,6 @@ public class EnemyAI : MonoBehaviour
         }
 
         currentState = newState;
-        // Debug.Log($"Enemy state changed to: {currentState}"); // Optional debug
     }
 
     private void HandleEnemyDeath()
@@ -121,4 +133,28 @@ public class EnemyAI : MonoBehaviour
         movement.StopMovement();
         enabled = false;
     }
+
+    private void CheckAndPlayScream()
+    {
+        if (playerTransform == null || audioManager == null) return;
+
+        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+
+        if (distanceToPlayer <= screamDistanceThreshold && Time.time >= lastScreamTime + screamCooldownDuration)
+        {
+            if(this.gameObject.name == "MediumEnemy")
+            {
+                audioManager.PlayMediumEnemyScream();
+                lastScreamTime = Time.time;
+
+            } 
+            else if (gameObject.name == "SmallEnemy")
+            {
+                audioManager.PlaySmallEnemyScream();
+                lastScreamTime = Time.time;
+            }
+           
+        }
+    }
+
 }

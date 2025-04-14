@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;  // For UI Image
 
 public class DamagePopUp : MonoBehaviour
 {
@@ -37,6 +38,9 @@ public class DamagePopUp : MonoBehaviour
     [SerializeField] private float critMinDuration = 1f;
     [SerializeField] private float critMaxDuration = 1.2f;
 
+    [Header("Flash Effect")]
+    [SerializeField] private Image flashImage;  // Reference to the image for the white flash effect
+
     private void Awake()
     {
         if (Instance == null)
@@ -65,6 +69,12 @@ public class DamagePopUp : MonoBehaviour
 
         Vector3 spawnPosition = position + Vector3.up * spawnHeight + randomOffset;
 
+        // If it's a critical hit, trigger the screen flash
+        if (isCritical)
+        {
+            FlashScreen();  // Trigger the white flash effect
+        }
+
         // Create popup
         GameObject popUp = Instantiate(popUpPrefab, spawnPosition, Quaternion.identity);
         TextMeshPro text = popUp.GetComponent<TextMeshPro>();
@@ -87,10 +97,22 @@ public class DamagePopUp : MonoBehaviour
             Random.Range(critMinDuration, critMaxDuration) :
             Random.Range(normalMinDuration, normalMaxDuration);
 
-        // Animate
+        // Animate the damage popup (move and fade out)
         LeanTween.moveY(popUp, spawnPosition.y + floatDistance, duration)
                  .setEaseOutQuad();
         LeanTween.alphaText(popUp.GetComponent<RectTransform>(), 0f, duration)
                  .setOnComplete(() => Destroy(popUp));
+    }
+
+    private void FlashScreen()
+    {
+        if (flashImage != null)
+        {
+            // Make the image visible (white flash)
+            flashImage.color = new Color(1f, 1f, 1f, 1f); // Fully opaque white
+
+            // Use LeanTween to fade it back out over 0.2 seconds (adjust as needed)
+            LeanTween.alpha(flashImage.rectTransform, 0f, 0.2f).setEaseOutQuad();
+        }
     }
 }
