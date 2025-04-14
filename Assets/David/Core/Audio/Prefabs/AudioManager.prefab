@@ -721,13 +721,61 @@ MonoBehaviour:
   - name: Player
     source: {fileID: 743618483834653189}
     sounds:
-    - name: take_hit
+    - name: take_hit_01
       clip: {fileID: 8300000, guid: 626523139f0f25b4b9b32f194695504b, type: 3}
+      volume: 1
+      pitch: 1
+    - name: take_hit_02
+      clip: {fileID: 8300000, guid: c020f0cf2f9e0ae49aa80ee97d680b30, type: 3}
+      volume: 1
+      pitch: 1
+    - name: take_hit_03
+      clip: {fileID: 8300000, guid: b078a19e769b0434e87292efed930dc1, type: 3}
+      volume: 1
+      pitch: 1
+    - name: slash_hit_01
+      clip: {fileID: 8300000, guid: 897fb0ad211e6db49b79831e6c27a31d, type: 3}
+      volume: 1
+      pitch: 1
+    - name: slash_hit_02
+      clip: {fileID: 8300000, guid: a1b6afbb0b18db04893c5414180ac318, type: 3}
+      volume: 1
+      pitch: 1
+    - name: slash_hit_03
+      clip: {fileID: 8300000, guid: 525f0826b66dc984fbd45f292d78fe70, type: 3}
+      volume: 1
+      pitch: 1
+    - name: slash_hit_04
+      clip: {fileID: 8300000, guid: 12ad9d0220c43274eb0bf1d628320b59, type: 3}
       volume: 1
       pitch: 1
   - name: Enemies
     source: {fileID: 4473733131193264158}
-    sounds: []
+    sounds:
+    - name: scream_medium_enemy
+      clip: {fileID: 8300000, guid: fe6d6aa4e19f64444a34e91c652bf96e, type: 3}
+      volume: 1
+      pitch: 1
+    - name: last_scream_medium_enemy
+      clip: {fileID: 8300000, guid: 8668dbb6c8fc62b4c99628a7bb54c001, type: 3}
+      volume: 1
+      pitch: 1
+    - name: takehit_medium_enemy
+      clip: {fileID: 8300000, guid: 4968c202b538df643a751553733eb958, type: 3}
+      volume: 1
+      pitch: 1
+    - name: scream_small_enemy
+      clip: {fileID: 8300000, guid: 33bb2cf674f97a144968156ab3457ae1, type: 3}
+      volume: 1
+      pitch: 1
+    - name: last_scream_small_enemy
+      clip: {fileID: 8300000, guid: e9d4010e44033a74ab9f5206deb50950, type: 3}
+      volume: 1
+      pitch: 1
+    - name: takehit_small_enemy
+      clip: {fileID: 8300000, guid: e505f3aa12630e742a5d8e7f64e12b47, type: 3}
+      volume: 1
+      pitch: 1
   - name: Boss
     source: {fileID: 5319925431149274405}
     sounds: []

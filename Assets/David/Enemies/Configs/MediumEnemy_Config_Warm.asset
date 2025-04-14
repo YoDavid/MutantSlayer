@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   moveSpeed: 3.5
-  walkingRange: 30
+  walkingRange: 15
   attackRange: 4.72
-  attackCooldown: 6
+  minAttackCooldown: 3
+  maxAttackCooldown: 5
   attackDelay: 1
   colliderActiveDuration: 1
   attackDamage: 10

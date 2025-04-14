@@ -28,14 +28,13 @@ public class EnemyCombat : MonoBehaviour
         movement = GetComponent<EnemyMovement>();
         cameraShake = Camera.main.GetComponent<CameraShake>();
 
-        // Initialize first cooldown
         currentAttackCooldown = config.GetRandomAttackCooldown();
     }
 
     public void ExecuteAttack()
     {
         lastAttackTime = Time.time;
-        currentAttackCooldown = config.GetRandomAttackCooldown(); // Set a new cooldown every attack
+        currentAttackCooldown = config.GetRandomAttackCooldown(); 
         IsAttacking = true;
         animator.SetTrigger("Attack");
         StartCoroutine(AttackSequence());

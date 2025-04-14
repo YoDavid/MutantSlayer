@@ -52,7 +52,7 @@ MonoBehaviour:
   healthSlider: {fileID: 3280430647542578520}
   fillImage: {fileID: 6895639501377206442}
   fullHealthColor: {r: 0.5849056, g: 0, b: 0, a: 1}
-  zeroHealthColor: {r: 0, g: 0, b: 0, a: 1}
+  zeroHealthColor: {r: 0.33962262, g: 0, b: 0, a: 1}
 --- !u!1 &2472641154033023021
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,7 +349,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -679,6 +679,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 259a898ead587e94a8d7e2780698a204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  screamDistanceThreshold: 50
+  screamCooldownDuration: 15
+  playerTransform: {fileID: 0}
 --- !u!114 &8424989995627453975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -813,7 +816,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
