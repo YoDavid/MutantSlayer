@@ -18,8 +18,8 @@ public class BackgroundController : MonoBehaviour
     private void FixedUpdate()
     {
         float distance = cam.transform.position.x * parallaxEffectX;
-        float distanceY = cam.transform.position.y * -1 * parallaxEffectY;
-        transform.position = new Vector3(startPosX + distance, startPosY + distanceY, transform.position.z);
+        float distanceY = cam.transform.position.y * 1 * parallaxEffectY;
+        transform.position = new Vector3(startPosX + distance, /*startPosY + distanceY*/transform.position.y , transform.position.z);
         
         float movement = cam.transform.position.x * (1 - parallaxEffectX);
         if (movement > startPosX + length)
