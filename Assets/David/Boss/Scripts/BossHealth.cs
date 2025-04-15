@@ -4,7 +4,7 @@ using System.Collections;
 public class BossHealth : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private int maxHealth = 500;
+    [SerializeField] public int maxHealth = 500;
     [SerializeField] private Color blinkColor = Color.white; // Customizable in Inspector
     [SerializeField] private float blinkDuration = 0.1f;
     [SerializeField] private int blinkCount = 3;
@@ -17,6 +17,10 @@ public class BossHealth : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
 
+    public event System.Action<int> OnHealthChanged;
+    public event System.Action OnDeath;
+    public int MaxHealth => maxHealth; 
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -28,6 +32,8 @@ public class BossHealth : MonoBehaviour
     {
         currentHealth -= damage;
 
+        OnHealthChanged?.Invoke(currentHealth); // <- Add this
+
         if (DamagePopUp.Instance != null)
         {
             DamagePopUp.Instance.CreateDamageText(
@@ -35,15 +41,19 @@ public class BossHealth : MonoBehaviour
                 transform.position + popupOffset,
                 isPlayer: false,
                 isBoss: true,
-                isCritical: isCritical // Add this new parameter
+                isCritical: isCritical
             );
         }
 
         if (blinkRoutine != null) StopCoroutine(blinkRoutine);
         blinkRoutine = StartCoroutine(BlinkEffect());
 
-        if (currentHealth <= 0) Die();
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
     }
+
 
     private IEnumerator BlinkEffect()
     {
@@ -63,6 +73,7 @@ public class BossHealth : MonoBehaviour
             Instantiate(bloodSplashPrefab, transform.position, Quaternion.identity);
         }
 
-        Destroy(gameObject); 
+        OnDeath?.Invoke(); // <- Add this
+        Destroy(gameObject);
     }
 }

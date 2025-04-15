@@ -108,6 +108,7 @@ public class BossAI : MonoBehaviour
 
     void UpdatePlayerDistance()
     {
+        if(player == null) return;
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
     }
 
@@ -119,6 +120,7 @@ public class BossAI : MonoBehaviour
     void HandleFlipAndState()
     {
         FlipTowardsPlayer();
+        if(player == null) return;
         HandleState(Vector2.Distance(transform.position, player.position));
     }
 

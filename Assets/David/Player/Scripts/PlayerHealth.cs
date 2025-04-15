@@ -12,6 +12,7 @@ public class PlayerHealth : HealthSystem
     private PlayerAnimationController playerAnimation;
     private bool isInvulnerable = false;
 
+
     protected override void Awake()
     {
         // No need to set MaxHealth here - it's set in the inspector

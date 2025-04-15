@@ -8,6 +8,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameOverMenuController gameOverMenu;
     [SerializeField] private PlayerHealth playerHealth;
 
+    [Header("Boss UI")]
+    [SerializeField] private GameObject bossHealthBarContainer;
+    [SerializeField] private Transform bossTransform;
+    [SerializeField] private float bossBarShowDistance = 15f;
+    private Transform playerTransform;
+
     private void Awake()
     {
         if (!hud) hud = transform.Find("Canvas/HUD")?.gameObject;
@@ -25,15 +31,32 @@ public class UIManager : MonoBehaviour
         {
             playerHealth.OnDeath += HandlePlayerDeath;
         }
+
+        if (playerHealth != null)
+        {
+            playerHealth.OnDeath += HandlePlayerDeath;
+        }
+
+        playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
+
+        if (bossHealthBarContainer != null)
+            bossHealthBarContainer.SetActive(false);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && (gameOverMenu == null || !gameOverMenu.IsVisible))
+        if (Input.GetKeyDown(KeyCode.Escape)
+            && (gameOverMenu == null || !gameOverMenu.IsVisible)
+            && playerHealth != null
+            && playerHealth.CurrentHealth > 0)
         {
             TogglePauseMenu();
         }
+
+        HandleBossHealthBarVisibility();
     }
+
+
 
     private void OnDestroy()
     {
@@ -59,6 +82,18 @@ public class UIManager : MonoBehaviour
         bool shouldPause = !pauseMenu.IsVisible;
         pauseMenu.SetVisible(shouldPause);
         SetHUDVisible(!shouldPause);
+    }
+
+    private void HandleBossHealthBarVisibility()
+    {
+        if (playerTransform == null || bossTransform == null || bossHealthBarContainer == null)
+            return;
+
+        float distance = Vector2.Distance(playerTransform.position, bossTransform.position);
+        bool shouldShow = distance <= bossBarShowDistance;
+
+        if (bossHealthBarContainer.activeSelf != shouldShow)
+            bossHealthBarContainer.SetActive(shouldShow);
     }
 
     public void ShowGameOver()

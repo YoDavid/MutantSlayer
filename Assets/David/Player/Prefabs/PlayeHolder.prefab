@@ -586,7 +586,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGrounded: 0
   isDashing: 0
-  moveSpeed: 12
+  moveSpeed: 13
   dashMoveSpeedMultiplier: 2.4
   dashSpeed: 12
   dashDuration: 0.8

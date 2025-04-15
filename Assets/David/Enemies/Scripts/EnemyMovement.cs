@@ -62,7 +62,15 @@ public class EnemyMovement : MonoBehaviour
     {
         if (MovementLocked) return;
 
-        // Check player position at intervals
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+            }
+        }
+
         if (Time.time >= nextPositionCheckTime)
         {
             nextPositionCheckTime = Time.time + playerPositionCheckInterval;
@@ -88,7 +96,6 @@ public class EnemyMovement : MonoBehaviour
         bool wasInCombat = isInCombat;
         isInCombat = IsPlayerInDetectionRange() && IsPlayerWithinChaseBounds();
 
-        // If just entered combat, immediately update facing
         if (isInCombat && !wasInCombat)
         {
             UpdateFacingTowardsPlayer();
@@ -148,6 +155,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void UpdateFacingTowardsPlayer()
     {
+        if (player == null) return;
         Vector2 directionToPlayer = (player.position - transform.position).normalized;
         UpdateSpriteFacing(directionToPlayer);
     }
@@ -160,12 +168,14 @@ public class EnemyMovement : MonoBehaviour
 
     public bool IsPlayerWithinChaseBounds()
     {
+        if (player == null) return false;
         float playerX = player.position.x;
         return playerX >= WorldChaseLeft && playerX <= WorldChaseRight;
     }
 
     public bool IsPlayerInDetectionRange()
     {
+        if (player == null) return false;
         return Vector2.Distance(transform.position, player.position) <= config.walkingRange;
     }
 

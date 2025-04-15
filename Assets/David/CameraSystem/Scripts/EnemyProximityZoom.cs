@@ -151,10 +151,20 @@ public class EnemyProximityZoom : MonoBehaviour
 
     private void Update()
     {
-        UpdateActiveProfile();
-        ApplySmoothZoom();
-        ApplySmoothYOffset();
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+            }
+
+            UpdateActiveProfile();
+            ApplySmoothZoom();
+            ApplySmoothYOffset();
+        }
     }
+
 
     public bool AreEnemiesInRange()
     {
@@ -217,12 +227,14 @@ public class EnemyProximityZoom : MonoBehaviour
     private void ApplySmoothYOffset()
     {
         Vector3 pos = transform.position;
+        if (player == null) return;
         float newY = Mathf.SmoothDamp(
             pos.y,
             player.position.y + targetYOffset, // Apply offset relative to player
             ref yOffsetVelocity,
             yOffsetSmoothTime
         );
+        if (player == null) return;
         transform.position = new Vector3(
             pos.x, // Keep X (controlled by CameraDeadZoneFollow)
             newY,
