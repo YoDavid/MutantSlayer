@@ -1,7 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(ParticleSystem))]
-public class AutoDestroyParticle : MonoBehaviour
+public class AutoDestroyRockParticles : MonoBehaviour
 {
     private ParticleSystem ps;
 
@@ -10,7 +12,6 @@ public class AutoDestroyParticle : MonoBehaviour
         ps = GetComponent<ParticleSystem>();
         var main = ps.main;
         main.stopAction = ParticleSystemStopAction.Callback;
-        AudioManager.Instance.PlayBloodParticlesDeathSound();
     }
 
     private void OnParticleSystemStopped()

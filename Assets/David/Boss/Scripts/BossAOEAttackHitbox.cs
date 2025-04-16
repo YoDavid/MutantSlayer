@@ -20,6 +20,8 @@ public class BossAOEAttack : MonoBehaviour
     [Header("Camera Shake")]
     private CameraShake cameraShake;
 
+    [SerializeField] private GameObject rockParticlesPrefab;
+
     private void Start()
     {
         foreach (var spike in spikes)
@@ -54,18 +56,22 @@ public class BossAOEAttack : MonoBehaviour
         // Wave 1: Activate Spike 1 and 2
         ToggleSpikes(0, 1, true); // Enable Spike 1 and 2
         cameraShake?.ShakeCameraAOEAttack(); // Trigger camera shake
+
+        AudioManager.Instance.PlayAOEAttackBoss();
         yield return new WaitForSeconds(spikeActiveDuration); // Wait for 0.8 seconds
         ToggleSpikes(0, 1, false); // Disable Spike 1 and 2
 
         // Wave 2: Activate Spike 3 and 4
         ToggleSpikes(2, 3, true); // Enable Spike 3 and 4
         cameraShake?.ShakeCameraAOEAttack(); // Trigger camera shake
+        AudioManager.Instance.PlayAOEAttackBoss();
         yield return new WaitForSeconds(spikeActiveDuration); // Wait for 0.8 seconds
         ToggleSpikes(2, 3, false); // Disable Spike 3 and 4
 
         // Wave 3: Activate Spike 5 and 6
         ToggleSpikes(4, 5, true); // Enable Spike 5 and 6
         cameraShake?.ShakeCameraAOEAttack(); // Trigger camera shake
+        AudioManager.Instance.PlayAOEAttackBoss();
         yield return new WaitForSeconds(spikeActiveDuration); // Wait for 0.8 seconds
         ToggleSpikes(4, 5, false); // Disable Spike 5 and 6
 
@@ -105,6 +111,16 @@ public class BossAOEAttack : MonoBehaviour
             {
                 Debug.LogError($"Spike script not found on Spike {index1 + 1}");
             }
+
+            if (state && rockParticlesPrefab != null)
+            {
+                Collider2D spikeCollider = spikes[index1].GetComponent<Collider2D>();
+                if (spikeCollider != null)
+                {
+                    Vector2 spawnPos = new Vector2(spikeCollider.bounds.center.x, spikeCollider.bounds.min.y + 2f);
+                    Instantiate(rockParticlesPrefab, spawnPos, Quaternion.identity);
+                }
+            }
         }
 
         if (index2 < spikes.Count && spikes[index2] != null)
@@ -119,8 +135,21 @@ public class BossAOEAttack : MonoBehaviour
             {
                 Debug.LogError($"Spike script not found on Spike {index2 + 1}");
             }
+
+            if (state && rockParticlesPrefab != null)
+            {
+                Collider2D spikeCollider = spikes[index2].GetComponent<Collider2D>();
+                if (spikeCollider != null)
+                {
+                    Vector2 spawnPos = new Vector2(spikeCollider.bounds.center.x, spikeCollider.bounds.min.y + 2f);
+                    Instantiate(rockParticlesPrefab, spawnPos, Quaternion.identity);
+                }
+            }
+
         }
     }
+
+
 
     private void ToggleSideSpikes(bool state)
     {

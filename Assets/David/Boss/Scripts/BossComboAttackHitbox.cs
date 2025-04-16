@@ -23,6 +23,8 @@ public class BossComboAttackHitbox : MonoBehaviour
     [Header("Camera Shake")]
     private CameraShake cameraShake;
 
+    [SerializeField] private GameObject rockParticlesPrefab;
+
     private void Awake()
     {
         InitializeComponents();
@@ -90,11 +92,21 @@ public class BossComboAttackHitbox : MonoBehaviour
                 yield return new WaitForSeconds(waitTime);
 
             EnableCollider();
+
+            AudioManager.Instance.PlayComboAttackBoss();
+
+            if (rockParticlesPrefab != null)
+            {
+                Vector2 spawnPos = new Vector2(attackCollider.bounds.center.x, attackCollider.bounds.min.y + 2f);
+                Instantiate(rockParticlesPrefab, spawnPos, Quaternion.identity);
+            }
+
             cameraShake.ShakeCameraComboAttack();
             yield return new WaitForSeconds(attackDuration);
             DisableCollider();
         }
     }
+
 
     private void EnableCollider()
     {

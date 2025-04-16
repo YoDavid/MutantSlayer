@@ -22,6 +22,8 @@ public class BossJumpAttackHitbox : MonoBehaviour
     [Header("Camera Shake")]
     private CameraShake cameraShake;
 
+    [SerializeField] private GameObject rockParticlesPrefab;
+
     private void Awake()
     {
         InitializeComponents();
@@ -101,7 +103,16 @@ public class BossJumpAttackHitbox : MonoBehaviour
     private void EnableCollider()
     {
         attackCollider.enabled = true;
+        if (rockParticlesPrefab != null)
+
+        {
+            Vector2 spawnPos = new Vector2(attackCollider.bounds.center.x, attackCollider.bounds.min.y + 2f);
+            Instantiate(rockParticlesPrefab, spawnPos, Quaternion.identity);
+        }
+
+        AudioManager.Instance.PlayJumpAttackBoss();
     }
+
 
     public void DisableCollider()
     {
