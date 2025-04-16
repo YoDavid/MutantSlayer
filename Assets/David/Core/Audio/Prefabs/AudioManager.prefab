@@ -778,7 +778,43 @@ MonoBehaviour:
       pitch: 1
   - name: Boss
     source: {fileID: 5319925431149274405}
-    sounds: []
+    sounds:
+    - name: walking_boss
+      clip: {fileID: 8300000, guid: 9d37d2a2662a21943a9a583a3a49375b, type: 3}
+      volume: 1
+      pitch: 1
+    - name: scream00_boss
+      clip: {fileID: 8300000, guid: 49ff5b4a0e0cf2049b2b28b2a356fbb8, type: 3}
+      volume: 1
+      pitch: 1
+    - name: scream01_boss
+      clip: {fileID: 8300000, guid: 088c17d2a9e71af469ac6f5999d4123f, type: 3}
+      volume: 1
+      pitch: 1
+    - name: scream02_boss
+      clip: {fileID: 8300000, guid: 96697e24c3e1d814198c8e7eee12e422, type: 3}
+      volume: 1
+      pitch: 1
+    - name: scream03_boss
+      clip: {fileID: 8300000, guid: 0958d7b8901b1eb4496ab885880db523, type: 3}
+      volume: 1
+      pitch: 1
+    - name: comboattack_boss
+      clip: {fileID: 8300000, guid: 3bc1d8baaccfa0a4998b7ba17275914d, type: 3}
+      volume: 1
+      pitch: 1
+    - name: aoeattack_boss
+      clip: {fileID: 8300000, guid: 9cbf31693f36a2c4796106f698cb0b14, type: 3}
+      volume: 1
+      pitch: 1
+    - name: jumpattack_boss
+      clip: {fileID: 8300000, guid: c283b6f051a957f49833c8d212b6e247, type: 3}
+      volume: 1
+      pitch: 1
+    - name: spitattack_boss
+      clip: {fileID: 8300000, guid: e79ca4fd6f2aaa248954ecb3a7e37d1b, type: 3}
+      volume: 1
+      pitch: 1
   musicSource: {fileID: 5609026769129953427}
   musicTracks:
   - name: menu_theme

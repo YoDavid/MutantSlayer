@@ -549,7 +549,7 @@ MonoBehaviour:
   attackDurations:
   - 0.3
   - 0.35
-  - 0.4
+  - 0.5
   requireGrounded: 1
   cancelAttackIfAirborne: 1
   colliderOffsets:

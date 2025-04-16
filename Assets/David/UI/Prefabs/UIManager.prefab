@@ -142,6 +142,7 @@ MonoBehaviour:
   fillImage: {fileID: 3210405851038692441}
   fullHealthColor: {r: 0.46226418, g: 0, b: 0, a: 1}
   zeroHealthColor: {r: 0, g: 0, b: 0, a: 1}
+  bossHealth: {fileID: 0}
 --- !u!1 &302583074786419726
 GameObject:
   m_ObjectHideFlags: 0
@@ -1940,7 +1941,7 @@ MonoBehaviour:
   playerHealth: {fileID: 0}
   bossHealthBarContainer: {fileID: 237698047963805409}
   bossTransform: {fileID: 0}
-  bossBarShowDistance: 100
+  bossBarShowDistance: 45
 --- !u!114 &7898128371427369842
 MonoBehaviour:
   m_ObjectHideFlags: 0

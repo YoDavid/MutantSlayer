@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7596a4234e8daf64f9a1b60e2f7dc227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 8229323256694479062}
+  player: {fileID: 0}
   cameraZPosition: -100
   boundsSize: {x: 15, y: 10}
   idleCenterTime: 3
@@ -168,13 +168,13 @@ MonoBehaviour:
     name: Default
     enemyTag: 
     detectionRange: 0
-    zoomSize: 13
-    yOffset: 0
+    zoomSize: 10
+    yOffset: 2
     gizmoColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   regularEnemyProfile:
     name: Regular Enemy
     enemyTag: Enemy
-    detectionRange: 35
+    detectionRange: 28.5
     zoomSize: 13
     yOffset: 4
     gizmoColor: {r: 1, g: 0, b: 0, a: 1}
@@ -182,8 +182,8 @@ MonoBehaviour:
     name: Boss Enemy
     enemyTag: BossEnemy
     detectionRange: 55
-    zoomSize: 17
-    yOffset: 10
+    zoomSize: 18
+    yOffset: 5
     gizmoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   zoomSmoothTime: 0.3
   yOffsetSmoothTime: 0.2
