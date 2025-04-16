@@ -53,18 +53,17 @@ public class EnemyProximityZoom : MonoBehaviour
     [SerializeField] private float yOffsetSmoothTime = 0.2f;
     [SerializeField] private bool showGizmos = true;
 
-    [Header("Player Reference")] // NEW: Add player reference
+    [Header("Player Reference")]
     public Transform player;
 
     private Camera cam;
     private List<Transform> allEnemies = new List<Transform>();
     private List<Transform> allBosses = new List<Transform>();
-    private float targetZoom;
     private float zoomVelocity;
-    private float targetYOffset;
     private float yOffsetVelocity;
     private float originalZ;
     private bool enemiesInRange;
+    private ZoomProfile activeProfile;
 
     private void Awake()
     {
@@ -79,74 +78,17 @@ public class EnemyProximityZoom : MonoBehaviour
 
         originalZ = transform.position.z;
 
-        InitializeDefaults();
         FindAllEnemies();
-        CheckInitialZoom();
+        SetActiveProfileBasedOnProximity(); // This replaces CheckInitialZoom()
 
         transform.position = new Vector3(
             transform.position.x,
             transform.position.y,
             originalZ
         );
-    }
 
-
-    private void InitializeDefaults()
-    {
-        targetZoom = defaultProfile.zoomSize;
-        targetYOffset = defaultProfile.yOffset;
-        cam.orthographicSize = targetZoom;
-        ApplyImmediateYOffset();
-    }
-
-    private void FindAllEnemies()
-    {
-        // Clear existing lists
-        allEnemies.Clear();
-        allBosses.Clear();
-
-        // Find all objects with Enemy tag
-        GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag(regularEnemyProfile.enemyTag);
-        foreach (GameObject enemy in enemyObjects)
-        {
-            allEnemies.Add(enemy.transform);
-        }
-
-        // Find all objects with EnemyBoss tag
-        GameObject[] bossObjects = GameObject.FindGameObjectsWithTag(bossEnemyProfile.enemyTag);
-        foreach (GameObject boss in bossObjects)
-        {
-            allBosses.Add(boss.transform);
-        }
-    }
-
-    private void CheckInitialZoom()
-    {
-        // Check if there are any bosses in range at start
-        foreach (Transform boss in allBosses)
-        {
-            if (boss != null && Vector2.Distance(transform.position, boss.position) < bossEnemyProfile.detectionRange)
-            {
-                SetActiveProfile(bossEnemyProfile);
-                ApplyImmediateZoom();
-                return;
-            }
-        }
-
-        // Check if there are any regular enemies in range at start
-        foreach (Transform enemy in allEnemies)
-        {
-            if (enemy != null && Vector2.Distance(transform.position, enemy.position) < regularEnemyProfile.detectionRange)
-            {
-                SetActiveProfile(regularEnemyProfile);
-                ApplyImmediateZoom();
-                return;
-            }
-        }
-
-        // Default if no enemies found
-        SetActiveProfile(defaultProfile);
         ApplyImmediateZoom();
+        ApplyImmediateYOffset();
     }
 
     private void Update()
@@ -155,23 +97,15 @@ public class EnemyProximityZoom : MonoBehaviour
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
-            {
                 player = playerObj.transform;
-            }
-
-            UpdateActiveProfile();
-            ApplySmoothZoom();
-            ApplySmoothYOffset();
         }
+
+        SetActiveProfileBasedOnProximity();
+        ApplySmoothZoom();
+        ApplySmoothYOffset();
     }
 
-
-    public bool AreEnemiesInRange()
-    {
-        return enemiesInRange;
-    }
-
-    private void UpdateActiveProfile()
+    private void SetActiveProfileBasedOnProximity()
     {
         bool bossDetected = CheckEnemiesInRange(allBosses, bossEnemyProfile.detectionRange);
         bool regularEnemyDetected = CheckEnemiesInRange(allEnemies, regularEnemyProfile.detectionRange);
@@ -191,6 +125,14 @@ public class EnemyProximityZoom : MonoBehaviour
         }
     }
 
+    private void SetActiveProfile(ZoomProfile profile)
+    {
+        if (activeProfile != profile)
+        {
+            activeProfile = profile;
+        }
+    }
+
     private bool CheckEnemiesInRange(List<Transform> enemies, float range)
     {
         foreach (Transform enemy in enemies)
@@ -203,88 +145,98 @@ public class EnemyProximityZoom : MonoBehaviour
         return false;
     }
 
-    private void SetActiveProfile(ZoomProfile profile)
-    {
-        targetZoom = profile.zoomSize;
-        targetYOffset = profile.yOffset;
-    }
-
-    private void ApplyImmediateZoom()
-    {
-        cam.orthographicSize = targetZoom;
-    }
-
     private void ApplySmoothZoom()
     {
+        if (activeProfile == null) return;
+
         cam.orthographicSize = Mathf.SmoothDamp(
             cam.orthographicSize,
-            targetZoom,
+            activeProfile.zoomSize,
             ref zoomVelocity,
             zoomSmoothTime
         );
     }
 
+    private void ApplyImmediateZoom()
+    {
+        if (activeProfile != null)
+            cam.orthographicSize = activeProfile.zoomSize;
+    }
+
     private void ApplySmoothYOffset()
     {
+        if (player == null || activeProfile == null) return;
+
         Vector3 pos = transform.position;
-        if (player == null) return;
         float newY = Mathf.SmoothDamp(
             pos.y,
-            player.position.y + targetYOffset, // Apply offset relative to player
+            player.position.y + activeProfile.yOffset,
             ref yOffsetVelocity,
             yOffsetSmoothTime
         );
-        if (player == null) return;
+
         transform.position = new Vector3(
-            pos.x, // Keep X (controlled by CameraDeadZoneFollow)
+            pos.x,
             newY,
-            originalZ // Keep Z at -10
+            originalZ
         );
     }
 
     private void ApplyImmediateYOffset()
     {
+        if (player == null || activeProfile == null) return;
+
         Vector3 pos = transform.position;
         transform.position = new Vector3(
             pos.x,
-            player.position.y + targetYOffset, // Immediate Y adjustment
+            player.position.y + activeProfile.yOffset,
             originalZ
         );
     }
+
+    private void FindAllEnemies()
+    {
+        allEnemies.Clear();
+        allBosses.Clear();
+
+        GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag(regularEnemyProfile.enemyTag);
+        foreach (GameObject enemy in enemyObjects)
+        {
+            allEnemies.Add(enemy.transform);
+        }
+
+        GameObject[] bossObjects = GameObject.FindGameObjectsWithTag(bossEnemyProfile.enemyTag);
+        foreach (GameObject boss in bossObjects)
+        {
+            allBosses.Add(boss.transform);
+        }
+    }
+
+    public bool AreEnemiesInRange() => enemiesInRange;
 
     public void RegisterEnemy(Transform enemy, bool isBoss = false)
     {
         if (isBoss)
         {
             if (!allBosses.Contains(enemy))
-            {
                 allBosses.Add(enemy);
-            }
         }
         else
         {
             if (!allEnemies.Contains(enemy))
-            {
                 allEnemies.Add(enemy);
-            }
         }
     }
 
     public void UnregisterEnemy(Transform enemy)
     {
-        if (allBosses.Contains(enemy))
-        {
-            allBosses.Remove(enemy);
-        }
-        if (allEnemies.Contains(enemy))
-        {
-            allEnemies.Remove(enemy);
-        }
+        allBosses.Remove(enemy);
+        allEnemies.Remove(enemy);
     }
 
     private void OnDrawGizmosSelected()
     {
-        if (!showGizmos || cam == null) return;
+        if (!showGizmos) return;
 
         DrawProfileGizmo(defaultProfile);
         DrawProfileGizmo(regularEnemyProfile);

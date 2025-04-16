@@ -72,7 +72,6 @@ public class PlayerAttackHitbox : MonoBehaviour
         int rand = UnityEngine.Random.Range(1, 5); // 1 to 4
         string clipName = $"slash_hit_0{rand}";
         audioManager.PlaySFX("Player", clipName);
-        Debug.Log($"Played: {clipName}");
     }
 
     private void SpawnHitParticles(Vector3 position)

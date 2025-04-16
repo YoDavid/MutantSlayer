@@ -177,7 +177,6 @@ public class PlayerAttackController : MonoBehaviour
     private void ResetCombo()
     {
         attackCount = 0;
-        Debug.Log("ResetCombo");
         animationController.SetAttackState(0);
     }
 

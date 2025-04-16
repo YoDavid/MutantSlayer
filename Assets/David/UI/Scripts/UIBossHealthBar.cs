@@ -8,7 +8,7 @@ public class UIBossHealthBar : MonoBehaviour
     [SerializeField] private Color fullHealthColor = Color.red;
     [SerializeField] private Color zeroHealthColor = Color.black;
 
-    private BossHealth bossHealth;
+    [SerializeField] private BossHealth bossHealth;
 
     private void Awake()
     {
@@ -56,6 +56,6 @@ public class UIBossHealthBar : MonoBehaviour
 
     private void HandleBossDeath()
     {
-        gameObject.SetActive(false); // hide on death
+        gameObject.SetActive(false); 
     }
 }
