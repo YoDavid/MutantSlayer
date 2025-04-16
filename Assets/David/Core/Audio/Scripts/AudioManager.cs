@@ -239,10 +239,18 @@ public class AudioManager : MonoBehaviour
 
 
     //               Boss
+    public void PlayBossWalking() => PlaySFX("Boss", "walking_boss");
+    
+
+
     public void PlayBossScream_00() => PlaySFX("Boss", "scream00_boss");
     public void PlayBossScream_01() => PlaySFX("Boss", "scream01_boss");
     public void PlayBossScream_02() => PlaySFX("Boss", "scream02_boss");
+    public void PlayBossScream_03() => PlaySFX("Boss", "scream03_boss");
+
+
     public void PlayComboAttackBoss() => PlaySFX("Boss", "comboattack_boss");
     public void PlayAOEAttackBoss() => PlaySFX("Boss", "aoeattack_boss");
     public void PlayJumpAttackBoss() => PlaySFX("Boss", "jumpattack_boss");
+    public void PlaySpitAttackBoss() => PlaySFX("Boss", "spitattack_boss");
 }

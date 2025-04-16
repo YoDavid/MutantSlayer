@@ -422,6 +422,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainBossHolder
       objectReference: {fileID: 0}
+    - target: {fileID: 5481050390583849895, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
+      propertyPath: rockParticlesPrefab
+      value: 
+      objectReference: {fileID: 4647388484711977732, guid: b6a658d7087101d45bb61c72d5a81c0d, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -828,55 +832,79 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.size
-      value: 6
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[0].clip
       value: 
-      objectReference: {fileID: 8300000, guid: 49ff5b4a0e0cf2049b2b28b2a356fbb8, type: 3}
+      objectReference: {fileID: 8300000, guid: 9d37d2a2662a21943a9a583a3a49375b, type: 3}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[0].name
-      value: scream00_boss
+      value: walking_boss
       objectReference: {fileID: 0}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[1].clip
       value: 
-      objectReference: {fileID: 8300000, guid: 088c17d2a9e71af469ac6f5999d4123f, type: 3}
+      objectReference: {fileID: 8300000, guid: 49ff5b4a0e0cf2049b2b28b2a356fbb8, type: 3}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[1].name
-      value: scream01_boss
+      value: scream00_boss
       objectReference: {fileID: 0}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[2].clip
       value: 
-      objectReference: {fileID: 8300000, guid: 96697e24c3e1d814198c8e7eee12e422, type: 3}
+      objectReference: {fileID: 8300000, guid: 088c17d2a9e71af469ac6f5999d4123f, type: 3}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[2].name
-      value: scream03_boss
+      value: scream01_boss
       objectReference: {fileID: 0}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[3].clip
       value: 
-      objectReference: {fileID: 8300000, guid: 8eab2ca225704ad4db86e592cb840167, type: 3}
+      objectReference: {fileID: 8300000, guid: 96697e24c3e1d814198c8e7eee12e422, type: 3}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[3].name
-      value: comboattack_boss
+      value: scream02_boss
       objectReference: {fileID: 0}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[4].clip
       value: 
-      objectReference: {fileID: 8300000, guid: 9cbf31693f36a2c4796106f698cb0b14, type: 3}
+      objectReference: {fileID: 8300000, guid: 0958d7b8901b1eb4496ab885880db523, type: 3}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[4].name
-      value: aoeattack_boss
+      value: scream03_boss
       objectReference: {fileID: 0}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[5].clip
       value: 
-      objectReference: {fileID: 8300000, guid: d107e873dbd35f34586260afd56f9c0e, type: 3}
+      objectReference: {fileID: 8300000, guid: 3bc1d8baaccfa0a4998b7ba17275914d, type: 3}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[5].name
+      value: comboattack_boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[4].sounds.Array.data[6].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 9cbf31693f36a2c4796106f698cb0b14, type: 3}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[4].sounds.Array.data[6].name
+      value: aoeattack_boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[4].sounds.Array.data[7].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: c283b6f051a957f49833c8d212b6e247, type: 3}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[4].sounds.Array.data[7].name
       value: jumpattack_boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[4].sounds.Array.data[8].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: e79ca4fd6f2aaa248954ecb3a7e37d1b, type: 3}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[4].sounds.Array.data[8].name
+      value: spitattack_boss
       objectReference: {fileID: 0}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[0].pitch
@@ -903,6 +931,18 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[4].sounds.Array.data[6].pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[4].sounds.Array.data[7].pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[4].sounds.Array.data[8].pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: categories.Array.data[4].sounds.Array.data[0].volume
       value: 1
       objectReference: {fileID: 0}
@@ -926,6 +966,18 @@ PrefabInstance:
       propertyPath: categories.Array.data[4].sounds.Array.data[5].volume
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[4].sounds.Array.data[6].volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[4].sounds.Array.data[7].volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[4].sounds.Array.data[8].volume
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5587642829418137772, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: m_Name
       value: AudioManager
@@ -935,63 +987,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
---- !u!1001 &2883033258326409804
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 610927889684560972, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 221.44536
-      objectReference: {fileID: 0}
-    - target: {fileID: 610927889684560972, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 505.37125
-      objectReference: {fileID: 0}
-    - target: {fileID: 610927889684560972, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -6.2133384
-      objectReference: {fileID: 0}
-    - target: {fileID: 610927889684560972, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.53729963
-      objectReference: {fileID: 0}
-    - target: {fileID: 610927889684560972, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.8433915
-      objectReference: {fileID: 0}
-    - target: {fileID: 610927889684560972, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 610927889684560972, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 610927889684560972, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -115
-      objectReference: {fileID: 0}
-    - target: {fileID: 610927889684560972, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 610927889684560972, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4647388484711977732, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
-      propertyPath: m_Name
-      value: RockExplosionParticles
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1007,4 +1002,3 @@ SceneRoots:
   - {fileID: 1605158233}
   - {fileID: 1204491651}
   - {fileID: 1788478603}
-  - {fileID: 2883033258326409804}
