@@ -56,11 +56,9 @@ public class DamagePopUp : MonoBehaviour
 
     public void CreateDamageText(int damage, Vector3 position, bool isPlayer, bool isBoss, bool isCritical = false)
     {
-        // Determine spawn height
         float spawnHeight = isPlayer ? playerSpawnHeight :
                           (isBoss ? bossSpawnHeight : regularEnemiesHeight);
 
-        // Add horizontal randomness
         Vector3 randomOffset = new Vector3(
             Random.Range(-horizontalRandomness, horizontalRandomness),
             0,
@@ -69,26 +67,36 @@ public class DamagePopUp : MonoBehaviour
 
         Vector3 spawnPosition = position + Vector3.up * spawnHeight + randomOffset;
 
-        // If it's a critical hit, trigger the screen flash
         if (isCritical)
         {
-            FlashScreen();  // Trigger the white flash effect
+            FlashScreen();
         }
 
-        // Create popup
         GameObject popUp = Instantiate(popUpPrefab, spawnPosition, Quaternion.identity);
         TextMeshPro text = popUp.GetComponent<TextMeshPro>();
 
-        // Set text properties with minus sign and space
-        text.text = $"-{damage}"; // Added minus sign and space
-        text.fontSize = isCritical ? critTextSize : normalTextSize;
-
-        // Color priority: Critical > Player/Boss > Default
+        text.text = $"-{damage}";
         text.color = isCritical ? critColor :
                    (isPlayer ? playerColor :
                    (isBoss ? bossColor : defaultColor));
 
-        // Choose animation parameters
+        // Set initial font size
+        if (isCritical)
+        {
+            float startSize = 10f; // Animation start size
+            text.fontSize = startSize;
+
+            // Animate font size to critTextSize
+            LeanTween.value(popUp, startSize, critTextSize, 0.2f)
+                     .setOnUpdate((float val) => {
+                         text.fontSize = val;
+                     });
+        }
+        else
+        {
+            text.fontSize = normalTextSize;
+        }
+
         float floatDistance = isCritical ?
             Random.Range(critMinFloatDistance, critMaxFloatDistance) :
             Random.Range(normalMinFloatDistance, normalMaxFloatDistance);
@@ -97,12 +105,13 @@ public class DamagePopUp : MonoBehaviour
             Random.Range(critMinDuration, critMaxDuration) :
             Random.Range(normalMinDuration, normalMaxDuration);
 
-        // Animate the damage popup (move and fade out)
         LeanTween.moveY(popUp, spawnPosition.y + floatDistance, duration)
                  .setEaseOutQuad();
+
         LeanTween.alphaText(popUp.GetComponent<RectTransform>(), 0f, duration)
                  .setOnComplete(() => Destroy(popUp));
     }
+
 
     private void FlashScreen()
     {

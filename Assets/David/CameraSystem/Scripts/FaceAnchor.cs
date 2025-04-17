@@ -17,6 +17,7 @@ public class FaceAnchor : MonoBehaviour
     public Vector3 attack2Offset = new Vector3(0.6f, -3.3f, -10);
     public Vector3 attack3Offset = new Vector3(6f, -3f, -10);
     public Vector3 takenHitOffset = new Vector3(-2f, 1f, -10);
+    public Vector3 healingOffset = new Vector3(0f, 2.5f, -10);
 
     [Header("Hit Reaction Settings")]
     public float hitFreezeDuration = 0.3f;
@@ -116,6 +117,7 @@ public class FaceAnchor : MonoBehaviour
     string GetCurrentState()
     {
         if (isInHitReaction) return "Hit";
+        if (animator.GetBool("IsHealing")) return "Heal";
         if (animator.GetBool("IsAttacking")) return "Attack" + animator.GetInteger("AttackCount");
         if (animator.GetBool("IsJumping")) return "Jump";
         if (animator.GetBool("IsFalling")) return "Fall";
@@ -124,11 +126,13 @@ public class FaceAnchor : MonoBehaviour
         return "Idle";
     }
 
+
     Vector3 GetCurrentOffset()
     {
         switch (currentState)
         {
             case "Hit": return takenHitOffset;
+            case "Heal": return healingOffset;
             case "Attack1": return attack1Offset;
             case "Attack2": return attack2Offset;
             case "Attack3": return attack3Offset;

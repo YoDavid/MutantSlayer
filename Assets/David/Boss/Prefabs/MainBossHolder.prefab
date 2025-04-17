@@ -1354,6 +1354,9 @@ MonoBehaviour:
   player: {fileID: 0}
   _isAttacking: 0
   showGizmos: 1
+  minScreamDelay: 5
+  maxScreamDelay: 10
+  screamDuration: 3
 --- !u!114 &2726740229659970565
 MonoBehaviour:
   m_ObjectHideFlags: 0

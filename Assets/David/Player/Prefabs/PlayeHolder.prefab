@@ -317,6 +317,7 @@ MonoBehaviour:
   attack2Offset: {x: 0.6, y: -3.3, z: -10}
   attack3Offset: {x: 6, y: -3, z: -10}
   takenHitOffset: {x: 0.9, y: -3, z: -10}
+  healingOffset: {x: 2, y: -0.7, z: -10}
   hitFreezeDuration: 0.4
   hitRecoveryCurve:
     serializedVersion: 2
@@ -358,6 +359,7 @@ GameObject:
   - component: {fileID: 4354458550246483424}
   - component: {fileID: 2616876883140300564}
   - component: {fileID: 6739346586538796022}
+  - component: {fileID: 237825488570196162}
   - component: {fileID: 2342704723376403555}
   m_Layer: 8
   m_Name: Player
@@ -532,6 +534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36dcf8e930e23eb4d8f1ed75af6058eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
   hitStunDuration: 0.3
 --- !u!114 &2616876883140300564
 MonoBehaviour:
@@ -549,7 +552,7 @@ MonoBehaviour:
   attackDurations:
   - 0.3
   - 0.35
-  - 0.5
+  - 0.3
   requireGrounded: 1
   cancelAttackIfAirborne: 1
   colliderOffsets:
@@ -603,6 +606,25 @@ MonoBehaviour:
   gravityScale: 4
   drawGizmos: 1
   lastDashTime: -999
+--- !u!114 &237825488570196162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8882437758783256304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95b5b0c3a87c17f4c8c1601516b8169b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHealth: {fileID: 2342704723376403555}
+  healingController: {fileID: 0}
+  staminaBar: {fileID: 0}
+  healPercentage: 0.33
+  holdThreshold: 0.25
+  holdTimer: 0
+  isHolding: 0
 --- !u!114 &2342704723376403555
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -53,17 +53,22 @@ public class BossAI : MonoBehaviour
     [SerializeField] private bool _isAttacking = false;
     [SerializeField] private bool showGizmos = false;
 
+    [Header("Boss Scream Settings")]
+    [SerializeField] private float minScreamDelay = 5f;
+    [SerializeField] private float maxScreamDelay = 10f;
+    private bool isScreamPlaying = false;
+    [SerializeField] private float screamDuration = 1.5f; 
+
+    private float nextScreamTimer;
     private bool isWalkingSoundPlaying = false;
-    private bool isScreamTriggered = false; 
-    private float screamCooldown = 4f; 
-    private float screamCooldownTimer = 0f; 
-    private bool isRangedAttackSoundPlaying = false;
+
 
 
     void Start()
     {
         InitializeValues();
         FindReferences();
+        nextScreamTimer = Random.Range(minScreamDelay, maxScreamDelay);
     }
 
     void InitializeValues()
@@ -94,14 +99,25 @@ public class BossAI : MonoBehaviour
         UpdateGroundedStatus();
         HandleFlipAndState();
 
-        if (screamCooldownTimer > 0f)
+        if (!isScreamPlaying)
         {
-            screamCooldownTimer -= Time.deltaTime;
+            nextScreamTimer -= Time.deltaTime;
+
+            if (nextScreamTimer <= 0f && player != null)
+            {
+                float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+
+                if (IsPlayerInWalkingRange(distanceToPlayer))
+                {
+                    StartCoroutine(PlayBossScreamWithCooldown());
+                }
+                else
+                {
+                    nextScreamTimer = Random.Range(minScreamDelay, maxScreamDelay);
+                }
+            }
         }
-        else
-        {
-            isScreamTriggered = false;  // Reset the flag after cooldown ends
-        }
+
 
         UpdateWalkingSound();
     }
@@ -149,7 +165,6 @@ public class BossAI : MonoBehaviour
             case BossState.Jumping:
                 if (!IsAttacking())
                 {
-                    PlayRandomBossScream(); // Play random scream when boss jumps
                     attackManager.JumpAttackBehavior();
                 }
                 break;
@@ -187,31 +202,21 @@ public class BossAI : MonoBehaviour
                 break;
 
             case BossState.AOEAttack:
-                PlayRandomBossScream();  // Play random scream when boss starts AOE attack
                 attackManager.AOEAttackBehavior();
                 StartCoroutine(WaitForAttack(aoeAttackDuration));
                 break;
 
             case BossState.RangedAttack:
-                if (!isRangedAttackSoundPlaying)  // Check if sound is not already playing
-                {
-                    AudioManager.Instance.PlaySpitAttackBoss();
-                    isRangedAttackSoundPlaying = true; // Set flag to prevent overlapping sound
-                }
-
                 attackManager.RangedAttackBehavior();
                 StartCoroutine(WaitForAttack(rangedAttackDuration));
                 break;
 
             case BossState.ComboAttack:
-                PlayRandomBossScream();  // Play random scream when boss starts combo attack
                 attackManager.ComboAttackBehavior();
                 StartCoroutine(WaitForAttack(comboAttackDuration));
                 break;
         }
     }
-
-
 
     void UpdateWalkingSound()
     {
@@ -226,8 +231,6 @@ public class BossAI : MonoBehaviour
             isWalkingSoundPlaying = false;
         }
     }
-
-
 
     void DecideAttack()
     {
@@ -312,12 +315,6 @@ public class BossAI : MonoBehaviour
         ResumeMovement();
         currentState = BossState.Moving;
         attackCooldownTimer = Random.Range(minAttackTime, maxAttackTime);
-
-        // Reset the sound flag after the attack is completed
-        if (currentState == BossState.RangedAttack)
-        {
-            isRangedAttackSoundPlaying = false;
-        }
     }
 
     public void StopMovement()
@@ -378,11 +375,11 @@ public class BossAI : MonoBehaviour
         return false;
     }
 
-    private void PlayRandomBossScream()
+    IEnumerator PlayBossScreamWithCooldown()
     {
-        if (isScreamTriggered) return;  // Prevent playing another scream if already triggered
+        isScreamPlaying = true;
 
-        int index = Random.Range(0, 3);
+        int index = Random.Range(0, 4);
         switch (index)
         {
             case 0:
@@ -399,12 +396,10 @@ public class BossAI : MonoBehaviour
                 break;
         }
 
-        // Set scream triggered and start cooldown timer
-        isScreamTriggered = true;
-        screamCooldownTimer = screamCooldown;
+        yield return new WaitForSeconds(screamDuration); 
+        isScreamPlaying = false;
+        nextScreamTimer = Random.Range(minScreamDelay, maxScreamDelay);
     }
-
-
 
     private void OnDrawGizmos()
     {

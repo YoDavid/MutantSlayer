@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerAnimationController : MonoBehaviour
 {
-    private Animator animator;
+    public Animator animator;
     private Rigidbody2D rb;
     private PlayerMovementController movementController;
     private PlayerAttackController attackController;
@@ -127,5 +127,10 @@ public class PlayerAnimationController : MonoBehaviour
 
         SetSpeed(move);
         SetDashingState(isDashing);
+    }
+
+    public void TriggerHealingAnimation()
+    {
+        animator.SetBool("IsHealing", true);
     }
 }

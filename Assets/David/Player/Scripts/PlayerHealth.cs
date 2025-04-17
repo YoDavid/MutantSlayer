@@ -6,12 +6,12 @@ public class PlayerHealth : HealthSystem
     [Header("Player Status")]
     public bool isDead = false;
     [SerializeField] private float invulnerabilityTime = 0.5f;
+ 
 
     private PlayerMovementController playerMovement;
     private PlayerHurtbox playerHurtbox;
     private PlayerAnimationController playerAnimation;
     private bool isInvulnerable = false;
-
 
     protected override void Awake()
     {
@@ -54,8 +54,6 @@ public class PlayerHealth : HealthSystem
         }
     }
 
-
-
     private IEnumerator InvulnerabilityFrame()
     {
         isInvulnerable = true;
@@ -81,5 +79,35 @@ public class PlayerHealth : HealthSystem
     {
         CurrentHealth += amount;
         OnHealthChanged?.Invoke(CurrentHealth);
+
+        if (playerAnimation != null)
+        {
+            playerAnimation.TriggerHealingAnimation();
+            StartCoroutine(EndHealingAfterDelay(0.9f)); // adjust time to match your healing animation length
+        }
     }
+
+    private IEnumerator EndHealingAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        playerAnimation.animator.SetBool("IsHealing", false);
+    }
+
+    public void HealPercentage(float percentage)
+    {
+        int healAmount = Mathf.FloorToInt(MaxHealth * percentage);  
+
+        CurrentHealth += healAmount;
+        CurrentHealth = Mathf.Min(CurrentHealth, MaxHealth); 
+
+        OnHealthChanged?.Invoke(CurrentHealth);
+
+        if (playerAnimation != null)
+        {
+            playerAnimation.TriggerHealingAnimation();
+            StartCoroutine(EndHealingAfterDelay(0.9f)); 
+        }
+    }
+
+
 }

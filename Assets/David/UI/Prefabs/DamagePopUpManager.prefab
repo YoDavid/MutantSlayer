@@ -179,7 +179,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1890701361
-  m_SortingLayer: 8
+  m_SortingLayer: 11
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &8141151732480384338
@@ -400,7 +400,7 @@ MonoBehaviour:
   bossColor: {r: 0.3019608, g: 0, b: 0, a: 1}
   critColor: {r: 1, g: 0.015686274, b: 0.065902814, a: 1}
   normalTextSize: 10
-  critTextSize: 14
+  critTextSize: 18
   regularEnemiesHeight: 1
   playerSpawnHeight: -2
   bossSpawnHeight: 1
