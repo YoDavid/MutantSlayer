@@ -47,6 +47,16 @@ public class PlayerMovementController : MonoBehaviour
     private float jumpTimeCounter;
     private bool isMovementEnabled = true;
 
+
+    [Header("Step Sound Settings")]
+    [SerializeField] private float stepInterval = 0.4f; // How often steps play
+    private bool isPlayingSteps = false;
+
+    public int GetFacingDirection()
+{
+    return facingDirection;
+}
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -75,6 +85,7 @@ public class PlayerMovementController : MonoBehaviour
         }
 
         Move(move);
+        HandleStepSound(move);
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded && CanJumpAfterDash())
             StartJump();
@@ -92,6 +103,36 @@ public class PlayerMovementController : MonoBehaviour
         }
 
         playerAnimationController.UpdateAnimationStates(move, isGrounded, isDashing);
+    }
+
+    private Coroutine stepCoroutine;
+
+    private void HandleStepSound(float move)
+    {
+        bool shouldPlaySteps = Mathf.Abs(move) > 0.1f && isGrounded;
+
+        if (shouldPlaySteps && !isPlayingSteps && !isDashing)
+        {
+            stepCoroutine = StartCoroutine(PlayStepSoundLoop());
+            isPlayingSteps = true;
+        }
+        else if (!shouldPlaySteps && isPlayingSteps || isDashing)
+        {
+            if (stepCoroutine != null) StopCoroutine(stepCoroutine);
+            isPlayingSteps = false;
+        }
+    }
+
+    private IEnumerator PlayStepSoundLoop()
+    {
+        while (true)
+        {
+            // Use the new method that randomizes the pitch
+            AudioManager.Instance.PlaySFXWithRandomPitch("PlayerOthers", "player_steps");
+
+            // Wait for the next step interval
+            yield return new WaitForSeconds(stepInterval);
+        }
     }
 
     private bool CanJumpAfterDash()
@@ -158,8 +199,12 @@ public class PlayerMovementController : MonoBehaviour
 
         playerHurtbox.SetInvincible(true);
         rb.velocity = new Vector2(facingDirection * dashSpeed, rb.velocity.y);
+
+        AudioManager.Instance.PlayDash();
+
         StartCoroutine(StopDash());
     }
+
 
     private IEnumerator StopDash()
     {
@@ -195,4 +240,6 @@ public class PlayerMovementController : MonoBehaviour
             Gizmos.DrawLine(groundCheckPoint.position, groundCheckPoint.position + Vector3.down * groundCheckDistance);
         }
     }
+
+
 }

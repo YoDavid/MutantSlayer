@@ -33,6 +33,7 @@ public class AudioManager : MonoBehaviour
         new AudioCategory { name = "UI" },
         new AudioCategory { name = "Environment" },
         new AudioCategory { name = "Player" },
+        new AudioCategory { name = "PlayerOthers" },
         new AudioCategory { name = "Enemies" },
         new AudioCategory { name = "Boss" }
     };
@@ -207,26 +208,59 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void PlaySFXWithRandomPitch(string categoryName, string soundName, float volumeMultiplier = 1f)
+    {
+        float randomPitch = Random.Range(0.8f, 1.2f); // Randomize pitch between 0.8 and 1.2
+        PlaySFX(categoryName, soundName, volumeMultiplier, randomPitch);
+    }
+
     //                UI 
     public void PlayButtonClick() => PlaySFX("UI", "button_click");
     public void PlayButtonHover() => PlaySFX("UI", "button_hover");
     public void PlaySlideTransition() => PlaySFX("UI", "slide_transition");
     public void PlayMenuOpen() => PlaySFX("UI", "menu_open");
     public void PlayMenuClose() => PlaySFX("UI", "menu_close");
+    public void PlayDeathScreen() => PlaySFX("UI", "death_Screen");
 
     //               Environment
     public void PlayBloodParticlesDeathSound() => PlaySFX("Environment", "blood_particles_death_sound");
+    public void PlayHealingSound() => PlaySFX("Environment", "healing_sound");
+    public void PlayCreatingHeal() => PlaySFX("Environment", "creating_heal");
 
-    //               Player
+    //               Player taking hit
     public void PlayPlayer_TakeHit01() => PlaySFX("Player", "take_hit_01");   // make random takehit sounds 
     public void PlayPlayer_TakeHit02() => PlaySFX("Player", "take_hit_02");   // make random takehit sounds 
     public void PlayPlayer_TakeHit03() => PlaySFX("Player", "take_hit_03");   // make random takehit sounds 
 
-
+    //               Player hit enemy
     public void PlaySlash_Hit01() => PlaySFX("Player", "slash_hit_01");   
     public void PlaySlash_Hit02() => PlaySFX("Player", "slash_hit_02");   
     public void PlaySlash_Hit03() => PlaySFX("Player", "slash_hit_03");   
-    public void PlaySlash_Hit04() => PlaySFX("Player", "slash_hit_04");   
+    public void PlaySlash_Hit04() => PlaySFX("Player", "slash_hit_04");
+
+    //               Player swing sword
+    public void PlaySwing_00() => PlaySFX("PlayerOthers", "player_swing_00");
+    public void PlaySwing_01() => PlaySFX("PlayerOthers", "player_swing_01");
+    public void PlaySwing_02() => PlaySFX("PlayerOthers", "player_swing_02");
+
+    public void PlayPlayerAttackSwing(int attackIndex)
+    {
+        // Clamp to valid range just in case
+        attackIndex = Mathf.Clamp(attackIndex, 0, 2);
+
+        string soundName = $"player_swing_0{attackIndex}";
+        PlaySFX("PlayerOthers", soundName);
+        Debug.Log("Play");
+    }
+
+    //               Player steps
+    public void PlaySteps() => PlaySFX("PlayerOthers", "player_steps");
+
+    public void PlayHealingGrunt() => PlaySFX("Player", "player_grunt");
+
+    public void PlayDash() => PlaySFX("Player", "player_dash");
+
+
 
     //               Enemies
     public void PlayMediumEnemyScream() => PlaySFX("Enemies", "scream_medium_enemy");

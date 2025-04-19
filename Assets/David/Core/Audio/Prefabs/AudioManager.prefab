@@ -512,6 +512,134 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &2588045251480407845
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6044781596796473464}
+  - component: {fileID: 1903071763769011360}
+  m_Layer: 0
+  m_Name: PlayerOthers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6044781596796473464
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2588045251480407845}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8846214125633828358}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1903071763769011360
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2588045251480407845}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4608243634185540282
 GameObject:
   m_ObjectHideFlags: 0
@@ -711,12 +839,24 @@ MonoBehaviour:
       clip: {fileID: 8300000, guid: ef3ddbb65fca97541a93cae59f0ebab0, type: 3}
       volume: 1
       pitch: 1
+    - name: death_Screen
+      clip: {fileID: 8300000, guid: 440909c7dd80bce48ad008e6ad449708, type: 3}
+      volume: 0.5
+      pitch: 1
   - name: Environment
     source: {fileID: 7705638424714490615}
     sounds:
     - name: blood_particles_death_sound
       clip: {fileID: 8300000, guid: a9084681bd042ab4699afe08172862f0, type: 3}
-      volume: 0.4
+      volume: 0.2
+      pitch: 1
+    - name: healing_sound
+      clip: {fileID: 8300000, guid: cb405023201037f4aa49494f53993344, type: 3}
+      volume: 0.6
+      pitch: 1
+    - name: creating_heal
+      clip: {fileID: 8300000, guid: a17dff4530c159f448e8a8fbbd731a0e, type: 3}
+      volume: 0.6
       pitch: 1
   - name: Player
     source: {fileID: 743618483834653189}
@@ -735,18 +875,45 @@ MonoBehaviour:
       pitch: 1
     - name: slash_hit_01
       clip: {fileID: 8300000, guid: 897fb0ad211e6db49b79831e6c27a31d, type: 3}
-      volume: 1
+      volume: 0.6
       pitch: 1
     - name: slash_hit_02
       clip: {fileID: 8300000, guid: a1b6afbb0b18db04893c5414180ac318, type: 3}
-      volume: 1
+      volume: 0.6
       pitch: 1
     - name: slash_hit_03
       clip: {fileID: 8300000, guid: 525f0826b66dc984fbd45f292d78fe70, type: 3}
-      volume: 1
+      volume: 0.6
       pitch: 1
     - name: slash_hit_04
       clip: {fileID: 8300000, guid: 12ad9d0220c43274eb0bf1d628320b59, type: 3}
+      volume: 0.6
+      pitch: 1
+    - name: player_grunt
+      clip: {fileID: 8300000, guid: 9d8315e39a8e827469b1f5cdad4e414d, type: 3}
+      volume: 0.6
+      pitch: 1
+    - name: player_dash
+      clip: {fileID: 8300000, guid: f1547680e7798624ba8669180291e45c, type: 3}
+      volume: 0.6
+      pitch: 1
+  - name: PlayerOthers
+    source: {fileID: 1903071763769011360}
+    sounds:
+    - name: player_swing_00
+      clip: {fileID: 8300000, guid: 3e6f10e9332d07e4cbc261186fd9afcd, type: 3}
+      volume: 0.4
+      pitch: 1
+    - name: player_swing_01
+      clip: {fileID: 8300000, guid: 5247593f2e5cca541899b803be142d40, type: 3}
+      volume: 0.4
+      pitch: 1
+    - name: player_swing_02
+      clip: {fileID: 8300000, guid: 509786607c84e354eb8deb34ebe546c8, type: 3}
+      volume: 0.4
+      pitch: 1
+    - name: player_steps
+      clip: {fileID: 8300000, guid: 7b7d90e71e4400f4397f54ff707ebab5, type: 3}
       volume: 1
       pitch: 1
   - name: Enemies
@@ -754,27 +921,27 @@ MonoBehaviour:
     sounds:
     - name: scream_medium_enemy
       clip: {fileID: 8300000, guid: fe6d6aa4e19f64444a34e91c652bf96e, type: 3}
-      volume: 1
+      volume: 0.7
       pitch: 1
     - name: last_scream_medium_enemy
       clip: {fileID: 8300000, guid: 8668dbb6c8fc62b4c99628a7bb54c001, type: 3}
-      volume: 1
+      volume: 0.7
       pitch: 1
     - name: takehit_medium_enemy
       clip: {fileID: 8300000, guid: 4968c202b538df643a751553733eb958, type: 3}
-      volume: 1
+      volume: 0.7
       pitch: 1
     - name: scream_small_enemy
       clip: {fileID: 8300000, guid: 33bb2cf674f97a144968156ab3457ae1, type: 3}
-      volume: 1
+      volume: 0.4
       pitch: 1
     - name: last_scream_small_enemy
       clip: {fileID: 8300000, guid: e9d4010e44033a74ab9f5206deb50950, type: 3}
-      volume: 1
+      volume: 0.4
       pitch: 1
     - name: takehit_small_enemy
       clip: {fileID: 8300000, guid: e505f3aa12630e742a5d8e7f64e12b47, type: 3}
-      volume: 1
+      volume: 0.4
       pitch: 1
   - name: Boss
     source: {fileID: 5319925431149274405}
@@ -985,6 +1152,7 @@ Transform:
   - {fileID: 5226764251146977168}
   - {fileID: 3733575515032036246}
   - {fileID: 8843768683420501992}
+  - {fileID: 6044781596796473464}
   - {fileID: 8726445627587333140}
   - {fileID: 6402462255804626210}
   m_Father: {fileID: 4586583392172079557}

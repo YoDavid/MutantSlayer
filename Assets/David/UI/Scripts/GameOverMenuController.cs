@@ -6,7 +6,7 @@ using System.Collections;
 public class GameOverMenuController : BaseMenuController
 {
     [Header("Death Sequence Settings")]
-    [SerializeField] private float timeSlowDuration = 1.5f; // New: Duration for time slowdown
+    [SerializeField] private float timeSlowDuration = 1.5f;
     [SerializeField] private float fadeOutDuration = 1f;
     [SerializeField] private float delayBeforeTextAnimation = 0.5f;
     [SerializeField] private float textFadeInDuration = 1f;
@@ -15,11 +15,13 @@ public class GameOverMenuController : BaseMenuController
     [SerializeField] private float maxScale = 1.2f;
     [SerializeField] private float delayAfterTextAnimation = 0.5f;
     [SerializeField] private float panelFadeDuration = 1f;
+    [SerializeField] private float buttonFadeDuration = 1f;
 
     [Header("UI References")]
     [SerializeField] private CanvasGroup youDiedTextCanvasGroup;
     [SerializeField] private RectTransform youDiedTextTransform;
     [SerializeField] private GameObject buttonsParent;
+    [SerializeField] private CanvasGroup buttonsCanvasGroup;
     [SerializeField] private CanvasGroup fadeInPanel;
 
     public bool IsVisible { get; private set; }
@@ -34,12 +36,17 @@ public class GameOverMenuController : BaseMenuController
     {
         if (youDiedTextCanvasGroup != null) youDiedTextCanvasGroup.alpha = 0f;
         if (buttonsParent != null) buttonsParent.SetActive(false);
+        if (buttonsCanvasGroup != null)
+        {
+            buttonsCanvasGroup.alpha = 0f;
+            buttonsCanvasGroup.interactable = false;
+            buttonsCanvasGroup.blocksRaycasts = false;
+        }
         if (fadeInPanel != null) fadeInPanel.alpha = 0f;
     }
 
     public void StartGameOverSequence()
     {
-        // Don't pause immediately - start slowdown coroutine
         StartCoroutine(GradualTimeSlowdown());
     }
 
@@ -48,33 +55,28 @@ public class GameOverMenuController : BaseMenuController
         float elapsed = 0f;
         while (elapsed < timeSlowDuration)
         {
-            // Gradually reduce timescale from 1 to 0
             Time.timeScale = Mathf.Lerp(1f, 0f, elapsed / timeSlowDuration);
-            Time.fixedDeltaTime = 0.02f * Time.timeScale; // Adjust fixedDeltaTime accordingly
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
             elapsed += Time.unscaledDeltaTime;
             yield return null;
         }
 
-        // Ensure timescale is exactly 0 when done
         Time.timeScale = 0f;
 
-        // Start the UI sequence
         ResetMenuState();
         StartCoroutine(GameOverSequence());
     }
 
     private IEnumerator GameOverSequence()
     {
-        // Make sure the fadeInPanel is active
         if (fadeInPanel != null)
         {
-            fadeInPanel.gameObject.SetActive(true); // Make it active before fading
-            yield return StartCoroutine(FadePanel(0f, 1f, panelFadeDuration));
+            fadeInPanel.gameObject.SetActive(true);
+            yield return StartCoroutine(FadeCanvasGroup(fadeInPanel, 0f, 1f, panelFadeDuration));
         }
 
         yield return new WaitForSecondsRealtime(delayBeforeTextAnimation);
 
-        // Animate "You Died" text
         if (youDiedTextCanvasGroup != null && youDiedTextTransform != null)
         {
             yield return StartCoroutine(AnimateYouDiedText());
@@ -82,44 +84,48 @@ public class GameOverMenuController : BaseMenuController
 
         yield return new WaitForSecondsRealtime(delayAfterTextAnimation);
 
-        // Show buttons
-        if (buttonsParent != null)
+        if (buttonsParent != null && buttonsCanvasGroup != null)
         {
             buttonsParent.SetActive(true);
+            yield return StartCoroutine(FadeCanvasGroup(buttonsCanvasGroup, 0f, 1f, buttonFadeDuration));
+            buttonsCanvasGroup.interactable = true;
+            buttonsCanvasGroup.blocksRaycasts = true;
         }
 
         SetVisible(true);
-    }
-
-
-    private IEnumerator FadePanel(float startAlpha, float endAlpha, float duration)
-    {
-        fadeInPanel.alpha = startAlpha;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            fadeInPanel.alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / duration);
-            elapsed += Time.unscaledDeltaTime;
-            yield return null;
-        }
-
-        fadeInPanel.alpha = endAlpha;
     }
 
     private IEnumerator AnimateYouDiedText()
     {
         youDiedTextCanvasGroup.alpha = 0f;
         float elapsed = 0f;
+        AudioManager.Instance.PlayDeathScreen();
 
-        // Fade in
         while (elapsed < textFadeInDuration)
         {
             youDiedTextCanvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsed / textFadeInDuration);
             elapsed += Time.unscaledDeltaTime;
             yield return null;
         }
+
         youDiedTextCanvasGroup.alpha = 1f;
+    }
+
+    private IEnumerator FadeCanvasGroup(CanvasGroup group, float startAlpha, float endAlpha, float duration)
+    {
+        if (group == null) yield break;
+
+        float elapsed = 0f;
+        group.alpha = startAlpha;
+
+        while (elapsed < duration)
+        {
+            group.alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / duration);
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        group.alpha = endAlpha;
     }
 
     public void SetVisible(bool visible)
@@ -131,7 +137,7 @@ public class GameOverMenuController : BaseMenuController
     public void OnRestartPressed()
     {
         Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02f; // Reset fixedDeltaTime
+        Time.fixedDeltaTime = 0.02f;
         LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -139,7 +145,7 @@ public class GameOverMenuController : BaseMenuController
     {
         AudioManager.Instance.PlayButtonClick();
         Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02f; // Reset fixedDeltaTime
+        Time.fixedDeltaTime = 0.02f;
         SceneLoader.Instance.LoadSceneWithFade("Scene_MainMenu");
     }
 }

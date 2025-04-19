@@ -7,11 +7,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private PauseMenuController pauseMenu;
     [SerializeField] private GameOverMenuController gameOverMenu;
     [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private PlayerMovementController playerMovement;
 
     [Header("Boss UI")]
     [SerializeField] private GameObject bossHealthBarContainer;
     [SerializeField] private Transform bossTransform;
     [SerializeField] private float bossBarShowDistance = 15f;
+
     private Transform playerTransform;
 
     private void Awake()
@@ -19,18 +21,12 @@ public class UIManager : MonoBehaviour
         if (!hud) hud = transform.Find("Canvas/HUD")?.gameObject;
         if (!pauseMenu) pauseMenu = transform.Find("Canvas/PauseMenu")?.GetComponent<PauseMenuController>();
         if (!gameOverMenu) gameOverMenu = transform.Find("Canvas/GameOverMenu")?.GetComponent<GameOverMenuController>();
+        if (!playerHealth) playerHealth = FindAnyObjectByType<PlayerHealth>();
+        if (!playerMovement) playerMovement = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerMovementController>();
 
         SetHUDVisible(true);
-        if (gameOverMenu != null) gameOverMenu.gameObject.SetActive(false);
-        playerHealth = FindAnyObjectByType<PlayerHealth>();
-    }
 
-    private void Start()
-    {
-        if (playerHealth != null)
-        {
-            playerHealth.OnDeath += HandlePlayerDeath;
-        }
+        if (gameOverMenu != null) gameOverMenu.gameObject.SetActive(false);
 
         if (playerHealth != null)
         {
@@ -56,8 +52,6 @@ public class UIManager : MonoBehaviour
         HandleBossHealthBarVisibility();
     }
 
-
-
     private void OnDestroy()
     {
         if (playerHealth != null)
@@ -73,15 +67,25 @@ public class UIManager : MonoBehaviour
 
     public void SetHUDVisible(bool visible)
     {
-        if (hud) hud.SetActive(visible);
+        if (hud != null)
+            hud.SetActive(visible);
     }
 
     public void TogglePauseMenu()
     {
         if (pauseMenu == null) return;
+
         bool shouldPause = !pauseMenu.IsVisible;
+
         pauseMenu.SetVisible(shouldPause);
         SetHUDVisible(!shouldPause);
+
+        // Safely pause/unpause game time
+        Time.timeScale = shouldPause ? 0f : 1f;
+
+        // Enable/disable player movement
+        if (playerMovement != null)
+            playerMovement.SetMovementEnabled(!shouldPause);
     }
 
     private void HandleBossHealthBarVisibility()
@@ -98,7 +102,10 @@ public class UIManager : MonoBehaviour
 
     public void ShowGameOver()
     {
+        Time.timeScale = 1f; // Resume time just in case
+
         SetHUDVisible(false);
+
         if (gameOverMenu != null)
         {
             gameOverMenu.gameObject.SetActive(true);

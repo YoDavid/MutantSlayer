@@ -133,4 +133,27 @@ public class PlayerAnimationController : MonoBehaviour
     {
         animator.SetBool("IsHealing", true);
     }
+
+    public void SetChargeStart(bool value)
+    {
+        animator.SetBool("ChargeStart", value);
+    }
+
+    public void SetChargingLoop(bool value)
+    {
+        animator.SetBool("ChargingLoop", value);
+    }
+
+    public void SetChargeAttack()
+    {
+        animator.SetBool("ChargeStart", false); 
+        animator.SetBool("ChargingLoop", false);
+        animator.SetBool("ChargeAttack", true);
+    }
+
+    public void ResetChargeAttack()
+    {
+        animator.SetBool("ChargeAttack", false);
+    }
+
 }

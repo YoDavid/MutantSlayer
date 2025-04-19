@@ -374,6 +374,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6412936599127628674}
+  - component: {fileID: 8186502503050222496}
   m_Layer: 5
   m_Name: ButtonsParent
   m_TagString: Untagged
@@ -402,6 +403,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -75}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &8186502503050222496
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356259107323380178}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &358504965374541688
 GameObject:
   m_ObjectHideFlags: 0
@@ -1736,9 +1749,11 @@ MonoBehaviour:
   maxScale: 1.2
   delayAfterTextAnimation: 0.5
   panelFadeDuration: 1
+  buttonFadeDuration: 1
   youDiedTextCanvasGroup: {fileID: 8718005387496665273}
   youDiedTextTransform: {fileID: 3009965751678881060}
   buttonsParent: {fileID: 356259107323380178}
+  buttonsCanvasGroup: {fileID: 8186502503050222496}
   fadeInPanel: {fileID: 5503047388229596887}
 --- !u!1 &3274793186069623585
 GameObject:

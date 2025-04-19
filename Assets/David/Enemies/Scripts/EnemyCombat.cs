@@ -15,6 +15,9 @@ public class EnemyCombat : MonoBehaviour
     private EnemyMovement movement;
     private CameraShake cameraShake;
 
+    [Header("Effects")]
+    [SerializeField] private GameObject rockParticlesPrefab;
+
     public bool CanAttack => Time.time >= lastAttackTime + currentAttackCooldown;
     public bool IsAttacking { get; private set; }
     public float AttackRange => config.attackRange;
@@ -34,7 +37,7 @@ public class EnemyCombat : MonoBehaviour
     public void ExecuteAttack()
     {
         lastAttackTime = Time.time;
-        currentAttackCooldown = config.GetRandomAttackCooldown(); 
+        currentAttackCooldown = config.GetRandomAttackCooldown();
         IsAttacking = true;
         animator.SetTrigger("Attack");
         StartCoroutine(AttackSequence());
@@ -54,6 +57,14 @@ public class EnemyCombat : MonoBehaviour
 
         attackCollider.SetAttackPhase(true);
         attackCollider.EnableAttackCollider();
+
+        if (rockParticlesPrefab != null && attackCollider.TryGetComponent<Collider2D>(out var col))
+        {
+            Vector3 spawnPosition = col.bounds.center + Vector3.down * 2f;
+            AudioManager.Instance.PlayComboAttackBoss();
+            Instantiate(rockParticlesPrefab, spawnPosition, Quaternion.identity);
+        }
+
         yield return new WaitForSeconds(config.colliderActiveDuration);
         attackCollider.DisableAttackCollider();
 
