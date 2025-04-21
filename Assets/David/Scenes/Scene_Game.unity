@@ -959,6 +959,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 646856363}
     m_Modifications:
+    - target: {fileID: 237825488570196162, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: staminaBar
+      value: 
+      objectReference: {fileID: 1320395528}
+    - target: {fileID: 237825488570196162, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: healingController
+      value: 
+      objectReference: {fileID: 542809628}
     - target: {fileID: 2342704723376403555, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: _maxHealth
       value: 10
@@ -1009,6 +1017,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5545429896931029101, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5562773795898690743, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6021447871000286383, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
@@ -2256,6 +2268,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
   m_PrefabInstance: {fileID: 1675540709}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &542809628 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 126891350228964196, guid: ed5300a798306264f8c832093c79fe55, type: 3}
+  m_PrefabInstance: {fileID: 48389303548591984}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 740eadc728e510440aea7321e96e3204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &555345230 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2833721365130449538, guid: f4ada9318c85be649840e870830fa14e, type: 3}
@@ -12288,6 +12311,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
+--- !u!114 &1320395528 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9075038868208015824, guid: ed5300a798306264f8c832093c79fe55, type: 3}
+  m_PrefabInstance: {fileID: 48389303548591984}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58b8accce06d10b4a9641fa6b97e42f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1321005290
 GameObject:
   m_ObjectHideFlags: 0
