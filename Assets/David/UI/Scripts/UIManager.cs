@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameOverMenuController gameOverMenu;
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private PlayerMovementController playerMovement;
+    [SerializeField] private PlayerAttackController playerAttackController;
 
     [Header("Boss UI")]
     [SerializeField] private GameObject bossHealthBarContainer;
@@ -23,6 +24,7 @@ public class UIManager : MonoBehaviour
         if (!gameOverMenu) gameOverMenu = transform.Find("Canvas/GameOverMenu")?.GetComponent<GameOverMenuController>();
         if (!playerHealth) playerHealth = FindAnyObjectByType<PlayerHealth>();
         if (!playerMovement) playerMovement = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerMovementController>();
+        if (!playerAttackController) playerAttackController = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerAttackController>();
 
         SetHUDVisible(true);
 
@@ -86,7 +88,12 @@ public class UIManager : MonoBehaviour
         // Enable/disable player movement
         if (playerMovement != null)
             playerMovement.SetMovementEnabled(!shouldPause);
+
+        // Disable/enable the PlayerAttackController when pausing/unpausing
+        if (playerAttackController != null)
+            playerAttackController.enabled = !shouldPause;
     }
+
 
     private void HandleBossHealthBarVisibility()
     {

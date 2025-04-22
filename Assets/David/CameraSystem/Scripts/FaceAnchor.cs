@@ -13,6 +13,8 @@ public class FaceAnchor : MonoBehaviour
     public Vector3 jumpOffset = new Vector3(3.2f, 0.8f, -10);
     public Vector3 fallOffset = new Vector3(3.2f, 0.8f, -10);
     public Vector3 slideOffset = new Vector3(-1f, -4.5f, -10);
+    public Vector3 chargeStartOffset = new Vector3(0f, 0.5f, -10);
+    public Vector3 chargeAttackOffset = new Vector3(2f, -1f, -10);
     public Vector3 attack1Offset = new Vector3(3f, -2.15f, -10);
     public Vector3 attack2Offset = new Vector3(0.6f, -3.3f, -10);
     public Vector3 attack3Offset = new Vector3(6f, -3f, -10);
@@ -118,6 +120,8 @@ public class FaceAnchor : MonoBehaviour
     {
         if (isInHitReaction) return "Hit";
         if (animator.GetBool("IsHealing")) return "Heal";
+        if (animator.GetBool("ChargeAttack")) return "ChargeAttack";
+        if (animator.GetBool("ChargeStart") || animator.GetBool("ChargingLoop")) return "ChargeStart";
         if (animator.GetBool("IsAttacking")) return "Attack" + animator.GetInteger("AttackCount");
         if (animator.GetBool("IsJumping")) return "Jump";
         if (animator.GetBool("IsFalling")) return "Fall";
@@ -126,13 +130,14 @@ public class FaceAnchor : MonoBehaviour
         return "Idle";
     }
 
-
     Vector3 GetCurrentOffset()
     {
         switch (currentState)
         {
             case "Hit": return takenHitOffset;
             case "Heal": return healingOffset;
+            case "ChargeAttack": return chargeAttackOffset;
+            case "ChargeStart": return chargeStartOffset;
             case "Attack1": return attack1Offset;
             case "Attack2": return attack2Offset;
             case "Attack3": return attack3Offset;

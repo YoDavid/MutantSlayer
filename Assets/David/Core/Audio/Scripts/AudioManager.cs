@@ -214,6 +214,32 @@ public class AudioManager : MonoBehaviour
         PlaySFX(categoryName, soundName, volumeMultiplier, randomPitch);
     }
 
+    public void StopSound(string categoryName, string soundName = null)
+    {
+        foreach (var category in categories)
+        {
+            if (category.name == categoryName)
+            {
+                if (string.IsNullOrEmpty(soundName))
+                {
+                    // Stop all sounds in the category
+                    category.source.Stop();
+                }
+                else
+                {
+                    // Optionally stop a specific sound if necessary
+                    if (category.soundDict.ContainsKey(soundName))
+                    {
+                        // Stop the specific sound (this could be adjusted based on whether you're using one-shot sounds or loops)
+                        category.source.Stop();
+                    }
+                }
+                return;
+            }
+        }
+    }
+
+
     //                UI 
     public void PlayButtonClick() => PlaySFX("UI", "button_click");
     public void PlayButtonHover() => PlaySFX("UI", "button_hover");
@@ -226,6 +252,7 @@ public class AudioManager : MonoBehaviour
     public void PlayBloodParticlesDeathSound() => PlaySFX("Environment", "blood_particles_death_sound");
     public void PlayHealingSound() => PlaySFX("Environment", "healing_sound");
     public void PlayCreatingHeal() => PlaySFX("Environment", "creating_heal");
+    public void PlayProjectileHit() => PlaySFX("Environment", "projectile_hit");
 
     //               Player taking hit
     public void PlayPlayer_TakeHit01() => PlaySFX("Player", "take_hit_01");   // make random takehit sounds 
@@ -253,12 +280,18 @@ public class AudioManager : MonoBehaviour
         Debug.Log("Play");
     }
 
+    public void PlayerChargingRangeAttack() => PlaySFX("Player", "player_charging_range_attack");
+    public void PlayerChargingSwordDraw() => PlaySFX("PlayerOthers", "player_charging_sword_draw");
+    public void PlayerChargingClimax() => PlaySFX("PlayerOthers", "player_charging_climax");
+
     //               Player steps
     public void PlaySteps() => PlaySFX("PlayerOthers", "player_steps");
 
     public void PlayHealingGrunt() => PlaySFX("Player", "player_grunt");
 
     public void PlayDash() => PlaySFX("Player", "player_dash");
+
+    public void PlayPlayerProjectileSound() => PlaySFX("PlayerOthers", "projectile_player");
 
 
 

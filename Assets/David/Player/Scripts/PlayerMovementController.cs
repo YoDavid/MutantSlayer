@@ -52,11 +52,6 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private float stepInterval = 0.4f; // How often steps play
     private bool isPlayingSteps = false;
 
-    public int GetFacingDirection()
-{
-    return facingDirection;
-}
-
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -204,7 +199,6 @@ public class PlayerMovementController : MonoBehaviour
 
         StartCoroutine(StopDash());
     }
-
 
     private IEnumerator StopDash()
     {

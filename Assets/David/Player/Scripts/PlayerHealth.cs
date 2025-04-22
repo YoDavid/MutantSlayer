@@ -29,7 +29,7 @@ public class PlayerHealth : HealthSystem
         base.TakeDamage(damage, isCritical);
 
         playerAnimation.TriggerTakenHit();
-        PlayRandomTakeHitSound(); // <-- Random sound here
+        PlayRandomTakeHitSound(); 
         DamagePopUp.Instance?.CreateDamageText(
             damage, transform.position + Vector3.up * 1.8f,
             isPlayer: true, isBoss: false, isCritical);
