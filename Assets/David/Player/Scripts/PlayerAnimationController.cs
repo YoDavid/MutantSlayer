@@ -12,6 +12,11 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField] private float hitStunDuration = 0.3f;
     private bool isInHitStun = false;
 
+    [Header("Charge Scale Settings")]
+    [SerializeField] private float chargeScale = 0.7f;
+    [SerializeField] private float normalScale = 1f;
+    private bool isCharging = false;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -19,6 +24,8 @@ public class PlayerAnimationController : MonoBehaviour
         movementController = GetComponent<PlayerMovementController>();
         attackController = GetComponent<PlayerAttackController>();
     }
+
+
 
     public void SetSpeed(float speed)
     {
@@ -72,7 +79,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void TriggerTakenHit()
     {
-        if (!isInHitStun && !animator.GetBool("IsDashing")) 
+        if (!isInHitStun && !animator.GetBool("IsDashing"))
         {
             StartCoroutine(HitStunRoutine());
             FaceAnchor faceAnchor = GetComponentInChildren<FaceAnchor>();
@@ -137,23 +144,42 @@ public class PlayerAnimationController : MonoBehaviour
     public void SetChargeStart(bool value)
     {
         animator.SetBool("ChargeStart", value);
+
+        if (value)
+        {
+            movementController.SetMovementEnabled(false);
+            attackController.SetAttackEnabled(false);
+        }
     }
 
     public void SetChargingLoop(bool value)
     {
         animator.SetBool("ChargingLoop", value);
+
+        if (value)
+        {
+            movementController.SetMovementEnabled(false);
+            attackController.SetAttackEnabled(false);
+        }
     }
 
     public void SetChargeAttack()
     {
-        animator.SetBool("ChargeStart", false); 
+        animator.SetBool("ChargeStart", false);
         animator.SetBool("ChargingLoop", false);
         animator.SetBool("ChargeAttack", true);
+
+        AudioManager.Instance.StopSound("Player", "player_charging_range_attack");
+        AudioManager.Instance.PlaySwing_00();
     }
 
     public void ResetChargeAttack()
     {
         animator.SetBool("ChargeAttack", false);
+
+        // Now re-enable movement + attack
+        movementController.SetMovementEnabled(true);
+        attackController.SetAttackEnabled(true);
     }
 
 }

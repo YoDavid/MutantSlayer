@@ -49,6 +49,16 @@ public class PlayerAttackController : MonoBehaviour
     private bool hasFiredChargeAttack = false;
     private float staminaDepleted = 0f; // Track the stamina consumed during the charge cycle
 
+    [Header("Charge Audio Delays")]
+    [SerializeField] private float chargingSoundDelay = 0.1f;
+    [SerializeField] private float swordDrawDelay = 0.4f;
+    [SerializeField] private float climaxDelay = 1.8f;
+
+    private Coroutine chargeAudioRoutine;
+    private bool playedSwordDraw = false;
+    private bool playedClimax = false;
+
+
 
 
     private void Awake()
@@ -93,11 +103,15 @@ public class PlayerAttackController : MonoBehaviour
                 {
                     animationController.SetChargeStart(true);
                     isCharging = true;
+                    playedSwordDraw = false;
+                    playedClimax = false;
+
+                    // Start the continuous and delayed sound logic
+                    if (chargeAudioRoutine != null) StopCoroutine(chargeAudioRoutine);
+                    chargeAudioRoutine = StartCoroutine(HandleChargeSounds());
                 }
                 else
                 {
-                    // Optional: Feedback if you want
-                    // Debug.Log("Not enough stamina to begin charging.");
                     return;
                 }
             }
@@ -123,7 +137,6 @@ public class PlayerAttackController : MonoBehaviour
             }
         }
 
-        // If the right mouse button is released
         if (Input.GetMouseButtonUp(1))
         {
             if (isCharging && !hasFiredChargeAttack)
@@ -131,7 +144,6 @@ public class PlayerAttackController : MonoBehaviour
                 TriggerChargeAttackSequence();
             }
 
-            // ✅ Reset if player releases button even after already firing
             if (hasFiredChargeAttack)
             {
                 isCharging = false;
@@ -141,8 +153,35 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
+    private IEnumerator HandleChargeSounds()
+    {
+        // Wait and play charging loop sound
+        yield return new WaitForSeconds(chargingSoundDelay);
+        if (isCharging)
+            AudioManager.Instance.PlayerChargingRangeAttack();
 
+        // Wait for sword draw
+        float waitForSwordDraw = swordDrawDelay - chargingSoundDelay;
+        if (waitForSwordDraw > 0)
+            yield return new WaitForSeconds(waitForSwordDraw);
 
+        if (isCharging && !playedSwordDraw)
+        {
+            AudioManager.Instance.PlayerChargingSwordDraw();
+            playedSwordDraw = true;
+        }
+
+        // Wait for climax
+        float waitForClimax = climaxDelay - swordDrawDelay;
+        if (waitForClimax > 0)
+            yield return new WaitForSeconds(waitForClimax);
+
+        if (isCharging && !playedClimax)
+        {
+            AudioManager.Instance.PlayerChargingClimax();
+            playedClimax = true;
+        }
+    }
 
 
     private void TriggerChargeAttackSequence()
@@ -163,8 +202,6 @@ public class PlayerAttackController : MonoBehaviour
         StartCoroutine(ResetChargeAttackState());
     }
 
-
-
     private IEnumerator FireChargeProjectileAfterDelay()
     {
         yield return new WaitForSeconds(chargeProjectileDelay);
@@ -172,20 +209,25 @@ public class PlayerAttackController : MonoBehaviour
         if (chargeProjectilePrefab != null && projectileSpawnPoint != null)
         {
             float chargeDuration = Time.time - chargeStartTime;
-            float finalScale = 0.1f; // default
+            float maxChargeTime = 9f;
+
+            // Clamp duration and calculate interpolation factor
+            float t = Mathf.Clamp01(chargeDuration / maxChargeTime);
+
+            // Calculate scale and damage using Lerp
+            float minScale = 0.1f;
+            float maxScale = 0.3f;
+            float finalScale = Mathf.Lerp(minScale, maxScale, t);
+
+            int damage = Mathf.RoundToInt(Mathf.Lerp(5f, 50f, t));
+
+            // Adjust spawn position based on charge duration
             Vector3 spawnPosition = projectileSpawnPoint.position;
-
-            if (chargeDuration >= 4f)
+            if (chargeDuration >= 4.5f) // Mid to max charge raises position
             {
-                finalScale = 0.3f;
-                spawnPosition.y += 2f; // Raise projectile when fully charged
-            }
-            else if (chargeDuration >= 2f)
-            {
-                finalScale = 0.2f;
+                spawnPosition.y += Mathf.Lerp(0f, 2f, (chargeDuration - 4.5f) / (maxChargeTime - 4.5f));
             }
 
-            // Instantiate and launch the projectile
             GameObject projectile = Instantiate(chargeProjectilePrefab, spawnPosition, Quaternion.identity);
             projectile.transform.localScale = new Vector3(finalScale, finalScale, 1f);
 
@@ -193,14 +235,11 @@ public class PlayerAttackController : MonoBehaviour
             if (cp != null)
             {
                 bool isFacingRight = transform.localScale.x > 0f;
+                cp.damage = damage;
                 cp.Launch(isFacingRight);
             }
         }
     }
-
-
-
-
 
     private IEnumerator ResetChargeAttackState()
     {
@@ -217,9 +256,6 @@ public class PlayerAttackController : MonoBehaviour
         // Reset stamina depletion tracker for next charge cycle
         staminaDepleted = 0f;
     }
-
-
-
 
     public void SetAttackEnabled(bool enabled)
     {
