@@ -3,13 +3,9 @@ using UnityEngine;
 
 public class PlatformDisappearAndReappear : MonoBehaviour
 {
-    // משך הזמן עד שהפלטפורמה נעלמת
     public float disappearTime = 3f;
-    // משך זמן ההבהוב
     public float blinkDuration = 1f;
-    // מספר ההבהובים
     public int blinkCount = 5;
-    // משך הזמן עד שהפלטפורמה חוזרת
     public float reappearTime = 5f;
 
     private bool playerOnPlatform = false;
@@ -36,12 +32,12 @@ public class PlatformDisappearAndReappear : MonoBehaviour
             if (timer >= disappearTime)
             {
                 StartCoroutine(BlinkAndDisappear());
-                playerOnPlatform = false; // עצירת הטיימר
+                playerOnPlatform = false; 
             }
         }
         else
         {
-            timer = 0f; // איפוס הטיימר
+            timer = 0f; 
         }
     }
 
@@ -63,7 +59,6 @@ public class PlatformDisappearAndReappear : MonoBehaviour
 
     IEnumerator BlinkAndDisappear()
     {
-        // הבהוב
         for (int i = 0; i < blinkCount; i++)
         {
             spriteRenderer.color = Color.white;
@@ -72,11 +67,9 @@ public class PlatformDisappearAndReappear : MonoBehaviour
             yield return new WaitForSeconds(blinkDuration / (blinkCount * 2));
         }
 
-        // כיבוי הפלטפורמה
         spriteRenderer.enabled = false;
         platformCollider.enabled = false;
 
-        // המתנה ואיפוס הפלטפורמה
         yield return new WaitForSeconds(reappearTime);
         spriteRenderer.enabled = true;
         platformCollider.enabled = true;

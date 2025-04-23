@@ -858,6 +858,10 @@ MonoBehaviour:
       clip: {fileID: 8300000, guid: a17dff4530c159f448e8a8fbbd731a0e, type: 3}
       volume: 0.6
       pitch: 1
+    - name: projectile_hit
+      clip: {fileID: 8300000, guid: 99b7cbd3b4cb19b4a86593e31ac6e2cb, type: 3}
+      volume: 0.6
+      pitch: 1
   - name: Player
     source: {fileID: 743618483834653189}
     sounds:
@@ -897,6 +901,10 @@ MonoBehaviour:
       clip: {fileID: 8300000, guid: f1547680e7798624ba8669180291e45c, type: 3}
       volume: 0.6
       pitch: 1
+    - name: player_charging_range_attack
+      clip: {fileID: 8300000, guid: 0d5ff3eab4e702b4aa9386940501b149, type: 3}
+      volume: 0.6
+      pitch: 1
   - name: PlayerOthers
     source: {fileID: 1903071763769011360}
     sounds:
@@ -916,6 +924,18 @@ MonoBehaviour:
       clip: {fileID: 8300000, guid: 7b7d90e71e4400f4397f54ff707ebab5, type: 3}
       volume: 1
       pitch: 1
+    - name: player_charging_sword_draw
+      clip: {fileID: 8300000, guid: 87c3df6b982aac14ca46aadec2b4aa4c, type: 3}
+      volume: 0.8
+      pitch: 1
+    - name: player_charging_climax
+      clip: {fileID: 8300000, guid: bba23407d70a36542acdaa8e9d9d5715, type: 3}
+      volume: 0.4
+      pitch: 1
+    - name: projectile_player
+      clip: {fileID: 8300000, guid: 5a72bdfc5c17f8c449369e4f5fd206a0, type: 3}
+      volume: 0.5
+      pitch: 3
   - name: Enemies
     source: {fileID: 4473733131193264158}
     sounds:

@@ -72,7 +72,15 @@ public class PlayerAttackController : MonoBehaviour
             originalSize = attackCollider.size;
             attackCollider.enabled = false;
         }
+
+        if (staminaBar == null)
+            staminaBar = FindObjectOfType<UIPlayerStaminaBar>();
+
+        if (projectileSpawnPoint == null)
+            projectileSpawnPoint = transform.Find("ProjectilePos");
+
     }
+
 
     private void Update()
     {

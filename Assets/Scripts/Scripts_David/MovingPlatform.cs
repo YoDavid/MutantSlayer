@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
-    // מרחק התנועה (בפיקסלים)
     public float moveDistance = 5f;
-    // מהירות התנועה
     public float moveSpeed = 2f;
 
     private Vector3 startPosition;
@@ -15,14 +13,12 @@ public class MovingPlatform : MonoBehaviour
 
     void Start()
     {
-        // שמירת מיקום התחלתי ומיקום סופי
         startPosition = transform.position;
         endPosition = startPosition + Vector3.right * moveDistance;
     }
 
     void Update()
     {
-        // תנועה ימינה או שמאלה
         if (movingRight)
         {
             transform.position = Vector3.MoveTowards(transform.position, endPosition, moveSpeed * Time.deltaTime);

@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class Teleport : MonoBehaviour
 {
-    public Transform targetLocation; // מיקום הטלפרוט
-    public string targetTag = "Player"; // תגית של האובייקט שיתטפל
+    public Transform targetLocation; 
+    public string targetTag = "Player"; 
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag(targetTag)) // בדיקה אם האובייקט הוא בעל התגית הרצויה
+        if (other.CompareTag(targetTag)) 
         {
-            other.transform.position = targetLocation.position; // שינוי מיקום
-            Debug.Log("Player teleported!"); // הודעה לקונסול
+            other.transform.position = targetLocation.position;
+            Debug.Log("Player teleported!"); 
         }
     }
 }

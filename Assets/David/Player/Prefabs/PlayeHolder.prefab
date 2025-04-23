@@ -344,6 +344,8 @@ MonoBehaviour:
   jumpOffset: {x: 3.2, y: 0.8, z: -10}
   fallOffset: {x: 3.2, y: 0.8, z: -10}
   slideOffset: {x: -1, y: -4.5, z: -10}
+  chargeStartOffset: {x: 0, y: -7, z: -10}
+  chargeAttackOffset: {x: 6, y: -3.5, z: -10}
   attack1Offset: {x: 3, y: -2.15, z: -10}
   attack2Offset: {x: 0.6, y: -3.3, z: -10}
   attack3Offset: {x: 6, y: -3, z: -10}
@@ -568,6 +570,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   hitStunDuration: 0.3
+  chargeScale: 0.7
+  normalScale: 1
 --- !u!114 &2616876883140300564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -611,6 +615,9 @@ MonoBehaviour:
   chargeProjectilePrefab: {fileID: 5326225131147632039, guid: ea007bd1e8b2d564b8892405f82e92a9, type: 3}
   projectileSpawnPoint: {fileID: 4743698568555562021}
   chargeProjectileDelay: 0.3
+  chargingSoundDelay: 0.25
+  swordDrawDelay: 0.4
+  climaxDelay: 1.15
 --- !u!114 &6739346586538796022
 MonoBehaviour:
   m_ObjectHideFlags: 0
