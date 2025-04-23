@@ -277,7 +277,6 @@ public class AudioManager : MonoBehaviour
 
         string soundName = $"player_swing_0{attackIndex}";
         PlaySFX("PlayerOthers", soundName);
-        Debug.Log("Play");
     }
 
     public void PlayerChargingRangeAttack() => PlaySFX("Player", "player_charging_range_attack");

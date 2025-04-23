@@ -20,6 +20,7 @@ public class UIPlayerStaminaBar : MonoBehaviour
     public bool IsFull => staminaSlider.value >= maxStamina;
     public bool IsEmpty => staminaSlider.value <= 0;
 
+
     private void Start()
     {
         staminaSlider.maxValue = maxStamina;

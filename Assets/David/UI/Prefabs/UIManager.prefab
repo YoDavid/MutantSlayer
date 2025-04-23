@@ -2442,7 +2442,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Restart '
+  m_text: Restart at Checkpoint
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 298679ce5706d624c807c34d3e36f867, type: 2}
   m_sharedMaterial: {fileID: 7584624785969250397, guid: 298679ce5706d624c807c34d3e36f867, type: 2}
@@ -3015,7 +3015,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -150}
-  m_SizeDelta: {x: 640, y: 120}
+  m_SizeDelta: {x: 900, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7331278952169152994
 CanvasRenderer:
@@ -3101,7 +3101,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6725556479933554782}
         m_TargetAssemblyTypeName: GameOverMenuController, Assembly-CSharp
-        m_MethodName: OnRestartPressed
+        m_MethodName: OnRestartAtCheckpointPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

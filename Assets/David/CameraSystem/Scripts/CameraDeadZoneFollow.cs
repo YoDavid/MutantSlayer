@@ -55,14 +55,20 @@ public class CameraDeadZoneFollow : MonoBehaviour
             if (playerObj != null) player = playerObj.transform;
         }
 
-        transform.position = new Vector3(
-            player.position.x,
-            player.position.y,
-            cameraZPosition
-        );
-
+        ForceCameraReposition(); // Changed from direct position set
         InitializeReferences();
     }
+
+    private void Start()
+    {
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null) player = playerObj.transform;
+        }
+
+    }
+
 
     private void InitializeReferences()
     {
@@ -188,6 +194,39 @@ public class CameraDeadZoneFollow : MonoBehaviour
             {
                 isIdle = true;
             }
+        }
+    }
+
+    public void ForceCameraReposition()
+    {
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null) player = playerObj.transform;
+        }
+
+        if (player != null)
+        {
+            Vector3 targetPos = new Vector3(
+                player.position.x,
+                player.position.y,
+                cameraZPosition
+            );
+
+            transform.position = targetPos;
+            lastPlayerPosition = player.position;
+            previousPlayerPosition = player.position;
+
+            Debug.Log("Camera forcibly repositioned to player");
+        }
+    }
+
+    private void OnEnable()
+    {
+        // Reset camera when enabled
+        if (player != null)
+        {
+            ForceCameraReposition();
         }
     }
 

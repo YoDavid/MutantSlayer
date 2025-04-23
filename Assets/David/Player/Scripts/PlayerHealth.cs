@@ -73,6 +73,11 @@ public class PlayerHealth : HealthSystem
         Debug.Log("Player died!");
     }
 
+    public void KillPlayer()
+    {
+        Die();
+    }
+
     public bool IsPlayerInvulnerable() => playerMovement.isDashing || isInvulnerable;
 
     public void Heal(int amount)
@@ -109,5 +114,17 @@ public class PlayerHealth : HealthSystem
         }
     }
 
+    // Add these methods to your existing PlayerHealth script
+    public void SetHealth(int amount)
+    {
+        CurrentHealth = Mathf.Clamp(amount, 0, MaxHealth);
+        OnHealthChanged?.Invoke(CurrentHealth);
+    }
 
+    public void Revive()
+    {
+        isDead = false;
+        playerAnimation.enabled = true;
+        playerMovement.enabled = true;
+    }
 }

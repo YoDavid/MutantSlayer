@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class UIHealingController : MonoBehaviour
 {
     public Image[] healingIcons; 
-    [SerializeField] private int currentHealing = 3;
+    public int currentHealing = 3;
 
     public bool CanHeal => currentHealing > 0;
     public bool CanGainHeal => currentHealing < healingIcons.Length;

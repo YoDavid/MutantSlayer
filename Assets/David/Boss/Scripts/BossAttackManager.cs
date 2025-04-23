@@ -68,11 +68,6 @@ public class BossAttackManager : MonoBehaviour
             jumpEndTime = Time.time;
             jumpAttackDuration = jumpEndTime - jumpStartTime;
         }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            JumpAttackBehavior();
-        }
     }
 
     public void ComboAttackBehavior()

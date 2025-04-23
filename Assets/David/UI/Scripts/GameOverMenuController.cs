@@ -24,11 +24,14 @@ public class GameOverMenuController : BaseMenuController
     [SerializeField] private CanvasGroup buttonsCanvasGroup;
     [SerializeField] private CanvasGroup fadeInPanel;
 
+    private PlayerHealth playerHealth;
+
     public bool IsVisible { get; private set; }
 
     protected override void Start()
     {
         base.Start();
+        PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
         ResetMenuState();
     }
 
@@ -134,18 +137,25 @@ public class GameOverMenuController : BaseMenuController
         if (visible) SelectButton(0);
     }
 
-    public void OnRestartPressed()
+    public void OnRestartAtCheckpointPressed()
     {
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02f;
-        LoadScene(SceneManager.GetActiveScene().name);
+        AudioManager.Instance.PlayButtonClick();
+
+        if (CheckpointManager.Instance.HasCheckpoint())
+        {
+            // Use SceneLoader for smooth transition
+            SceneLoader.Instance.LoadSceneWithFade(SceneManager.GetActiveScene().name);
+        }
+        else
+        {
+            // Fallback to regular restart
+            SceneLoader.Instance.LoadSceneWithFade(SceneManager.GetActiveScene().name);
+        }
     }
 
     public void OnMainMenuPressed()
     {
         AudioManager.Instance.PlayButtonClick();
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02f;
         SceneLoader.Instance.LoadSceneWithFade("Scene_MainMenu");
     }
 }
