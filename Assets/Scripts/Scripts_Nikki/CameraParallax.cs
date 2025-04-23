@@ -23,9 +23,5 @@ public class CameraParallax : MonoBehaviour
             Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothSpeed);
             transform.position = smoothedPosition;
         }
-        else
-        {
-            Debug.LogWarning("Target (Player) not assigned to the CameraFollow script.");
-        }
     }
 }

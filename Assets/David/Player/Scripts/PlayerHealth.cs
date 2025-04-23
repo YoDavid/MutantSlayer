@@ -70,7 +70,6 @@ public class PlayerHealth : HealthSystem
         playerMovement.enabled = false;
         base.Die();
        
-        Debug.Log("Player died!");
     }
 
     public void KillPlayer()
