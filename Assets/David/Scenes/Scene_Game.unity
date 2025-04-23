@@ -10354,6 +10354,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2609325147832916907, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2609325147832916907, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2609325147832916907, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8999383822992539004, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
       propertyPath: m_Name
       value: FadeOverlay
