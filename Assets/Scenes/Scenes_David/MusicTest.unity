@@ -631,26 +631,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6115125865990785060, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
-      propertyPath: damageBlinkColor.a
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6115125865990785060, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
-      propertyPath: damageBlinkColor.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6115125865990785060, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
-      propertyPath: damageBlinkColor.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6115125865990785060, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
-      propertyPath: damageBlinkColor.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6115125865990785060, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
-      propertyPath: damageBlinkDuration
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -940.69617

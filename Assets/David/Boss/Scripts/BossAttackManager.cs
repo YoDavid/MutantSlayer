@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class BossAttackManager : MonoBehaviour
 {
+    // === CORE REFERENCES ===
     [Header("Camera Components")]
     private CameraShake cameraShake;
 
@@ -11,41 +12,42 @@ public class BossAttackManager : MonoBehaviour
     private BossAI bossAI;
     private SpriteRenderer bossSpriteRenderer;
 
+    // === ATTACK SYSTEM ===
     [Header("Attack Hitboxes")]
     [SerializeField] private BossComboAttackHitbox comboAttackHitbox;
     [SerializeField] private BossJumpAttackHitbox bossJumpAttackHitbox;
-    [SerializeField] private BossAOEAttack bossAOEAttack; 
+    [SerializeField] private BossAOEAttack bossAOEAttack;
 
+    // === RANGED ATTACK SETTINGS ===
     [Header("Ranged Attack Settings")]
     [SerializeField] private GameObject spitParticlePrefab;
     [SerializeField] private float projectileSpeed;
     [SerializeField] private Transform spitSpawnPoint;
     [SerializeField] private float spitDelay;
 
-    [Header("Jump Settings (Floats)")]
-    public float jumpAnticipationTime = 0.7f;
-    public float jumpHeightMin;
-    public float jumpHeightMax;
+    // === JUMP ATTACK SETTINGS ===
+    [Header("Jump Settings (Anticipation & Timing)")]
+    [SerializeField] private float jumpAnticipationTime = 0.7f;
+    [SerializeField] private float timeOffscreenBeforeDrop = 2f;
+    [SerializeField] private float maxTimeInAir = 3f;
 
-    [Header("Jump Target Position")]
-    public Vector2 jumpTargetPosition;
+    [Header("Jump Settings (Physics)")]
+    [SerializeField] private float jumpHeight = 50f;
+    [SerializeField] private float dropSpeed = -30f;
 
     [Header("Jump Settings (Booleans & Flags)")]
     public bool isJumping = false;
     public bool isJumpingSmash = false;
 
-    [Header("Jump Debug")]
-    public float jumpForce;
-    public float jumpHorizontalSpeed;
-    public float jumpHeight;
+    [Header("Jump Target Position")]
+    public Vector2 jumpTargetPosition;
 
-    [Header("Jump Timer (Debug)")]
-    public float jumpAttackDuration;
+    // === INTERNAL VALUES ===
     private float jumpStartTime;
-    private float jumpEndTime;
 
     private Vector3 spitPositionFacingLeft = new Vector3(-40f, -21.4f, 0f);
     private Vector3 spitPositionFacingRight = new Vector3(40f, -21.4f, 0f);
+
 
 
     void Start()
@@ -63,15 +65,6 @@ public class BossAttackManager : MonoBehaviour
         spitSpawnPoint = transform.Find("Spit_Position_Instantiaion");
         bossAOEAttack = GetComponentInChildren<BossAOEAttack>();
         cameraShake = Camera.main?.GetComponent<CameraShake>();
-    }
-
-    private void Update()
-    {
-        if (isJumping)
-        {
-            jumpEndTime = Time.time;
-            jumpAttackDuration = jumpEndTime - jumpStartTime;
-        }
     }
 
     public void ComboAttackBehavior()
@@ -118,7 +111,7 @@ public class BossAttackManager : MonoBehaviour
 
         // 1. Instantiate the projectile first
         GameObject spit = Instantiate(spitParticlePrefab, spitSpawnPoint.position, Quaternion.identity);
-        SpitProjectile spitProjectile = spit.GetComponent<SpitProjectile>(); 
+        SpitProjectile spitProjectile = spit.GetComponent<SpitProjectile>();
 
         // 2. Calculate direction and set it
         bool isFacingLeft = transform.position.x > bossAI.player.position.x;
@@ -159,28 +152,72 @@ public class BossAttackManager : MonoBehaviour
             bossAI.SetAttacking(true);
             bossAI.currentState = BossState.Jumping;
 
-            jumpTargetPosition = bossAI.player.position;
-
-            CalculateJumpParameters();
-
-            animator.SetTrigger("JumpAnticipation");
-            StartCoroutine(JumpAnticipationRoutine());
+            StartCoroutine(JumpAttackSequence());
         }
     }
 
-    IEnumerator JumpAnticipationRoutine()
+    private IEnumerator JumpAttackSequence()
     {
         jumpStartTime = Time.time;
+        bool forcedDrop = false;
+
+        // Step 1: Anticipation before jump
+        Debug.Log("Step 1: Anticipation before jump");
+        animator.SetTrigger("JumpAnticipation");
         yield return new WaitForSeconds(jumpAnticipationTime);
 
-        bossAI.rb.velocity = new Vector2(jumpHorizontalSpeed, jumpForce);
+        // Step 2: Jump vertically out of screen
+        Debug.Log("Step 2: Jump vertically out of screen");
+        float jumpForce = Mathf.Sqrt(2 * Mathf.Abs(Physics2D.gravity.y) * jumpHeight);
+        bossAI.rb.velocity = new Vector2(0, jumpForce);
         animator.SetTrigger("JumpUpwardMovement");
+        cameraShake.ShakeCameraAOEAttack();
 
-        yield return new WaitUntil(() => bossAI.rb.velocity.y <= 0);
-        animator.SetTrigger("JumpLanding");
+        // Step 3: Wait until boss starts falling OR max air time is reached
+        Debug.Log("Step 3: Wait for fall or timeout");
+        yield return new WaitUntil(() =>
+        {
+            // Check if we've exceeded max air time
+            if (Time.time - jumpStartTime > maxTimeInAir && bossAI.rb.velocity.y > 0)
+            {
+                forcedDrop = true;
+                return true;
+            }
+            return bossAI.rb.velocity.y <= 0;
+        });
 
+        // If we forced the drop, immediately zero out upward velocity
+        if (forcedDrop)
+        {
+            bossAI.rb.velocity = new Vector2(bossAI.rb.velocity.x, 0);
+        }
+
+        // Step 4: Pause in air (simulate off-screen delay)
+        Debug.Log("Step 4: Pause in air (simulate off-screen delay)");
+        bossAI.rb.velocity = Vector2.zero;
+        bossAI.rb.isKinematic = true;
+        bossSpriteRenderer.enabled = false;
+
+        yield return new WaitForSeconds(timeOffscreenBeforeDrop);
+
+        // Step 5: Lock target and teleport above player
+        Debug.Log("Step 5: Lock target and teleport above player");
+        jumpTargetPosition = bossAI.player.position;
+        transform.position = new Vector3(jumpTargetPosition.x, transform.position.y, transform.position.z);
+        bossSpriteRenderer.enabled = true;
+        bossAI.rb.isKinematic = false;
+
+        // Step 6: Fall rapidly toward player
+        Debug.Log("Step 6: Fall rapidly toward player");
+        bossAI.rb.velocity = new Vector2(0, dropSpeed); // Now using the serialized dropSpeed
+        animator.SetTrigger("JumpFalling");
+
+        // Step 7: Wait for ground contact
+        Debug.Log("Step 7: Wait for ground contact");
         yield return new WaitUntil(() => bossAI.isGrounded);
 
+        // Step 8: Land and smash
+        Debug.Log("Step 8: Land and smash");
         if (!isJumpingSmash)
         {
             animator.SetTrigger("JumpGroundSmash");
@@ -193,8 +230,9 @@ public class BossAttackManager : MonoBehaviour
         }
 
         ResetJumpState();
-        isJumpingSmash = false;
     }
+
+
 
     private void ResetAttackState()
     {
@@ -214,25 +252,4 @@ public class BossAttackManager : MonoBehaviour
         bossAI.currentState = BossState.Idle;
     }
 
-    private void CalculateJumpParameters()
-    {
-        // Randomly pick a jump height between the minimum and maximum values
-        jumpHeight = Random.Range(jumpHeightMin, jumpHeightMax);
-
-        // Get gravity from Unity's physics settings
-        float gravity = Mathf.Abs(Physics2D.gravity.y);
-
-        // Calculate initial vertical velocity needed to reach the desired height
-        jumpForce = Mathf.Sqrt(2 * gravity * jumpHeight);
-
-        // Calculate time to reach peak and total time in air
-        float timeToPeak = jumpForce / gravity;
-        float totalAirTime = timeToPeak * 2; // Up + Down
-
-        // Calculate horizontal distance to the player's last position
-        float distanceToPlayer = jumpTargetPosition.x - transform.position.x;
-
-        // Calculate horizontal speed required to land at player's saved position
-        jumpHorizontalSpeed = distanceToPlayer / totalAirTime;
-    }
 }

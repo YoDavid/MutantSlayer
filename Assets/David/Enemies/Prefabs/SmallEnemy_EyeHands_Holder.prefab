@@ -420,8 +420,8 @@ MonoBehaviour:
   _maxHealth: 100
   _currentHealth: 0
   bloodSplashPrefab: {fileID: 4501868321521990437, guid: 361828f1cec2e764e8d1417f686a9f47, type: 3}
-  damageBlinkDuration: 0.1
-  damageBlinkColor: {r: 1, g: 0, b: 0, a: 1}
+  damageBlinkDuration: 0.2
+  damageBlinkColor: {r: 1, g: 1, b: 1, a: 0}
   config: {fileID: 11400000, guid: 381bf157cb8e54749af0658368dc3e25, type: 2}
   overrideHealth: 0
   customMaxHealth: 30
