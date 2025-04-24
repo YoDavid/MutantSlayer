@@ -344,11 +344,10 @@ public class BossAI : MonoBehaviour
 
     void FlipTowardsPlayer()
     {
-        if (player == null || !IsGrounded()) return;  // Don't flip if not grounded or player is null
+        if (player == null || !IsGrounded()) return;
 
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // Flip toward the player
         if (player.position.x < transform.position.x)
         {
             spriteRenderer.flipX = false;
@@ -361,7 +360,10 @@ public class BossAI : MonoBehaviour
             isFacingLeft = false;
             bossAttackHitbox.FlipCollider(true);
         }
+
+        attackManager.UpdateSpitPosition(isFacingLeft);
     }
+
 
     private bool IsGrounded()
     {

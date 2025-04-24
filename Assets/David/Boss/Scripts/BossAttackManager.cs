@@ -44,6 +44,10 @@ public class BossAttackManager : MonoBehaviour
     private float jumpStartTime;
     private float jumpEndTime;
 
+    private Vector3 spitPositionFacingLeft = new Vector3(-40f, -21.4f, 0f);
+    private Vector3 spitPositionFacingRight = new Vector3(40f, -21.4f, 0f);
+
+
     void Start()
     {
         AssignReferences();
@@ -114,7 +118,7 @@ public class BossAttackManager : MonoBehaviour
 
         // 1. Instantiate the projectile first
         GameObject spit = Instantiate(spitParticlePrefab, spitSpawnPoint.position, Quaternion.identity);
-        SpitProjectile spitProjectile = spit.GetComponent<SpitProjectile>(); // Get the component
+        SpitProjectile spitProjectile = spit.GetComponent<SpitProjectile>(); 
 
         // 2. Calculate direction and set it
         bool isFacingLeft = transform.position.x > bossAI.player.position.x;
@@ -128,6 +132,14 @@ public class BossAttackManager : MonoBehaviour
         else
         {
             Debug.LogError("SpitProjectile component missing on spit prefab!");
+        }
+    }
+
+    public void UpdateSpitPosition(bool isFacingLeft)
+    {
+        if (spitSpawnPoint != null)
+        {
+            spitSpawnPoint.localPosition = isFacingLeft ? spitPositionFacingLeft : spitPositionFacingRight;
         }
     }
 

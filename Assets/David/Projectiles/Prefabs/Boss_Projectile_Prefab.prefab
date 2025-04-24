@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -6314828418482676717}
   - component: {fileID: 94041331923168704}
   m_Layer: 0
-  m_Name: Boss_Spit_Prefab
+  m_Name: Boss_Projectile_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,9 +74,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 568015659
-  m_SortingLayer: 7
+  m_SortingLayer: 10
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1919ab1f7875f20469a4805c4ff570c8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0ee32176d3723884db8d1c582a65f928, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -165,6 +165,6 @@ MonoBehaviour:
   speed: 50
   playerHealth: {fileID: 0}
   playerHurtBoxCollider: {fileID: 0}
-  shrinkDuration: 3
-  initialScale: {x: 1, y: 1, z: 1}
-  minScale: {x: 0, y: 0, z: 0}
+  growDuration: 0.3
+  initialScale: {x: 0.2, y: 0.2, z: 0.2}
+  maxScale: {x: 1, y: 1, z: 1}

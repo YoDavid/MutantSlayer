@@ -69,7 +69,7 @@ public class PlayerAttackHitbox : MonoBehaviour
     {
         if (audioManager == null) return;
 
-        int rand = UnityEngine.Random.Range(1, 5); // 1 to 4
+        int rand = UnityEngine.Random.Range(0, 4); // 1 to 4
         string clipName = $"sfx_player_attack_hit_0{rand}";
         audioManager.PlaySFX("Player", clipName);
     }
