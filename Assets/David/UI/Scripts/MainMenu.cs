@@ -12,8 +12,20 @@ public class MainMenu : BaseMenuController
         AudioManager.Instance.PlayMusic("menu_theme");
     }
 
+    public void OnContinuePressed()
+    {
+        string lastScene = CheckpointManager.Instance.GetSavedScene();
+        if (!string.IsNullOrEmpty(lastScene))
+        {
+            LoadScene(lastScene);
+        }
+    }
 
-    public void OnStartPressed() => LoadScene("Scene_SlideShow");
+    public void OnStartPressed()
+    {
+        CheckpointManager.Instance.ResetCheckpoint();
+        LoadScene("Scene_SlideShow"); 
+    }
 
     public void OnOptionsPressed()
     {

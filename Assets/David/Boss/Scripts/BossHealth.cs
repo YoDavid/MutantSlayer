@@ -5,7 +5,7 @@ public class BossHealth : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] public int maxHealth = 500;
-    [SerializeField] private Color blinkColor = Color.white; // Customizable in Inspector
+    [SerializeField] private Color blinkColor = Color.white; 
     [SerializeField] private float blinkDuration = 0.1f;
     [SerializeField] private int blinkCount = 3;
     [SerializeField] private Vector3 popupOffset = new Vector3(0, 2f, 0);
@@ -32,7 +32,7 @@ public class BossHealth : MonoBehaviour
     {
         currentHealth -= damage;
 
-        OnHealthChanged?.Invoke(currentHealth); // <- Add this
+        OnHealthChanged?.Invoke(currentHealth); 
 
         if (DamagePopUp.Instance != null)
         {
@@ -59,9 +59,9 @@ public class BossHealth : MonoBehaviour
     {
         for (int i = 0; i < blinkCount; i++)
         {
-            spriteRenderer.color = blinkColor; // Flash red
+            spriteRenderer.color = blinkColor; 
             yield return new WaitForSeconds(blinkDuration);
-            spriteRenderer.color = originalColor; // Revert
+            spriteRenderer.color = originalColor;
             yield return new WaitForSeconds(blinkDuration);
         }
     }
@@ -73,7 +73,7 @@ public class BossHealth : MonoBehaviour
             Instantiate(bloodSplashPrefab, transform.position, Quaternion.identity);
         }
 
-        OnDeath?.Invoke(); // <- Add this
+        OnDeath?.Invoke(); 
         Destroy(gameObject);
     }
 }

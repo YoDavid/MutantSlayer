@@ -186,7 +186,7 @@ Transform:
   m_GameObject: {fileID: 1287259514076753074}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -45.6, y: -22.4, z: 0}
+  m_LocalPosition: {x: -40, y: -22.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1375,7 +1375,7 @@ MonoBehaviour:
   spitParticlePrefab: {fileID: 4635511025921963439, guid: 5616280496e7c5b40b2438d91e28831b, type: 3}
   projectileSpeed: 5
   spitSpawnPoint: {fileID: 2623339895284347317}
-  spitDelay: 0.65
+  spitDelay: 0.5
   jumpAnticipationTime: 0.7
   jumpHeightMin: 10
   jumpHeightMax: 15
@@ -1417,9 +1417,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  blinkColor: {r: 1, g: 1, b: 1, a: 1}
+  blinkColor: {r: 1, g: 1, b: 1, a: 0}
   blinkDuration: 0.1
-  blinkCount: 3
+  blinkCount: 1
   popupOffset: {x: 0, y: -1.5, z: 0}
   bloodSplashPrefab: {fileID: 4501868321521990437, guid: 361828f1cec2e764e8d1417f686a9f47, type: 3}
   currentHealth: 0

@@ -19,7 +19,7 @@ MonoBehaviour:
   minAttackCooldown: 2.5
   maxAttackCooldown: 5
   attackDelay: 1.5
-  colliderActiveDuration: 0.5
+  colliderActiveDuration: 0.1
   attackDamage: 10
   hitCooldown: 0.1
   enemyBlinkDuration: 0.1
