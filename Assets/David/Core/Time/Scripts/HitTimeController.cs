@@ -16,11 +16,15 @@ public class HitTimeController : MonoBehaviour
 
     private Coroutine currentTimeEffect;
 
-    private void Awake()
+    private void Start()
     {
         if (attackHitbox == null)
         {
-            attackHitbox = GetComponentInChildren<PlayerAttackHitbox>();
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                attackHitbox = player.GetComponentInChildren<PlayerAttackHitbox>();
+            }
         }
 
         if (attackHitbox != null)
@@ -29,9 +33,10 @@ public class HitTimeController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("PlayerAttackHitbox reference not found in children!");
+            Debug.LogWarning("PlayerAttackHitbox reference not found in Player's children!");
         }
     }
+
 
     private void HandleHit(bool isCritical, bool isBoss)
     {

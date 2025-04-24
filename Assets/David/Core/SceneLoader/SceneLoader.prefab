@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadingScreen: {fileID: 7032700037057797051}
   minLoadTime: 2
-  fadeOverlay: {fileID: 674116444699808878}
+  fadeOverlay: {fileID: 132357236284705920}
   fadeDuration: 0.5
 --- !u!1 &6593231212352799474
 GameObject:
@@ -81,7 +81,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4796974655050038269}
-  - {fileID: 5825773333458237624}
+  - {fileID: 6365141645165305942}
   m_Father: {fileID: 3686343397473804694}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -227,7 +227,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1001 &4724366092623912445
+--- !u!1001 &5268255603089245459
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -261,11 +261,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1245557649287095621, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 119.213135
+      value: 119.213
       objectReference: {fileID: 0}
     - target: {fileID: 1245557649287095621, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 66.943115
+      value: 66.943
       objectReference: {fileID: 0}
     - target: {fileID: 1245557649287095621, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -285,15 +285,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1245557649287095621, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1245557649287095621, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1245557649287095621, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1245557649287095621, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -316,14 +316,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2609325147832916907, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
-      propertyPath: m_Type
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2609325147832916907, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 2609325147832916907, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
       propertyPath: m_Color.b
       value: 0
       objectReference: {fileID: 0}
@@ -339,26 +331,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: FadeOverlay
       objectReference: {fileID: 0}
-    - target: {fileID: 8999383822992539004, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8999383822992539004, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
---- !u!225 &674116444699808878 stripped
+--- !u!225 &132357236284705920 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 5245181443263121811, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
-  m_PrefabInstance: {fileID: 4724366092623912445}
+  m_PrefabInstance: {fileID: 5268255603089245459}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &5825773333458237624 stripped
+--- !u!224 &6365141645165305942 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1245557649287095621, guid: d033f8d18e559c642b8d0dd2c277d14c, type: 3}
-  m_PrefabInstance: {fileID: 4724366092623912445}
+  m_PrefabInstance: {fileID: 5268255603089245459}
   m_PrefabAsset: {fileID: 0}

@@ -14,7 +14,7 @@ public class SceneLoader : MonoBehaviour
     [SerializeField] private CanvasGroup fadeOverlay;
     [SerializeField] private float fadeDuration = 0.5f;
 
-    private bool isTransitioningScene = false;  // Flag to prevent multiple scene loads
+    private bool isTransitioningScene = false; 
 
     private void Awake()
     {
@@ -76,6 +76,19 @@ public class SceneLoader : MonoBehaviour
 
         isTransitioningScene = false;  // Mark that transition is complete
     }
+
+    public IEnumerator FadeWithOverlay(float from, float to, float duration)
+    {
+        if (fadeOverlay == null) yield break;
+
+        fadeOverlay.gameObject.SetActive(true);
+        yield return StartCoroutine(Fade(from, to, duration));
+
+        // Only deactivate overlay if we're fading out (to transparent)
+        if (to == 0f)
+            fadeOverlay.gameObject.SetActive(false);
+    }
+
 
     public IEnumerator Fade(float from, float to, float duration)
     {

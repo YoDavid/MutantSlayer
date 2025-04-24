@@ -240,83 +240,113 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    //                UI 
-    public void PlayButtonClick() => PlaySFX("UI", "button_click");
-    public void PlayButtonHover() => PlaySFX("UI", "button_hover");
-    public void PlaySlideTransition() => PlaySFX("UI", "slide_transition");
-    public void PlayMenuOpen() => PlaySFX("UI", "menu_open");
-    public void PlayMenuClose() => PlaySFX("UI", "menu_close");
-    public void PlayDeathScreen() => PlaySFX("UI", "death_Screen");
 
-    //               Environment
-    public void PlayBloodParticlesDeathSound() => PlaySFX("Environment", "blood_particles_death_sound");
-    public void PlayHealingSound() => PlaySFX("Environment", "healing_sound");
-    public void PlayCreatingHeal() => PlaySFX("Environment", "creating_heal");
-    public void PlayProjectileHit() => PlaySFX("Environment", "projectile_hit");
+    // ====================== UI Sounds ======================
+    #region UI - Menus
+    public void PlayMenuOpen() => PlaySFX("UI", "sfx_ui_menu_open");
+    public void PlayMenuClose() => PlaySFX("UI", "sfx_ui_menu_close");
+    public void PlaySlideTransition() => PlaySFX("UI", "sfx_ui_slide_transition");
+    public void PlayDeathScreen() => PlaySFX("UI", "sfx_ui_death_screen");
+    #endregion
 
-    //               Player taking hit
-    public void PlayPlayer_TakeHit01() => PlaySFX("Player", "take_hit_01");   // make random takehit sounds 
-    public void PlayPlayer_TakeHit02() => PlaySFX("Player", "take_hit_02");   // make random takehit sounds 
-    public void PlayPlayer_TakeHit03() => PlaySFX("Player", "take_hit_03");   // make random takehit sounds 
+    #region UI - Buttons
+    public void PlayButtonClick() => PlaySFX("UI", "sfx_ui_button_click");
+    public void PlayButtonHover() => PlaySFX("UI", "sfx_ui_button_hover");
+    #endregion
 
-    //               Player hit enemy
-    public void PlaySlash_Hit01() => PlaySFX("Player", "slash_hit_01");   
-    public void PlaySlash_Hit02() => PlaySFX("Player", "slash_hit_02");   
-    public void PlaySlash_Hit03() => PlaySFX("Player", "slash_hit_03");   
-    public void PlaySlash_Hit04() => PlaySFX("Player", "slash_hit_04");
 
-    //               Player swing sword
-    public void PlaySwing_00() => PlaySFX("PlayerOthers", "player_swing_00");
-    public void PlaySwing_01() => PlaySFX("PlayerOthers", "player_swing_01");
-    public void PlaySwing_02() => PlaySFX("PlayerOthers", "player_swing_02");
+    // ====================== Environment Sounds ======================
+    #region Environment - Effects
+    public void PlayBloodParticlesDeathSound() => PlaySFX("Environment", "sfx_env_blood_particles_death");
+    public void PlayProjectileHit() => PlaySFX("Environment", "sfx_env_projectile_hit");
+    #endregion
+
+    #region Environment - Healing
+    public void PlayHealingSound() => PlaySFX("Environment", "sfx_env_healing");
+    public void PlayCreatingHeal() => PlaySFX("Environment", "sfx_env_heal_creation");
+    #endregion
+
+
+    // ====================== Player Sounds ======================
+    #region Player - Combat: Swing Sounds
+    public void PlaySwing_00() => PlaySFX("PlayerOthers", "sfx_player_attack_swing_00");
+    public void PlaySwing_01() => PlaySFX("PlayerOthers", "sfx_player_attack_swing_01");
+    public void PlaySwing_02() => PlaySFX("PlayerOthers", "sfx_player_attack_swing_02");
 
     public void PlayPlayerAttackSwing(int attackIndex)
     {
-        // Clamp to valid range just in case
         attackIndex = Mathf.Clamp(attackIndex, 0, 2);
-
-        string soundName = $"player_swing_0{attackIndex}";
+        string soundName = $"sfx_player_attack_swing_0{attackIndex}";
         PlaySFX("PlayerOthers", soundName);
     }
+    #endregion
 
-    public void PlayerChargingRangeAttack() => PlaySFX("Player", "player_charging_range_attack");
-    public void PlayerChargingSwordDraw() => PlaySFX("PlayerOthers", "player_charging_sword_draw");
-    public void PlayerChargingClimax() => PlaySFX("PlayerOthers", "player_charging_climax");
+    #region Player - Combat: Attack Hits
+    public void PlaySlash_Hit00() => PlaySFX("Player", "sfx_player_attack_hit_00");
+    public void PlaySlash_Hit01() => PlaySFX("Player", "sfx_player_attack_hit_01");
+    public void PlaySlash_Hit02() => PlaySFX("Player", "sfx_player_attack_hit_02");
+    public void PlaySlash_Hit03() => PlaySFX("Player", "sfx_player_attack_hit_03");
+    #endregion
 
-    //               Player steps
-    public void PlaySteps() => PlaySFX("PlayerOthers", "player_steps");
+    #region Player - Combat: Taking Damage
+    public void PlayPlayer_TakeHit00() => PlaySFX("Player", "sfx_player_take_hit_00");
+    public void PlayPlayer_TakeHit01() => PlaySFX("Player", "sfx_player_take_hit_01");
+    public void PlayPlayer_TakeHit02() => PlaySFX("Player", "sfx_player_take_hit_02");
+    #endregion
 
-    public void PlayHealingGrunt() => PlaySFX("Player", "player_grunt");
+    #region Player - Combat: Charging
+    public void PlayerChargingRangeAttack() => PlaySFX("Player", "sfx_player_charge_range_attack");
+    public void PlayerChargingSwordDraw() => PlaySFX("PlayerOthers", "sfx_player_charge_sword_draw");
+    public void PlayerChargingClimax() => PlaySFX("PlayerOthers", "sfx_player_charge_climax");
+    #endregion
 
-    public void PlayDash() => PlaySFX("Player", "player_dash");
+    #region Player - Movement
+    public void PlaySteps() => PlaySFX("PlayerOthers", "sfx_player_footsteps");
+    public void PlayDash() => PlaySFX("Player", "sfx_player_dash");
+    #endregion
 
-    public void PlayPlayerProjectileSound() => PlaySFX("PlayerOthers", "projectile_player");
+    #region Player - Reactions
+    public void PlayHealingGrunt() => PlaySFX("Player", "sfx_player_healing_grunt");
+    #endregion
 
-
-
-    //               Enemies
-    public void PlayMediumEnemyScream() => PlaySFX("Enemies", "scream_medium_enemy");
-    public void PlayMediumEnemyLastScream() => PlaySFX("Enemies", "last_scream_medium_enemy");
-    public void PlayMediumEnemyTakeHit() => PlaySFX("Enemies", "takehit_medium_enemy");
-
-    public void PlaySmallEnemyScream() => PlaySFX("Enemies", "scream_small_enemy");
-    public void PlaySmallEnemyTakeHit() => PlaySFX("Enemies", "takehit_small_enemy");
-    public void PlaySmallEnemyLastScream() => PlaySFX("Enemies", "last_scream_small_enemy");
-
-
-    //               Boss
-    public void PlayBossWalking() => PlaySFX("Boss", "walking_boss");
-    
-
-
-    public void PlayBossScream_00() => PlaySFX("Boss", "scream00_boss");
-    public void PlayBossScream_01() => PlaySFX("Boss", "scream01_boss");
-    public void PlayBossScream_02() => PlaySFX("Boss", "scream02_boss");
-    public void PlayBossScream_03() => PlaySFX("Boss", "scream03_boss");
+    #region Player - Projectiles
+    public void PlayPlayerProjectileSound() => PlaySFX("PlayerOthers", "sfx_player_projectile");
+    #endregion
 
 
-    public void PlayComboAttackBoss() => PlaySFX("Boss", "comboattack_boss");
-    public void PlayAOEAttackBoss() => PlaySFX("Boss", "aoeattack_boss");
-    public void PlayJumpAttackBoss() => PlaySFX("Boss", "jumpattack_boss");
-    public void PlaySpitAttackBoss() => PlaySFX("Boss", "spitattack_boss");
+    // ====================== Enemy Sounds ======================
+    #region Enemies - Small
+    public void PlaySmallEnemyScream() => PlaySFX("Enemies", "sfx_enemy_small_scream");
+    public void PlaySmallEnemyAttack() => PlaySFX("Enemies", "sfx_enemy_small_attack");
+    public void PlaySmallEnemyTakeHit() => PlaySFX("Enemies", "sfx_enemy_small_take_hit");
+    public void PlaySmallEnemyLastScream() => PlaySFX("Enemies", "sfx_enemy_small_death_scream");
+    #endregion
+
+    #region Enemies - Medium
+    public void PlayMediumEnemyScream() => PlaySFX("Enemies", "sfx_enemy_medium_scream");
+    public void PlayMediumEnemyTakeHit() => PlaySFX("Enemies", "sfx_enemy_medium_take_hit");
+    public void PlayMediumEnemyLastScream() => PlaySFX("Enemies", "sfx_enemy_medium_death_scream");
+    #endregion
+
+
+    // ====================== Boss Sounds ======================
+    #region Boss - Movement
+    public void PlayBossWalking() => PlaySFX("Boss", "sfx_boss_walk");
+    #endregion
+
+    #region Boss - Voice / Roar
+    public void PlayBossScream_00() => PlaySFX("Boss", "sfx_boss_scream_00");
+    public void PlayBossScream_01() => PlaySFX("Boss", "sfx_boss_scream_01");
+    public void PlayBossScream_02() => PlaySFX("Boss", "sfx_boss_scream_02");
+    public void PlayBossScream_03() => PlaySFX("Boss", "sfx_boss_scream_03");
+    #endregion
+
+    #region Boss - Attacks
+    public void PlayComboAttackBoss() => PlaySFX("Boss", "sfx_boss_attack_combo");
+    public void PlayAOEAttackBoss() => PlaySFX("Boss", "sfx_boss_attack_aoe");
+    public void PlayJumpAttackBoss() => PlaySFX("Boss", "sfx_boss_attack_jump");
+    public void PlaySpitAttackBoss() => PlaySFX("Boss", "sfx_boss_attack_spit");
+    #endregion
+
+
 }

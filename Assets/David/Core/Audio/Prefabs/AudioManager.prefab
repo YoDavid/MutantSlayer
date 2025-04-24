@@ -819,186 +819,190 @@ MonoBehaviour:
   - name: UI
     source: {fileID: 2827213357372201616}
     sounds:
-    - name: button_click
-      clip: {fileID: 8300000, guid: 40fa9a50b0b4fdf4da108efec1d8e4ea, type: 3}
+    - name: sfx_ui_menu_open
+      clip: {fileID: 8300000, guid: ef3ddbb65fca97541a93cae59f0ebab0, type: 3}
       volume: 1
       pitch: 1
-    - name: button_hover
-      clip: {fileID: 8300000, guid: 72df4c81dd3e76c439e392534b98c9ea, type: 3}
+    - name: sfx_ui_menu_close
+      clip: {fileID: 8300000, guid: ef3ddbb65fca97541a93cae59f0ebab0, type: 3}
       volume: 1
       pitch: 1
-    - name: slide_transition
+    - name: sfx_ui_slide_transition
       clip: {fileID: 8300000, guid: 298fe5dcf2c8f7e499ff6f8fce40890f, type: 3}
       volume: 1
       pitch: 1
-    - name: menu_open
-      clip: {fileID: 8300000, guid: ef3ddbb65fca97541a93cae59f0ebab0, type: 3}
-      volume: 1
-      pitch: 1
-    - name: menu_close
-      clip: {fileID: 8300000, guid: ef3ddbb65fca97541a93cae59f0ebab0, type: 3}
-      volume: 1
-      pitch: 1
-    - name: death_Screen
+    - name: sfx_ui_death_screen
       clip: {fileID: 8300000, guid: 440909c7dd80bce48ad008e6ad449708, type: 3}
       volume: 0.5
+      pitch: 1
+    - name: sfx_ui_button_click
+      clip: {fileID: 8300000, guid: 40fa9a50b0b4fdf4da108efec1d8e4ea, type: 3}
+      volume: 1
+      pitch: 1
+    - name: sfx_ui_button_hover
+      clip: {fileID: 8300000, guid: 72df4c81dd3e76c439e392534b98c9ea, type: 3}
+      volume: 1
       pitch: 1
   - name: Environment
     source: {fileID: 7705638424714490615}
     sounds:
-    - name: blood_particles_death_sound
+    - name: sfx_env_blood_particles_death
       clip: {fileID: 8300000, guid: a9084681bd042ab4699afe08172862f0, type: 3}
       volume: 0.2
       pitch: 1
-    - name: healing_sound
+    - name: sfx_env_projectile_hit
+      clip: {fileID: 8300000, guid: 99b7cbd3b4cb19b4a86593e31ac6e2cb, type: 3}
+      volume: 0.6
+      pitch: 1
+    - name: sfx_env_healing
       clip: {fileID: 8300000, guid: cb405023201037f4aa49494f53993344, type: 3}
       volume: 0.6
       pitch: 1
-    - name: creating_heal
+    - name: sfx_env_heal_creation
       clip: {fileID: 8300000, guid: a17dff4530c159f448e8a8fbbd731a0e, type: 3}
-      volume: 0.6
-      pitch: 1
-    - name: projectile_hit
-      clip: {fileID: 8300000, guid: 99b7cbd3b4cb19b4a86593e31ac6e2cb, type: 3}
       volume: 0.6
       pitch: 1
   - name: Player
     source: {fileID: 743618483834653189}
     sounds:
-    - name: take_hit_01
-      clip: {fileID: 8300000, guid: 626523139f0f25b4b9b32f194695504b, type: 3}
-      volume: 1
-      pitch: 1
-    - name: take_hit_02
-      clip: {fileID: 8300000, guid: c020f0cf2f9e0ae49aa80ee97d680b30, type: 3}
-      volume: 1
-      pitch: 1
-    - name: take_hit_03
-      clip: {fileID: 8300000, guid: b078a19e769b0434e87292efed930dc1, type: 3}
-      volume: 1
-      pitch: 1
-    - name: slash_hit_01
+    - name: sfx_player_attack_hit_00
       clip: {fileID: 8300000, guid: 897fb0ad211e6db49b79831e6c27a31d, type: 3}
       volume: 0.6
       pitch: 1
-    - name: slash_hit_02
+    - name: sfx_player_attack_hit_01
       clip: {fileID: 8300000, guid: a1b6afbb0b18db04893c5414180ac318, type: 3}
       volume: 0.6
       pitch: 1
-    - name: slash_hit_03
+    - name: sfx_player_attack_hit_02
       clip: {fileID: 8300000, guid: 525f0826b66dc984fbd45f292d78fe70, type: 3}
       volume: 0.6
       pitch: 1
-    - name: slash_hit_04
+    - name: sfx_player_attack_hit_03
       clip: {fileID: 8300000, guid: 12ad9d0220c43274eb0bf1d628320b59, type: 3}
       volume: 0.6
       pitch: 1
-    - name: player_grunt
+    - name: sfx_player_take_hit_00
+      clip: {fileID: 8300000, guid: 626523139f0f25b4b9b32f194695504b, type: 3}
+      volume: 1
+      pitch: 1
+    - name: sfx_player_take_hit_01
+      clip: {fileID: 8300000, guid: c020f0cf2f9e0ae49aa80ee97d680b30, type: 3}
+      volume: 1
+      pitch: 1
+    - name: sfx_player_take_hit_02
+      clip: {fileID: 8300000, guid: b078a19e769b0434e87292efed930dc1, type: 3}
+      volume: 1
+      pitch: 1
+    - name: sfx_player_charge_range_attack
+      clip: {fileID: 8300000, guid: 0d5ff3eab4e702b4aa9386940501b149, type: 3}
+      volume: 0.6
+      pitch: 1
+    - name: sfx_player_healing_grunt
       clip: {fileID: 8300000, guid: 9d8315e39a8e827469b1f5cdad4e414d, type: 3}
       volume: 0.6
       pitch: 1
-    - name: player_dash
+    - name: sfx_player_dash
       clip: {fileID: 8300000, guid: f1547680e7798624ba8669180291e45c, type: 3}
-      volume: 0.6
-      pitch: 1
-    - name: player_charging_range_attack
-      clip: {fileID: 8300000, guid: 0d5ff3eab4e702b4aa9386940501b149, type: 3}
       volume: 0.6
       pitch: 1
   - name: PlayerOthers
     source: {fileID: 1903071763769011360}
     sounds:
-    - name: player_swing_00
+    - name: sfx_player_attack_swing_00
       clip: {fileID: 8300000, guid: 3e6f10e9332d07e4cbc261186fd9afcd, type: 3}
       volume: 0.4
       pitch: 1
-    - name: player_swing_01
+    - name: sfx_player_attack_swing_01
       clip: {fileID: 8300000, guid: 5247593f2e5cca541899b803be142d40, type: 3}
       volume: 0.4
       pitch: 1
-    - name: player_swing_02
+    - name: sfx_player_attack_swing_02
       clip: {fileID: 8300000, guid: 509786607c84e354eb8deb34ebe546c8, type: 3}
       volume: 0.4
       pitch: 1
-    - name: player_steps
-      clip: {fileID: 8300000, guid: 7b7d90e71e4400f4397f54ff707ebab5, type: 3}
-      volume: 1
-      pitch: 1
-    - name: player_charging_sword_draw
+    - name: sfx_player_charge_sword_draw
       clip: {fileID: 8300000, guid: 87c3df6b982aac14ca46aadec2b4aa4c, type: 3}
       volume: 0.8
       pitch: 1
-    - name: player_charging_climax
+    - name: sfx_player_charge_climax
       clip: {fileID: 8300000, guid: bba23407d70a36542acdaa8e9d9d5715, type: 3}
       volume: 0.4
       pitch: 1
-    - name: projectile_player
+    - name: sfx_player_footsteps
+      clip: {fileID: 8300000, guid: 7b7d90e71e4400f4397f54ff707ebab5, type: 3}
+      volume: 1
+      pitch: 1
+    - name: sfx_player_projectile
       clip: {fileID: 8300000, guid: 5a72bdfc5c17f8c449369e4f5fd206a0, type: 3}
       volume: 0.5
       pitch: 3
   - name: Enemies
     source: {fileID: 4473733131193264158}
     sounds:
-    - name: scream_medium_enemy
-      clip: {fileID: 8300000, guid: fe6d6aa4e19f64444a34e91c652bf96e, type: 3}
-      volume: 0.7
-      pitch: 1
-    - name: last_scream_medium_enemy
-      clip: {fileID: 8300000, guid: 8668dbb6c8fc62b4c99628a7bb54c001, type: 3}
-      volume: 0.7
-      pitch: 1
-    - name: takehit_medium_enemy
-      clip: {fileID: 8300000, guid: 4968c202b538df643a751553733eb958, type: 3}
-      volume: 0.7
-      pitch: 1
-    - name: scream_small_enemy
+    - name: sfx_enemy_small_scream
       clip: {fileID: 8300000, guid: 33bb2cf674f97a144968156ab3457ae1, type: 3}
       volume: 0.4
       pitch: 1
-    - name: last_scream_small_enemy
+    - name: sfx_enemy_small_attack
+      clip: {fileID: 8300000, guid: 3aea00c00569154428e867d996957e6c, type: 3}
+      volume: 0.7
+      pitch: 1
+    - name: sfx_enemy_small_take_hit
+      clip: {fileID: 8300000, guid: e505f3aa12630e742a5d8e7f64e12b47, type: 3}
+      volume: 0.4
+      pitch: 1
+    - name: sfx_enemy_small_death_scream
       clip: {fileID: 8300000, guid: e9d4010e44033a74ab9f5206deb50950, type: 3}
       volume: 0.4
       pitch: 1
-    - name: takehit_small_enemy
-      clip: {fileID: 8300000, guid: e505f3aa12630e742a5d8e7f64e12b47, type: 3}
-      volume: 0.4
+    - name: sfx_enemy_medium_scream
+      clip: {fileID: 8300000, guid: fe6d6aa4e19f64444a34e91c652bf96e, type: 3}
+      volume: 0.7
+      pitch: 1
+    - name: sfx_enemy_medium_take_hit
+      clip: {fileID: 8300000, guid: 4968c202b538df643a751553733eb958, type: 3}
+      volume: 0.7
+      pitch: 1
+    - name: sfx_enemy_medium_death_scream
+      clip: {fileID: 8300000, guid: 8668dbb6c8fc62b4c99628a7bb54c001, type: 3}
+      volume: 0.7
       pitch: 1
   - name: Boss
     source: {fileID: 5319925431149274405}
     sounds:
-    - name: walking_boss
+    - name: sfx_boss_walk
       clip: {fileID: 8300000, guid: 9d37d2a2662a21943a9a583a3a49375b, type: 3}
       volume: 1
       pitch: 1
-    - name: scream00_boss
+    - name: sfx_boss_scream_00
       clip: {fileID: 8300000, guid: 49ff5b4a0e0cf2049b2b28b2a356fbb8, type: 3}
       volume: 1
       pitch: 1
-    - name: scream01_boss
+    - name: sfx_boss_scream_01
       clip: {fileID: 8300000, guid: 088c17d2a9e71af469ac6f5999d4123f, type: 3}
       volume: 1
       pitch: 1
-    - name: scream02_boss
+    - name: sfx_boss_scream_02
       clip: {fileID: 8300000, guid: 96697e24c3e1d814198c8e7eee12e422, type: 3}
       volume: 1
       pitch: 1
-    - name: scream03_boss
+    - name: sfx_boss_scream_03
       clip: {fileID: 8300000, guid: 0958d7b8901b1eb4496ab885880db523, type: 3}
       volume: 1
       pitch: 1
-    - name: comboattack_boss
+    - name: sfx_boss_attack_combo
       clip: {fileID: 8300000, guid: 3bc1d8baaccfa0a4998b7ba17275914d, type: 3}
       volume: 1
       pitch: 1
-    - name: aoeattack_boss
+    - name: sfx_boss_attack_aoe
       clip: {fileID: 8300000, guid: 9cbf31693f36a2c4796106f698cb0b14, type: 3}
       volume: 1
       pitch: 1
-    - name: jumpattack_boss
+    - name: sfx_boss_attack_jump
       clip: {fileID: 8300000, guid: c283b6f051a957f49833c8d212b6e247, type: 3}
       volume: 1
       pitch: 1
-    - name: spitattack_boss
+    - name: sfx_boss_attack_spit
       clip: {fileID: 8300000, guid: e79ca4fd6f2aaa248954ecb3a7e37d1b, type: 3}
       volume: 1
       pitch: 1

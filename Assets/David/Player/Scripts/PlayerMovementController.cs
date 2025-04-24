@@ -82,8 +82,20 @@ public class PlayerMovementController : MonoBehaviour
         Move(move);
         HandleStepSound(move);
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && CanJumpAfterDash())
-            StartJump();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (isDashing)
+            {
+                StopCoroutine("StopDash"); 
+                isDashing = false;
+                lastDashEndTime = Time.time;
+
+                playerHurtbox.SetInvincible(false);
+            }
+
+            if (isGrounded || isDashing)
+                StartJump();
+        }
         if (Input.GetKey(KeyCode.Space) && isJumping)
             ContinueJump();
         if (Input.GetKeyUp(KeyCode.Space) && isJumping)
@@ -123,7 +135,7 @@ public class PlayerMovementController : MonoBehaviour
         while (true)
         {
             // Use the new method that randomizes the pitch
-            AudioManager.Instance.PlaySFXWithRandomPitch("PlayerOthers", "player_steps");
+            AudioManager.Instance.PlaySFXWithRandomPitch("PlayerOthers", "sfx_player_footsteps");
 
             // Wait for the next step interval
             yield return new WaitForSeconds(stepInterval);
@@ -159,7 +171,7 @@ public class PlayerMovementController : MonoBehaviour
     {
         isJumping = true;
         jumpTimeCounter = maxJumpTime;
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        rb.velocity = new Vector2(rb.velocity.x * 1f, jumpForce);
     }
 
     private void ContinueJump()

@@ -54,6 +54,7 @@ public class EnemyAttackCollider : MonoBehaviour
 
         // NEW: Calculate damage with critical chance
         var (damage, isCritical) = damageDealer.CalculateDamage();
+        AudioManager.Instance.PlaySmallEnemyAttack();
         playerHealth.TakeDamage(damage, isCritical);
 
         // Worm-specific knockback (unchanged)

@@ -43,13 +43,13 @@ public class PlayerHealth : HealthSystem
         switch (rand)
         {
             case 1:
-                AudioManager.Instance.PlayPlayer_TakeHit01();
+                AudioManager.Instance.PlayPlayer_TakeHit00();
                 break;
             case 2:
-                AudioManager.Instance.PlayPlayer_TakeHit02();
+                AudioManager.Instance.PlayPlayer_TakeHit01();
                 break;
             case 3:
-                AudioManager.Instance.PlayPlayer_TakeHit03();
+                AudioManager.Instance.PlayPlayer_TakeHit02();
                 break;
         }
     }

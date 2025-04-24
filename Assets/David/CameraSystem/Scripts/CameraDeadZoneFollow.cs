@@ -217,7 +217,6 @@ public class CameraDeadZoneFollow : MonoBehaviour
             lastPlayerPosition = player.position;
             previousPlayerPosition = player.position;
 
-            Debug.Log("Camera forcibly repositioned to player");
         }
     }
 

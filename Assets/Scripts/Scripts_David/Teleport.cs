@@ -1,16 +1,86 @@
 using UnityEngine;
+using System.Collections;
 
 public class Teleport : MonoBehaviour
 {
-    public Transform targetLocation; 
-    public string targetTag = "Player"; 
+    public Transform targetLocation;
+    public string targetTag = "Player";
+    public float fadeDuration = 0.5f;
+    public float pauseDuration = 2f;
+
+    [SerializeField] private GameObject player;
+    [SerializeField] private PlayerMovementController movementController;
+    [SerializeField] private PlayerAttackController attackController;
+    [SerializeField] private bool isPlayerInZone = false;
+
+    private void Start()
+    {
+        player = GameObject.FindGameObjectWithTag(targetTag);
+
+        if (player != null)
+        {
+            movementController = player.GetComponent<PlayerMovementController>();
+            attackController = player.GetComponent<PlayerAttackController>();
+        }
+        else
+        {
+            Debug.LogWarning("Teleport: Player not found at Start!");
+        }
+    }
+
+    private void Update()
+    {
+        if (isPlayerInZone && Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log("Teleport: F pressed. Starting teleport...");
+            StartCoroutine(TeleportWithFade());
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag(targetTag)) 
+        if (other.CompareTag(targetTag))
         {
-            other.transform.position = targetLocation.position;
-            Debug.Log("Player teleported!"); 
+            isPlayerInZone = true;
+            Debug.Log("Teleport: Player entered teleport zone.");
         }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag(targetTag))
+        {
+            isPlayerInZone = false;
+            Debug.Log("Teleport: Player exited teleport zone.");
+        }
+    }
+
+    private IEnumerator TeleportWithFade()
+    {
+        isPlayerInZone = false;
+
+        if (movementController != null) movementController.enabled = false;
+        if (attackController != null) attackController.enabled = false;
+
+        if (SceneLoader.Instance != null)
+        {
+            yield return SceneLoader.Instance.StartCoroutine(SceneLoader.Instance.FadeWithOverlay(0, 1, fadeDuration));
+        }
+
+        Vector3 fromPosition = player.transform.position;
+        player.transform.position = targetLocation.position;
+        Debug.Log($"Player teleported from {fromPosition} to {targetLocation.position}");
+
+        yield return new WaitForSecondsRealtime(pauseDuration);
+
+        if (SceneLoader.Instance != null)
+        {
+            yield return SceneLoader.Instance.StartCoroutine(SceneLoader.Instance.FadeWithOverlay(1, 0, fadeDuration));
+        }
+
+        if (movementController != null) movementController.enabled = true;
+        if (attackController != null) attackController.enabled = true;
+
+        Debug.Log("Teleport complete. Player movement and attack re-enabled.");
     }
 }
