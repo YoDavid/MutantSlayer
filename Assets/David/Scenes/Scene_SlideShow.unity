@@ -278,9 +278,8 @@ MonoBehaviour:
   storyTextComponent: {fileID: 1523366424}
   nextSceneName: Scene_Game
   fadeDuration: 0.5
-  autoAdvanceDelay: 2
+  autoAdvanceDelay: 10
   spacePromptBlinkRate: 0.8
-  slideshowMusic: slideshow_music
   playTransitionSound: 1
   spacePromptText: {fileID: 1591552012}
   skipPromptText: {fileID: 2016144273}

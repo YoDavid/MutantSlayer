@@ -1377,15 +1377,13 @@ MonoBehaviour:
   spitSpawnPoint: {fileID: 2623339895284347317}
   spitDelay: 0.5
   jumpAnticipationTime: 0.7
-  jumpHeightMin: 10
-  jumpHeightMax: 15
-  jumpTargetPosition: {x: 0, y: 0}
+  timeOffscreenBeforeDrop: 0
+  maxTimeInAir: 2
+  jumpHeight: 80
+  dropSpeed: -65
   isJumping: 0
   isJumpingSmash: 0
-  jumpForce: 0
-  jumpHorizontalSpeed: 0
-  jumpHeight: 0
-  jumpAttackDuration: 0
+  jumpTargetPosition: {x: 0, y: 0}
 --- !u!114 &4773310631470295469
 MonoBehaviour:
   m_ObjectHideFlags: 0

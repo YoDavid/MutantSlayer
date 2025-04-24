@@ -10,6 +10,12 @@ public class MenuButton : MonoBehaviour,  ISelectHandler,  IDeselectHandler, IPo
     [SerializeField] private Color highlightedColor = Color.yellow;
     [SerializeField] private float fadeDuration = 0.1f;
 
+    [Header("Scaling")]
+    [SerializeField] private float selectedScale = 1.8f;
+    [SerializeField] private float normalScale = 1.3f;
+    [SerializeField] private float scaleDuration = 0.15f;
+
+
     [Header("References")]
     public Button button;
 
@@ -26,17 +32,20 @@ public class MenuButton : MonoBehaviour,  ISelectHandler,  IDeselectHandler, IPo
         targetImage.color = normalColor;
     }
 
+    private void Start()
+    {
+        transform.localScale = Vector3.one * normalScale;
+    }
+
     public void Select(bool fromEventSystem = false)
     {
-        if (targetImage == null)
-        {
-            Debug.LogError($"[MenuButton] targetImage is null on {gameObject.name} during Select().");
-        }
-
         if (_isSelected) return;
 
         _isSelected = true;
         targetImage.color = highlightedColor;
+
+        // Scale up
+        LeanTween.scale(gameObject, Vector3.one * selectedScale, scaleDuration).setEaseOutBack();
 
         if (!fromEventSystem)
         {
@@ -48,7 +57,11 @@ public class MenuButton : MonoBehaviour,  ISelectHandler,  IDeselectHandler, IPo
     {
         _isSelected = false;
         targetImage.color = normalColor;
+
+        // Scale down
+        LeanTween.scale(gameObject, Vector3.one * normalScale, scaleDuration).setEaseInBack();
     }
+
 
     public void SetAlpha(float alpha)
     {
