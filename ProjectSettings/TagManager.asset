@@ -51,20 +51,32 @@ TagManager:
   - name: 1-Paralax
     uniqueID: 1801015451
     locked: 0
-  - name: 2-InBiuldBack
+  - name: 2-Paralax
+    uniqueID: 2938051059
+    locked: 0
+  - name: 3-Paralax
+    uniqueID: 2813724755
+    locked: 0
+  - name: 4-Paralax
+    uniqueID: 1628874689
+    locked: 0
+  - name: 5-Paralax
+    uniqueID: 3717923233
+    locked: 0
+  - name: 6-Paralax
+    uniqueID: 3462785679
+    locked: 0
+  - name: 7-InBiuldBack
     uniqueID: 2794128715
     locked: 0
-  - name: 3-InBiuldWall
+  - name: 8-InBiuldWall
     uniqueID: 2375610731
     locked: 0
-  - name: 4-InbiuldPalatform
+  - name: 9-InbiuldPalatform
     uniqueID: 2481495577
     locked: 0
-  - name: 5-BuildOut
+  - name: 10-BuildOut
     uniqueID: 1289081979
-    locked: 0
-  - name: 6-BackGround
-    uniqueID: 215779121
     locked: 0
   - name: Player
     uniqueID: 568015659
