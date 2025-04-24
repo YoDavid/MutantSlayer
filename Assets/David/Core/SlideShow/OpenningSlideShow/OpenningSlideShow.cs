@@ -19,12 +19,11 @@ public class OpenningSlideShow : MonoBehaviour
     public float spacePromptBlinkRate = 0.8f;
 
     [Header("Audio Settings")]
-    public string slideshowMusic = "slideshow_music";
     public bool playTransitionSound = true;
 
     [Header("UI References")]
-    public TMP_Text spacePromptText; // SPACE Key prompt
-    public TMP_Text skipPromptText;  // ESC Key prompt (not blinking)
+    public TMP_Text spacePromptText;
+    public TMP_Text skipPromptText; 
 
     private int currentIndex = 0;
     private bool isFading = false;
@@ -33,12 +32,7 @@ public class OpenningSlideShow : MonoBehaviour
 
     private void Start()
     {
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayMusic("slideshow_theme");
-        }
-
-        // Initialize first slide
+        AudioManager.Instance.PlayMusic("slideshow_theme");
         if (images.Length > 0 && texts.Length > 0)
         {
             ShowSlide(0);
@@ -91,7 +85,6 @@ public class OpenningSlideShow : MonoBehaviour
 
             StartCoroutine(FadeAndChangeSlide());
 
-            // Restart auto-advance if not at the end
             if (autoAdvanceCoroutine != null)
                 StopCoroutine(autoAdvanceCoroutine);
             autoAdvanceCoroutine = StartCoroutine(AutoAdvance());

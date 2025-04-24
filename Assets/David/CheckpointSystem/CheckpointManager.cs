@@ -64,26 +64,22 @@ public class CheckpointManager : MonoBehaviour
         var player = FindObjectOfType<PlayerHealth>();
         if (player != null)
         {
-            // Set position and health
             player.transform.position = _lastCheckpointPosition;
             player.SetHealth(_savedHealth);
             player.Revive();
 
-            // Set stamina
             var staminaBar = FindObjectOfType<UIPlayerStaminaBar>();
             if (staminaBar != null)
             {
                 staminaBar.SetStamina(_savedStamina);
             }
 
-            // Set healing items
             var healingController = FindObjectOfType<UIHealingController>();
             if (healingController != null)
             {
                 ResetHealingItems(healingController);
             }
 
-            // Force camera reposition
             var camera = FindObjectOfType<CameraDeadZoneFollow>();
             camera?.ForceCameraReposition();
         }
@@ -91,13 +87,11 @@ public class CheckpointManager : MonoBehaviour
 
     private void ResetHealingItems(UIHealingController healingController)
     {
-        // Disable all healing icons first
         foreach (var icon in healingController.healingIcons)
         {
             icon.enabled = false;
         }
 
-        // Enable only the saved amount
         for (int i = 0; i < _savedHealing; i++)
         {
             if (i < healingController.healingIcons.Length)
@@ -113,18 +107,20 @@ public class CheckpointManager : MonoBehaviour
     {
         return !string.IsNullOrEmpty(_savedScene);
     }
-}
 
-public struct PlayerData
-{
-    public int health;
-    public float stamina;
-    public int healing;
-
-    public PlayerData(int health, float stamina, int healing)
+    public void ResetCheckpoint()
     {
-        this.health = health;
-        this.stamina = stamina;
-        this.healing = healing;
+        _savedScene = null;
+        _lastCheckpointPosition = Vector2.zero;
+        _savedHealth = 0;
+        _savedStamina = 0f;
+        _savedHealing = 0;
+
+        Debug.Log("Checkpoint data reset.");
+    }
+
+    public string GetSavedScene()
+    {
+        return _savedScene;
     }
 }

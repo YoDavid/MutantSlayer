@@ -46,10 +46,8 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadSceneWithFade(string sceneName)
     {
-        // Prevent loading if transition is already in progress
         if (isTransitioningScene) return;
 
-        // Start coroutine to fade and load the scene
         StartCoroutine(FadeAndLoadScene(sceneName));
     }
 
@@ -74,7 +72,7 @@ public class SceneLoader : MonoBehaviour
             fadeOverlay.gameObject.SetActive(false);
         }
 
-        isTransitioningScene = false;  // Mark that transition is complete
+        isTransitioningScene = false; 
     }
 
     public IEnumerator FadeWithOverlay(float from, float to, float duration)
@@ -88,7 +86,6 @@ public class SceneLoader : MonoBehaviour
         if (to == 0f)
             fadeOverlay.gameObject.SetActive(false);
     }
-
 
     public IEnumerator Fade(float from, float to, float duration)
     {

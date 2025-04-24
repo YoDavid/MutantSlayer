@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -348,5 +349,6 @@ public class AudioManager : MonoBehaviour
     public void PlaySpitAttackBoss() => PlaySFX("Boss", "sfx_boss_attack_spit");
     #endregion
 
-
+    public void PlayMainMenuMusic() => PlayMusic("menu_theme");
+    public void PlaySlideshowMusic() => PlayMusic("slideshow_theme");
 }
