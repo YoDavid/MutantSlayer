@@ -49,7 +49,7 @@ public class PlayerAnimationController : MonoBehaviour
     {
         yield return null;
         animator.SetBool("IsAttacking", false);
-        animator.SetInteger("AttackCount", 0);
+        //animator.SetInteger("AttackCount", 0);
     }
 
     public void SetJumpState(bool isJumping)

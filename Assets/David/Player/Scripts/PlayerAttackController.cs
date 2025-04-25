@@ -8,7 +8,7 @@ public class PlayerAttackController : MonoBehaviour
 
     [Header("Combo Settings")]
     [SerializeField] private float attackResetTime = 0.8f;
-    [SerializeField] private float[] attackDurations = { 0.4f, 0.35f, 0.3f };
+    [SerializeField] private float[] attackDurations = { 0.35f, 0.35f, 0.3f };
 
     [Header("Ground Requirements")]
     [SerializeField] private bool requireGrounded = true;
@@ -29,9 +29,9 @@ public class PlayerAttackController : MonoBehaviour
     [SerializeField] private float staminaDrainRate = 25f;
     [SerializeField] private UIPlayerStaminaBar staminaBar;
 
-    private int attackCount;
-    private float lastAttackTime;
-    private float lastAttackEndTime;
+    [SerializeField] private int attackCount;
+    [SerializeField] private float lastAttackTime;
+    [SerializeField] private float lastAttackEndTime;
     private Vector2 originalOffset;
     private Vector2 originalSize;
     private Coroutine currentAttackRoutine;
@@ -58,6 +58,11 @@ public class PlayerAttackController : MonoBehaviour
     private bool playedSwordDraw = false;
     private bool playedClimax = false;
 
+    [Header("Hold Combo Settings")]
+    [SerializeField] private float holdComboInterval = 0.3f; // Time between automatic combo advances when holding
+    private bool isHoldingAttack = false;
+    private Coroutine holdComboRoutine;
+
 
 
 
@@ -81,19 +86,57 @@ public class PlayerAttackController : MonoBehaviour
 
     }
 
-
     private void Update()
     {
+        // Existing checks
         if (!IsAttacking && attackCount > 0 && Time.time - lastAttackEndTime > attackResetTime)
             ResetCombo();
 
-        if (Input.GetMouseButtonDown(0) && CanAttack())
-            PerformAttack();
+        // Modified input handling
+        HandleAttackInput(); // New consolidated input method
+        HandleChargeAttackInput();
 
         if (IsAttacking && cancelAttackIfAirborne && !IsGrounded())
             CancelCurrentAttack();
+    }
 
-        HandleChargeAttackInput();
+    private void HandleAttackInput()
+    {
+        // Mouse down - start attack/combo
+        if (Input.GetMouseButtonDown(0) && CanAttack())
+        {
+            PerformAttack();
+            isHoldingAttack = true;
+            holdComboRoutine = StartCoroutine(HoldComboRoutine());
+        }
+
+        // Mouse up - stop hold combo
+        if (Input.GetMouseButtonUp(0))
+        {
+            isHoldingAttack = false;
+            if (holdComboRoutine != null)
+                StopCoroutine(holdComboRoutine);
+        }
+    }
+
+    private IEnumerator HoldComboRoutine()
+    {
+        while (isHoldingAttack && !staminaBar.IsEmpty)
+        {
+            // Wait for the next combo interval
+            yield return new WaitForSeconds(holdComboInterval);
+
+            // Only progress combo if:
+            // 1. Still holding mouse button
+            // 2. Not currently in hit recovery
+            // 3. Attack count hasn't maxed out
+            if (isHoldingAttack &&
+                Time.time - lastAttackEndTime <= attackResetTime &&
+                attackCount < attackDurations.Length)
+            {
+                PerformAttack();
+            }
+        }
     }
 
     private void HandleChargeAttackInput()
@@ -190,7 +233,6 @@ public class PlayerAttackController : MonoBehaviour
             playedClimax = true;
         }
     }
-
 
     private void TriggerChargeAttackSequence()
     {

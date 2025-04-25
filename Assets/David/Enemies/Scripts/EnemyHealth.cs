@@ -80,19 +80,16 @@ public class EnemyHealth : HealthSystem
         if (!screamedAt75 && healthPercent <= 0.75f)
         {
             audioManager.PlaySmallEnemyTakeHit();
-            Debug.Log("Scream at 75%");
             screamedAt75 = true;
         }
         else if (!screamedAt50 && healthPercent <= 0.5f)
         {
             audioManager.PlaySmallEnemyTakeHit();
-            Debug.Log("Scream at 50%");
             screamedAt50 = true;
         }
         else if (!screamedAt25 && healthPercent <= 0.25f)
         {
             audioManager.PlaySmallEnemyLastScream();
-            Debug.Log("Scream at 25%");
             screamedAt25 = true;
         }
 

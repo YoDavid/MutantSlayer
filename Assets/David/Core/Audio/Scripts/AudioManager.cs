@@ -349,6 +349,10 @@ public class AudioManager : MonoBehaviour
     public void PlaySpitAttackBoss() => PlaySFX("Boss", "sfx_boss_attack_spit");
     #endregion
 
-    public void PlayMainMenuMusic() => PlayMusic("menu_theme");
-    public void PlaySlideshowMusic() => PlayMusic("slideshow_theme");
+    // ====================== Music ======================
+    #region Music - Themes
+    public void PlayMainMenuTheme() => PlayMusic("music_theme_main_menu");
+    public void PlaySlideshowTheme() => PlayMusic("music_theme_slideshow");
+    #endregion
+
 }
