@@ -1,11 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-public class BossHealth : MonoBehaviour
+public class BossHealth : MonoBehaviour, IDamageable
 {
     [Header("Settings")]
     [SerializeField] public int maxHealth = 500;
-    [SerializeField] private Color blinkColor = Color.white; 
+    [SerializeField] private Color blinkColor = Color.white;
     [SerializeField] private float blinkDuration = 0.1f;
     [SerializeField] private int blinkCount = 3;
     [SerializeField] private Vector3 popupOffset = new Vector3(0, 2f, 0);
@@ -19,7 +19,7 @@ public class BossHealth : MonoBehaviour
 
     public event System.Action<int> OnHealthChanged;
     public event System.Action OnDeath;
-    public int MaxHealth => maxHealth; 
+    public int MaxHealth => maxHealth;
 
     private void Awake()
     {
@@ -28,20 +28,43 @@ public class BossHealth : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(int damage, bool isCritical = false)
+    public void TakeDamage(int damage, bool isCritical = false, bool isCombo = false, int comboCount = 0)
     {
         currentHealth -= damage;
 
-        OnHealthChanged?.Invoke(currentHealth); 
+        OnHealthChanged?.Invoke(currentHealth);
 
         if (DamagePopUp.Instance != null)
         {
+            Vector3 spawnPosition = transform.position + popupOffset;
+
+            if (isCombo)
+            {
+                // Apply combo-specific offset
+                spawnPosition += new Vector3(
+                    comboCount * 0.5f,  // Horizontal spacing
+                    comboCount * 0.3f,  // Vertical offset
+                    0
+                );
+            }
+            else
+            {
+                // Add some randomness for regular hits
+                spawnPosition += new Vector3(
+                    Random.Range(-0.5f, 0.5f),
+                    0,
+                    0
+                );
+            }
+
             DamagePopUp.Instance.CreateDamageText(
                 damage,
-                transform.position + popupOffset,
+                spawnPosition,
                 isPlayer: false,
                 isBoss: true,
-                isCritical: isCritical
+                isCritical: isCritical,
+                isCombo: isCombo,
+                comboIndex: comboCount
             );
         }
 
@@ -54,12 +77,11 @@ public class BossHealth : MonoBehaviour
         }
     }
 
-
     private IEnumerator BlinkEffect()
     {
         for (int i = 0; i < blinkCount; i++)
         {
-            spriteRenderer.color = blinkColor; 
+            spriteRenderer.color = blinkColor;
             yield return new WaitForSeconds(blinkDuration);
             spriteRenderer.color = originalColor;
             yield return new WaitForSeconds(blinkDuration);
@@ -73,7 +95,7 @@ public class BossHealth : MonoBehaviour
             Instantiate(bloodSplashPrefab, transform.position, Quaternion.identity);
         }
 
-        OnDeath?.Invoke(); 
+        OnDeath?.Invoke();
         Destroy(gameObject);
     }
 }

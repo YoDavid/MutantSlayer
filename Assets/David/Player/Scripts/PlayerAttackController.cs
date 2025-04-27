@@ -3,12 +3,62 @@ using UnityEngine;
 
 public class PlayerAttackController : MonoBehaviour
 {
+   
+    #region Components and References
     private PlayerAnimationController animationController;
     private PlayerMovementController movementController;
 
+    [Header("References")]
+    [SerializeField] private BoxCollider2D attackCollider;
+    [SerializeField] private UIPlayerStaminaBar staminaBar;
+    [SerializeField] private Transform projectileSpawnPoint;
+    [SerializeField] private GameObject chargeProjectilePrefab;
+    [SerializeField] private bool showGizmos = true;
+    [SerializeField] private PlayerComboHitbox comboHitbox;
+    #endregion
+
+    #region Attack State Variables
+    [SerializeField] private int attackCount;
+    [SerializeField] private float lastAttackTime;
+    [SerializeField] private float lastAttackEndTime;
+    private Vector2 originalOffset;
+    private Vector2 originalSize;
+    private Coroutine currentAttackRoutine;
+
+    public bool IsAttacking { get; private set; }
+    private bool isAttackEnabled = true;
+    #endregion
+
+    #region Charge Attack Variables
+    private bool isCharging = false;
+    private float chargeStartTime;
+    private bool hasFiredChargeAttack = false;
+    private float staminaDepleted = 0f;
+    private Coroutine chargeAudioRoutine;
+    private bool playedSwordDraw = false;
+    private bool playedClimax = false;
+    #endregion
+
+    #region Combo Attack Variables
     [Header("Combo Settings")]
+    [SerializeField] private float leftMouseButtonHoldTime = 0f;
+    [SerializeField] private bool isComboAttackTriggered = false;
+
+    [Header("Combo Audio Delays")]
+    [SerializeField] private float comboChargingSoundDelay = 0.25f;
+    [SerializeField] private float comboSwordDrawDelay = 0.4f;
+    [SerializeField] private float comboClimaxDelay = 1.15f;
+    [SerializeField] private float comboStaminaDrainRate = 25f;
+    [SerializeField] private float comboStaminaDepleted = 0f;
+
+    private bool playedComboSwordDraw = false;
+    private bool playedComboClimax = false;
+    #endregion
+
+    #region Settings
+    [Header("Normal Attacks Settings")]
     [SerializeField] private float attackResetTime = 0.8f;
-    [SerializeField] private float[] attackDurations = { 0.4f, 0.35f, 0.3f };
+    [SerializeField] private float[] attackDurations = { 0.35f, 0.35f, 0.3f };
 
     [Header("Ground Requirements")]
     [SerializeField] private bool requireGrounded = true;
@@ -20,47 +70,18 @@ public class PlayerAttackController : MonoBehaviour
     [SerializeField] private float[] hitboxEnableDelays;
     [SerializeField] private float[] hitboxActiveTimes;
 
-    [Header("References")]
-    [SerializeField] private BoxCollider2D attackCollider;
-    [SerializeField] private bool showGizmos = true;
-
-    [Header("Charge Attack Settings")]
+    [Header("Ranged Attack Settings")]
     [SerializeField] private float chargeStartDelay = 0.25f;
     [SerializeField] private float staminaDrainRate = 25f;
-    [SerializeField] private UIPlayerStaminaBar staminaBar;
-
-    private int attackCount;
-    private float lastAttackTime;
-    private float lastAttackEndTime;
-    private Vector2 originalOffset;
-    private Vector2 originalSize;
-    private Coroutine currentAttackRoutine;
-
-    public bool IsAttacking { get; private set; }
-    private bool isAttackEnabled = true;
-
-    private bool isCharging = false;
-    private float chargeStartTime;
-
-    [Header("Projectile")]
-    [SerializeField] private GameObject chargeProjectilePrefab;
-    [SerializeField] private Transform projectileSpawnPoint;
     [SerializeField] private float chargeProjectileDelay = 0.3f;
-    private bool hasFiredChargeAttack = false;
-    private float staminaDepleted = 0f; // Track the stamina consumed during the charge cycle
 
-    [Header("Charge Audio Delays")]
-    [SerializeField] private float chargingSoundDelay = 0.1f;
+    [Header("Range Audio Delays")]
+    [SerializeField] private float chargingSoundDelay = 0.25f;
     [SerializeField] private float swordDrawDelay = 0.4f;
-    [SerializeField] private float climaxDelay = 1.8f;
+    [SerializeField] private float climaxDelay = 1.15f;
+    #endregion
 
-    private Coroutine chargeAudioRoutine;
-    private bool playedSwordDraw = false;
-    private bool playedClimax = false;
-
-
-
-
+    #region Initialization
     private void Awake()
     {
         animationController = GetComponent<PlayerAnimationController>();
@@ -78,225 +99,40 @@ public class PlayerAttackController : MonoBehaviour
 
         if (projectileSpawnPoint == null)
             projectileSpawnPoint = transform.Find("ProjectilePos");
-
     }
+    #endregion
 
-
+    #region Update Loop
     private void Update()
     {
-        if (!IsAttacking && attackCount > 0 && Time.time - lastAttackEndTime > attackResetTime)
-            ResetCombo();
+        HandleNormalAttackInput();
+        HandleComboAttackInput();
+        HandleRangedAttackInput();
+    }
+    #endregion
 
+    #region Normal Attack Methods
+    private void HandleNormalAttackInput()
+    {
         if (Input.GetMouseButtonDown(0) && CanAttack())
-            PerformAttack();
-
-        if (IsAttacking && cancelAttackIfAirborne && !IsGrounded())
-            CancelCurrentAttack();
-
-        HandleChargeAttackInput();
-    }
-
-    private void HandleChargeAttackInput()
-    {
-        // Start the charging process
-        if (Input.GetMouseButtonDown(1))
-            chargeStartTime = Time.time;
-
-        // While holding the right mouse button
-        if (Input.GetMouseButton(1))
         {
-            if (!isCharging && Time.time - chargeStartTime >= chargeStartDelay)
-            {
-                if (staminaBar.GetStamina() >= 25f)
-                {
-                    animationController.SetChargeStart(true);
-                    isCharging = true;
-                    playedSwordDraw = false;
-                    playedClimax = false;
-
-                    // Start the continuous and delayed sound logic
-                    if (chargeAudioRoutine != null) StopCoroutine(chargeAudioRoutine);
-                    chargeAudioRoutine = StartCoroutine(HandleChargeSounds());
-                }
-                else
-                {
-                    return;
-                }
-            }
-
-            if (isCharging && Time.time - chargeStartTime >= 2.3f)
-            {
-                animationController.SetChargingLoop(true);
-                animationController.SetChargeStart(false);
-            }
-
-            // Depleting stamina while charging
-            if (isCharging && !staminaBar.IsEmpty)
-            {
-                float staminaUsed = staminaDrainRate * Time.deltaTime;
-                staminaDepleted += staminaUsed;
-                staminaBar.DepleteStamina(staminaUsed);
-            }
-
-            // Trigger charge attack once stamina is empty
-            if (isCharging && staminaBar.IsEmpty && !hasFiredChargeAttack)
-            {
-                TriggerChargeAttackSequence();
-            }
-        }
-
-        if (Input.GetMouseButtonUp(1))
-        {
-            if (isCharging && !hasFiredChargeAttack)
-            {
-                TriggerChargeAttackSequence();
-            }
-
-            if (hasFiredChargeAttack)
-            {
-                isCharging = false;
-                animationController.SetChargeStart(false);
-                animationController.SetChargingLoop(false);
-            }
+            PerformNormalAttack();
         }
     }
 
-    private IEnumerator HandleChargeSounds()
-    {
-        // Wait and play charging loop sound
-        yield return new WaitForSeconds(chargingSoundDelay);
-        if (isCharging)
-            AudioManager.Instance.PlayerChargingRangeAttack();
-
-        // Wait for sword draw
-        float waitForSwordDraw = swordDrawDelay - chargingSoundDelay;
-        if (waitForSwordDraw > 0)
-            yield return new WaitForSeconds(waitForSwordDraw);
-
-        if (isCharging && !playedSwordDraw)
-        {
-            AudioManager.Instance.PlayerChargingSwordDraw();
-            playedSwordDraw = true;
-        }
-
-        // Wait for climax
-        float waitForClimax = climaxDelay - swordDrawDelay;
-        if (waitForClimax > 0)
-            yield return new WaitForSeconds(waitForClimax);
-
-        if (isCharging && !playedClimax)
-        {
-            AudioManager.Instance.PlayerChargingClimax();
-            playedClimax = true;
-        }
-    }
-
-
-    private void TriggerChargeAttackSequence()
-    {
-        if (hasFiredChargeAttack) return; // Prevent firing more than once
-
-        // Stop charging and reset charge-related animation states
-        isCharging = false;
-        animationController.SetChargeStart(false);
-        animationController.SetChargingLoop(false);
-        animationController.SetChargeAttack(); // Trigger the charge attack animation
-
-        // Mark that the charge attack has been fired
-        hasFiredChargeAttack = true;
-
-        // Fire the projectile after a short delay
-        StartCoroutine(FireChargeProjectileAfterDelay());
-        StartCoroutine(ResetChargeAttackState());
-    }
-
-    private IEnumerator FireChargeProjectileAfterDelay()
-    {
-        yield return new WaitForSeconds(chargeProjectileDelay);
-
-        if (chargeProjectilePrefab != null && projectileSpawnPoint != null)
-        {
-            float chargeDuration = Time.time - chargeStartTime;
-            float maxChargeTime = 9f;
-
-            // Clamp duration and calculate interpolation factor
-            float t = Mathf.Clamp01(chargeDuration / maxChargeTime);
-
-            // Calculate scale and damage using Lerp
-            float minScale = 0.1f;
-            float maxScale = 0.3f;
-            float finalScale = Mathf.Lerp(minScale, maxScale, t);
-
-            int damage = Mathf.RoundToInt(Mathf.Lerp(5f, 50f, t));
-
-            // Adjust spawn position based on charge duration
-            Vector3 spawnPosition = projectileSpawnPoint.position;
-            if (chargeDuration >= 4.5f) // Mid to max charge raises position
-            {
-                spawnPosition.y += Mathf.Lerp(0f, 2f, (chargeDuration - 4.5f) / (maxChargeTime - 4.5f));
-            }
-
-            GameObject projectile = Instantiate(chargeProjectilePrefab, spawnPosition, Quaternion.identity);
-            projectile.transform.localScale = new Vector3(finalScale, finalScale, 1f);
-
-            ChargeProjectile cp = projectile.GetComponent<ChargeProjectile>();
-            if (cp != null)
-            {
-                bool isFacingRight = transform.localScale.x > 0f;
-                cp.damage = damage;
-                cp.Launch(isFacingRight);
-            }
-        }
-    }
-
-    private IEnumerator ResetChargeAttackState()
-    {
-        // Wait for a short period (to allow any lingering animation or effects to finish)
-        yield return new WaitForSeconds(0.5f);
-
-        // Reset the animation states
-        animationController.ResetChargeAttack();
-        animationController.SetChargingLoop(false); // Explicitly reset ChargingLoop to false
-
-        // Allow firing the next charge attack
-        hasFiredChargeAttack = false; // Reset so you can charge again
-
-        // Reset stamina depletion tracker for next charge cycle
-        staminaDepleted = 0f;
-    }
-
-    public void SetAttackEnabled(bool enabled)
-    {
-        isAttackEnabled = enabled;
-        if (!enabled && IsAttacking)
-            CancelCurrentAttack();
-    }
-
-    private bool CanAttack()
-    {
-        return isAttackEnabled &&
-               !IsAttacking &&
-               (attackCount == 0 || Time.time - lastAttackEndTime <= attackResetTime) &&
-               (!requireGrounded || IsGrounded());
-    }
-
-    private bool IsGrounded()
-    {
-        return movementController != null && movementController.isGrounded;
-    }
-
-    private void PerformAttack()
+    private void PerformNormalAttack()
     {
         if (attackCount >= attackDurations.Length)
         {
-            ResetCombo();
+            ResetNormalAttackCount();
             return;
         }
 
         lastAttackTime = Time.time;
         IsAttacking = true;
-        attackCount++;
+        Debug.Log("Normal Attack");
 
+        attackCount++;
         animationController.SetAttackState(attackCount);
         AudioManager.Instance.PlayPlayerAttackSwing(attackCount - 1);
 
@@ -323,7 +159,6 @@ public class PlayerAttackController : MonoBehaviour
         attackCollider.size = originalSize;
 
         float remainingTime = attackDurations[attackIndex] - (hitboxEnableDelays[attackIndex] + hitboxActiveTimes[attackIndex]);
-
         if (remainingTime > 0)
             yield return new WaitForSeconds(remainingTime);
 
@@ -333,7 +168,361 @@ public class PlayerAttackController : MonoBehaviour
         if (attackIndex < attackDurations.Length - 1)
             animationController.SetAttackState(0);
         else
-            ResetCombo();
+            ResetNormalAttackCount();
+    }
+    #endregion
+
+    #region Combo Attack Methods
+    public void HandleComboAttackInput()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            leftMouseButtonHoldTime += Time.deltaTime;
+
+            if (leftMouseButtonHoldTime >= 0.25f && !isComboAttackTriggered && staminaBar.GetStamina() >= 25f)
+            {
+                animationController.SetComboAttackStart(true);
+                animationController.SetIsComboAttacking(true);
+                isComboAttackTriggered = true;
+
+                // Start the combo hitbox
+                if (comboHitbox != null)
+                {
+                    comboHitbox.OnComboStarted();
+                }
+
+                if (chargeAudioRoutine != null) StopCoroutine(chargeAudioRoutine);
+                chargeAudioRoutine = StartCoroutine(HandleComboAttackSounds());
+            }
+
+            // Handle stamina consumption during combo attack
+            if (isComboAttackTriggered && !staminaBar.IsEmpty)
+            {
+                float staminaUsed = comboStaminaDrainRate * Time.deltaTime;
+                comboStaminaDepleted += staminaUsed;
+                staminaBar.DepleteStamina(staminaUsed);
+
+                if (staminaBar.IsEmpty)
+                {
+                    EndComboAttack();  // End combo attack when stamina runs out
+                }
+            }
+        }
+        else if (Input.GetMouseButtonUp(0))  // Left mouse button released
+        {
+            ResetComboInputState();  // Reset hold time when button is released
+            if (isComboAttackTriggered)
+            {
+                EndComboAttack();  // End combo when button is released
+            }
+        }
+    }
+
+    private IEnumerator HandleComboAttackSounds()
+    {
+        float elapsedTime = 0f;
+        bool chargingSoundPlaying = false;
+
+        // Wait for the combo charging sound delay
+        yield return new WaitForSeconds(comboChargingSoundDelay);
+        elapsedTime += comboChargingSoundDelay;
+
+        // Check if combo attack conditions are false
+        if (!animationController.animator.GetBool("ComboAttackStart") ||
+            !animationController.animator.GetBool("IsComboAttacking"))
+        {
+            yield break; // Immediate exit if conditions fail
+        }
+
+        // Start charging sound
+        AudioManager.Instance.PlayerChargingRangeAttack();
+        chargingSoundPlaying = true;
+
+        // Main sound sequence
+        while (elapsedTime < 2.55f &&
+               animationController.animator.GetBool("ComboAttackStart") &&
+               animationController.animator.GetBool("IsComboAttacking"))
+        {
+            // Play sword draw sound at the right time
+            if (!playedComboSwordDraw && elapsedTime >= comboSwordDrawDelay - comboChargingSoundDelay)
+            {
+                AudioManager.Instance.PlayerChargingSwordDraw();
+                playedComboSwordDraw = true;
+            }
+
+            // Play climax sound at the right time
+            if (!playedComboClimax && elapsedTime >= comboClimaxDelay - comboChargingSoundDelay)
+            {
+                AudioManager.Instance.PlayerChargingClimax();
+                playedComboClimax = true;
+            }
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Stop sound only when:
+        // 1. 2.6 seconds have passed, OR
+        // 2. Combo conditions become false
+        if (chargingSoundPlaying)
+        {
+            AudioManager.Instance.StopSound("Player", "sfx_player_charge_range_attack");
+        }
+
+        // Reset input state when combo naturally completes
+        if (elapsedTime >= 2.55f)
+        {
+            ResetComboInputState();
+        }
+    }
+
+    private void EndComboAttack()
+    {
+        animationController.StopComboAttack();
+        isComboAttackTriggered = false;
+        playedComboSwordDraw = false;
+        playedComboClimax = false;
+        comboStaminaDepleted = 0f;
+
+        animationController.SetComboAttackStart(false);
+        animationController.SetIsComboAttacking(false);
+
+        // Tell the combo hitbox to end
+        if (comboHitbox != null)
+        {
+            comboHitbox.OnComboEnded();
+        }
+    }
+
+    // New helper method to reset combo input state
+    private void ResetComboInputState()
+    {
+        leftMouseButtonHoldTime = 0f;
+    }
+    #endregion
+
+    #region Ranged Attack Methods
+    private void HandleRangedAttackInput()
+    {
+        if (Input.GetMouseButtonDown(1))
+            chargeStartTime = Time.time;
+
+        if (Input.GetMouseButton(1))
+        {
+            if (!isCharging && Time.time - chargeStartTime >= chargeStartDelay)
+            {
+                if (staminaBar.GetStamina() >= 25f)
+                {
+                    animationController.SetRangedAttackStart(true);
+                    isCharging = true;
+                    playedSwordDraw = false;
+                    playedClimax = false;
+
+                    if (chargeAudioRoutine != null) StopCoroutine(chargeAudioRoutine);
+                    chargeAudioRoutine = StartCoroutine(HandleRangedAttackSounds());
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            if (isCharging && Time.time - chargeStartTime >= 2.3f)
+            {
+                animationController.SetRangedAttackLoop(true);
+                animationController.SetRangedAttackStart(false);
+            }
+
+            if (isCharging && !staminaBar.IsEmpty)
+            {
+                float staminaUsed = staminaDrainRate * Time.deltaTime;
+                staminaDepleted += staminaUsed;
+                staminaBar.DepleteStamina(staminaUsed);
+            }
+
+            if (isCharging && staminaBar.IsEmpty && !hasFiredChargeAttack)
+            {
+                TriggerRangedAttackSequence();
+            }
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            if (isCharging && !hasFiredChargeAttack)
+            {
+                TriggerRangedAttackSequence();
+            }
+
+            if (hasFiredChargeAttack)
+            {
+                isCharging = false;
+                animationController.SetRangedAttackStart(false);
+                animationController.SetRangedAttackLoop(false);
+            }
+        }
+    }
+
+    private IEnumerator HandleRangedAttackSounds()
+    {
+        float elapsedTime = 0f;
+        bool chargingSoundPlaying = false;
+
+        // Wait for the initial charging sound delay
+        yield return new WaitForSeconds(chargingSoundDelay);
+        elapsedTime += chargingSoundDelay;
+
+        // Check if ranged attack conditions are still true
+        if (!isCharging)
+            yield break;
+
+        // Play charging sound if conditions are met
+        if (isCharging)
+        {
+            AudioManager.Instance.PlayerChargingRangeAttack();
+            chargingSoundPlaying = true;
+        }
+
+        // Calculate sword draw wait time
+        float waitForSwordDraw = swordDrawDelay - chargingSoundDelay;
+        if (waitForSwordDraw > 0)
+        {
+            yield return new WaitForSeconds(waitForSwordDraw);
+            elapsedTime += waitForSwordDraw;
+        }
+
+        // Play sword draw sound if conditions are met
+        if (isCharging && !playedSwordDraw && elapsedTime < 2.3f)
+        {
+            AudioManager.Instance.PlayerChargingSwordDraw();
+            playedSwordDraw = true;
+        }
+
+        // Calculate climax wait time
+        float waitForClimax = climaxDelay - swordDrawDelay;
+        if (waitForClimax > 0)
+        {
+            yield return new WaitForSeconds(waitForClimax);
+            elapsedTime += waitForClimax;
+        }
+
+        // Play climax sound if conditions are met
+        if (isCharging && !playedClimax && elapsedTime < 2.3f)
+        {
+            AudioManager.Instance.PlayerChargingClimax();
+            playedClimax = true;
+        }
+
+        // Continue checking while charging
+        while (isCharging && !hasFiredChargeAttack)
+        {
+            // Stop charging sound if we're past 2.3s AND not in attack loop state
+            if (elapsedTime >= 2.3f && !animationController.animator.GetBool("RangedAttackLoop"))
+            {
+                if (chargingSoundPlaying)
+                {
+                    AudioManager.Instance.StopSound("Player", "sfx_player_charge_range_attack");
+                    chargingSoundPlaying = false;
+                }
+            }
+            // Keep playing if we're in attack loop state
+            else if (elapsedTime >= 2.3f && animationController.animator.GetBool("RangedAttackLoop"))
+            {
+                if (!chargingSoundPlaying)
+                {
+                    AudioManager.Instance.PlayerChargingRangeAttack();
+                    chargingSoundPlaying = true;
+                }
+            }
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Final check to stop charging sound
+        if (chargingSoundPlaying)
+        {
+            AudioManager.Instance.StopSound("Player", "sfx_player_charge_range_attack");
+        }
+    }
+
+    private void TriggerRangedAttackSequence()
+    {
+        if (hasFiredChargeAttack) return;
+
+        isCharging = false;
+        animationController.SetRangedAttackStart(false);
+        animationController.SetRangedAttackLoop(false);
+        animationController.SetRangedAttack();
+
+        hasFiredChargeAttack = true;
+        StartCoroutine(FireChargeProjectileAfterDelay());
+        StartCoroutine(ResetRangedAttackState());
+    }
+
+    private IEnumerator FireChargeProjectileAfterDelay()
+    {
+        yield return new WaitForSeconds(chargeProjectileDelay);
+
+        if (chargeProjectilePrefab != null && projectileSpawnPoint != null)
+        {
+            float chargeDuration = Time.time - chargeStartTime;
+            float maxChargeTime = 9f;
+            float t = Mathf.Clamp01(chargeDuration / maxChargeTime);
+
+            float minScale = 0.1f;
+            float maxScale = 0.3f;
+            float finalScale = Mathf.Lerp(minScale, maxScale, t);
+
+            int damage = Mathf.RoundToInt(Mathf.Lerp(5f, 50f, t));
+
+            Vector3 spawnPosition = projectileSpawnPoint.position;
+            if (chargeDuration >= 4.5f)
+            {
+                spawnPosition.y += Mathf.Lerp(0f, 2f, (chargeDuration - 4.5f) / (maxChargeTime - 4.5f));
+            }
+
+            GameObject projectile = Instantiate(chargeProjectilePrefab, spawnPosition, Quaternion.identity);
+            projectile.transform.localScale = new Vector3(finalScale, finalScale, 1f);
+
+            ChargeProjectile cp = projectile.GetComponent<ChargeProjectile>();
+            if (cp != null)
+            {
+                bool isFacingRight = transform.localScale.x > 0f;
+                cp.damage = damage;
+                cp.Launch(isFacingRight);
+            }
+        }
+    }
+
+    private IEnumerator ResetRangedAttackState()
+    {
+        yield return new WaitForSeconds(0.5f);
+        animationController.ResetRangedAttack();
+        animationController.SetRangedAttackLoop(false);
+        hasFiredChargeAttack = false;
+        staminaDepleted = 0f;
+    }
+    #endregion
+
+    #region Utility Methods
+    public void SetAttackEnabled(bool enabled)
+    {
+        isAttackEnabled = enabled;
+        if (!enabled && IsAttacking)
+            CancelCurrentAttack();
+    }
+
+    private bool CanAttack()
+    {
+        return isAttackEnabled &&
+               !IsAttacking &&
+               (attackCount == 0 || Time.time - lastAttackEndTime <= attackResetTime) &&
+               (!requireGrounded || IsGrounded());
+    }
+
+    private bool IsGrounded()
+    {
+        return movementController != null && movementController.isGrounded;
     }
 
     private void CancelCurrentAttack()
@@ -346,15 +535,20 @@ public class PlayerAttackController : MonoBehaviour
         attackCollider.size = originalSize;
 
         IsAttacking = false;
+        Debug.Log("Attack Canceled");
+
         animationController.SetAttackState(0);
     }
 
-    private void ResetCombo()
+    private void ResetNormalAttackCount()
     {
         attackCount = 0;
+        Debug.Log("Combo Reset");
         animationController.SetAttackState(0);
     }
+    #endregion
 
+    #region Gizmos
     private void OnDrawGizmos()
     {
         if (!showGizmos || attackCollider == null || colliderOffsets == null || colliderSizes == null)
@@ -375,4 +569,5 @@ public class PlayerAttackController : MonoBehaviour
 
         Gizmos.matrix = originalMatrix;
     }
+    #endregion
 }

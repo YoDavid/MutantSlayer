@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class EnemyHealth : HealthSystem
+public class EnemyHealth : HealthSystem, IDamageable
 {
     [Header("Enemy Settings")]
     public EnemyConfig config;
@@ -27,12 +27,14 @@ public class EnemyHealth : HealthSystem
         if (audioObj != null) audioManager = audioObj.GetComponent<AudioManager>();
     }
 
-    public override void TakeDamage(int damage, bool isCritical = false)
+    // Implement TakeDamage from IDamageable interface
+    public void TakeDamage(int damage, bool isCritical = false, bool isCombo = false, int comboCount = 0)
     {
         if (CurrentHealth <= 0) return;
 
         base.TakeDamage(damage, isCritical);
 
+        // Handle enemy-specific sounds
         if (this.gameObject.name == "MediumEnemy")
         {
             MediumEnemyPlaySound();
@@ -42,9 +44,17 @@ public class EnemyHealth : HealthSystem
             SmallEnemyPlaySound();
         }
 
-        DamagePopUp.Instance?.CreateDamageText(
-        damage, transform.position + Vector3.up * 1.5f,
-        isPlayer: false, isBoss: false, isCritical);
+        // Show damage pop-up for regular attacks (not combo)
+        if (!isCombo && DamagePopUp.Instance != null)
+        {
+            DamagePopUp.Instance.CreateDamageText(
+                damage,
+                transform.position + Vector3.up * 1.5f,
+                isPlayer: false,
+                isBoss: false,
+                isCritical: isCritical
+            );
+        }
 
         if (CurrentHealth <= 0) Die();
     }
@@ -56,23 +66,20 @@ public class EnemyHealth : HealthSystem
         if (!screamedAt75 && healthPercent <= 0.75f)
         {
             audioManager.PlayMediumEnemyTakeHit();
-            Debug.Log("Scream at 75%");
             screamedAt75 = true;
         }
         else if (!screamedAt50 && healthPercent <= 0.5f)
         {
             audioManager.PlayMediumEnemyTakeHit();
-            Debug.Log("Scream at 50%");
             screamedAt50 = true;
         }
         else if (!screamedAt25 && healthPercent <= 0.25f)
         {
             audioManager.PlayMediumEnemyLastScream();
-            Debug.Log("Scream at 25%");
             screamedAt25 = true;
         }
-
     }
+
     private void SmallEnemyPlaySound()
     {
         float healthPercent = (float)CurrentHealth / MaxHealth;
@@ -80,22 +87,18 @@ public class EnemyHealth : HealthSystem
         if (!screamedAt75 && healthPercent <= 0.75f)
         {
             audioManager.PlaySmallEnemyTakeHit();
-            Debug.Log("Scream at 75%");
             screamedAt75 = true;
         }
         else if (!screamedAt50 && healthPercent <= 0.5f)
         {
             audioManager.PlaySmallEnemyTakeHit();
-            Debug.Log("Scream at 50%");
             screamedAt50 = true;
         }
         else if (!screamedAt25 && healthPercent <= 0.25f)
         {
             audioManager.PlaySmallEnemyLastScream();
-            Debug.Log("Scream at 25%");
             screamedAt25 = true;
         }
-
     }
 
     protected override void Die()
