@@ -12,6 +12,7 @@ public class PlayerAttackHitbox : MonoBehaviour
 
     private DamageDealer damageDealer;
     private AudioManager audioManager;
+    private CameraShake camerShake;
 
     // Events for time control
     public event Action<bool, bool> OnHit; // bool isCritical, bool isBoss
@@ -20,6 +21,8 @@ public class PlayerAttackHitbox : MonoBehaviour
     {
         damageDealer = gameObject.AddComponent<DamageDealer>();
         damageDealer.config = damageConfig;
+
+        camerShake = GameObject.FindObjectOfType<CameraShake>();
 
         GameObject audioObj = GameObject.Find("AudioManager");
         if (audioObj != null)
@@ -62,6 +65,18 @@ public class PlayerAttackHitbox : MonoBehaviour
             PlayRandomHitSound();
             SpawnHitParticles(hitPosition);
             OnHit?.Invoke(isCritical, isBoss);
+
+            if (camerShake != null)
+            {
+                if (isCritical)
+                {
+                    camerShake.CriticalHitShakeCamera(); // Stronger shake for crits
+                }
+                else
+                {
+                    camerShake.NormalHitShakeCamera(); // Normal shake for regular hits
+                }
+            }
         }
     }
 
