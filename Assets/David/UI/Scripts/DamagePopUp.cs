@@ -1,10 +1,9 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;  // For UI Image
+using UnityEngine.UI;
 
 public class DamagePopUp : MonoBehaviour
 {
-    // Singleton for easy access
     public static DamagePopUp Instance { get; private set; }
 
     [Header("References")]
@@ -38,8 +37,13 @@ public class DamagePopUp : MonoBehaviour
     [SerializeField] private float critMinDuration = 1f;
     [SerializeField] private float critMaxDuration = 1.2f;
 
+    [Header("Combo Settings")]
+    [SerializeField] private float comboSpacing = 0.5f;  // Space between combo numbers
+    [SerializeField] private float comboVerticalSpread = 0.3f;
+    [SerializeField] private float comboRandomness = 0.2f;  // Small position variation
+
     [Header("Flash Effect")]
-    [SerializeField] private Image flashImage;  // Reference to the image for the white flash effect
+    [SerializeField] private Image flashImage;
 
     private void Awake()
     {
@@ -54,18 +58,10 @@ public class DamagePopUp : MonoBehaviour
         }
     }
 
-    public void CreateDamageText(int damage, Vector3 position, bool isPlayer, bool isBoss, bool isCritical = false)
+    public void CreateDamageText(int damage, Vector3 position, bool isPlayer, bool isBoss,
+                               bool isCritical = false, bool isCombo = false, int comboIndex = 0)
     {
-        float spawnHeight = isPlayer ? playerSpawnHeight :
-                          (isBoss ? bossSpawnHeight : regularEnemiesHeight);
-
-        Vector3 randomOffset = new Vector3(
-            Random.Range(-horizontalRandomness, horizontalRandomness),
-            0,
-            0
-        );
-
-        Vector3 spawnPosition = position + Vector3.up * spawnHeight + randomOffset;
+        Vector3 spawnPosition = CalculateSpawnPosition(position, isPlayer, isBoss, isCombo, comboIndex);
 
         if (isCritical)
         {
@@ -74,29 +70,23 @@ public class DamagePopUp : MonoBehaviour
 
         GameObject popUp = Instantiate(popUpPrefab, spawnPosition, Quaternion.identity);
         TextMeshPro text = popUp.GetComponent<TextMeshPro>();
-
         text.text = $"-{damage}";
-        text.color = isCritical ? critColor :
-                   (isPlayer ? playerColor :
-                   (isBoss ? bossColor : defaultColor));
 
-        // Set initial font size
+        // Set visual properties (same as regular attacks)
+        text.color = isCritical ? critColor :
+                    (isPlayer ? playerColor :
+                    (isBoss ? bossColor : defaultColor));
+
+        float startSize = isCritical ? 10f : normalTextSize;
+        text.fontSize = startSize;
+
         if (isCritical)
         {
-            float startSize = 10f; // Animation start size
-            text.fontSize = startSize;
-
-            // Animate font size to critTextSize
-            LeanTween.value(popUp, startSize, critTextSize, 0.2f)
-                     .setOnUpdate((float val) => {
-                         text.fontSize = val;
-                     });
-        }
-        else
-        {
-            text.fontSize = normalTextSize;
+            LeanTween.value(text.gameObject, startSize, critTextSize, 0.2f)
+                    .setOnUpdate((float val) => text.fontSize = val);
         }
 
+        // Animation
         float floatDistance = isCritical ?
             Random.Range(critMinFloatDistance, critMaxFloatDistance) :
             Random.Range(normalMinFloatDistance, normalMaxFloatDistance);
@@ -106,21 +96,49 @@ public class DamagePopUp : MonoBehaviour
             Random.Range(normalMinDuration, normalMaxDuration);
 
         LeanTween.moveY(popUp, spawnPosition.y + floatDistance, duration)
-                 .setEaseOutQuad();
+                .setEaseOutQuad();
 
         LeanTween.alphaText(popUp.GetComponent<RectTransform>(), 0f, duration)
-                 .setOnComplete(() => Destroy(popUp));
+                .setOnComplete(() => Destroy(popUp));
     }
 
+    private Vector3 CalculateSpawnPosition(Vector3 position, bool isPlayer, bool isBoss, bool isCombo, int comboIndex)
+    {
+        float spawnHeight = isPlayer ? playerSpawnHeight :
+                          (isBoss ? bossSpawnHeight : regularEnemiesHeight);
+
+        Vector3 spawnPosition = position + Vector3.up * spawnHeight;
+
+        if (isCombo)
+        {
+            // Calculate perfect left/right spreading
+            int side = comboIndex % 2 == 0 ? 1 : -1; // Alternates sides
+            int multiplier = (comboIndex + 1) / 2;    // Increases distance progressively
+
+            spawnPosition += new Vector3(
+                side * multiplier * comboSpacing + Random.Range(-comboRandomness, comboRandomness),
+                Random.Range(-comboVerticalSpread, comboVerticalSpread),
+                0
+            );
+        }
+        else
+        {
+            // Regular random offset for non-combo attacks
+            spawnPosition += new Vector3(
+                Random.Range(-horizontalRandomness, horizontalRandomness),
+                0,
+                0
+            );
+        }
+
+        return spawnPosition;
+    }
 
     private void FlashScreen()
     {
         if (flashImage != null)
         {
-            // Make the image visible (white flash)
-            flashImage.color = new Color(1f, 1f, 1f, 1f); // Fully opaque white
-
-            // Use LeanTween to fade it back out over 0.2 seconds (adjust as needed)
+            flashImage.color = new Color(1f, 1f, 1f, 1f);
             LeanTween.alpha(flashImage.rectTransform, 0f, 0.2f).setEaseOutQuad();
         }
     }

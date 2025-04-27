@@ -52,7 +52,7 @@ public class EnemyCombat : MonoBehaviour
 
         if (config.hasDualAttack && cameraShake != null)
         {
-            cameraShake.ShakeCamera();
+            cameraShake.NormalHitShakeCamera();
         }
 
         attackCollider.SetAttackPhase(true);

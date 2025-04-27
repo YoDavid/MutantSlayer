@@ -113,7 +113,6 @@ public class PlayerHealth : HealthSystem
         }
     }
 
-    // Add these methods to your existing PlayerHealth script
     public void SetHealth(int amount)
     {
         CurrentHealth = Mathf.Clamp(amount, 0, MaxHealth);

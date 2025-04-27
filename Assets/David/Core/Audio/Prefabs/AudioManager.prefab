@@ -1008,11 +1008,11 @@ MonoBehaviour:
       pitch: 1
   musicSource: {fileID: 5609026769129953427}
   musicTracks:
-  - name: menu_theme
+  - name: music_theme_main_menu
     clip: {fileID: 8300000, guid: 65da4fa06cf15cf43bcb14aa1eb0eb5b, type: 3}
     volume: 0.4
     pitch: 1
-  - name: slideshow_theme
+  - name: music_theme_slideshow
     clip: {fileID: 8300000, guid: 1002f91584b48344b90fd207b77dba32, type: 3}
     volume: 1
     pitch: 1

@@ -3,12 +3,19 @@ using System.Collections;
 
 public class CameraShake : MonoBehaviour
 {
-    [Header("Shake Effect")]
-    [SerializeField] private float shakeDuration;
-    [SerializeField] private float minshakeMagnitude;
-    [SerializeField] private float maxshakeMagnitude;
-    [SerializeField] private float shakeMagnitude;
-    [SerializeField] private float dampingSpeed;
+    [Header("Normal Attack Shake Effect")]
+    [SerializeField] private float normalAttackShakeDuration;
+    [SerializeField] private float normalAttackMinshakeMagnitude;
+    [SerializeField] private float normalAttackMaxshakeMagnitude;
+    [SerializeField] private float normalAttackShakeMagnitude;
+    [SerializeField] private float normalAttackDampingSpeed;
+
+    [Header("Normal Attack Shake Effect")]
+    [SerializeField] private float criticalAttackShakeDuration;
+    [SerializeField] private float criticalAttackMinshakeMagnitude;
+    [SerializeField] private float criticalAttackMaxshakeMagnitude;
+    [SerializeField] private float criticalAttackShakeMagnitude;
+    [SerializeField] private float criticalAttackDampingSpeed;
 
     [Header("Combo Attack Shake Settings")]
     [SerializeField] private float comboShakeDuration;
@@ -43,12 +50,21 @@ public class CameraShake : MonoBehaviour
         fixedZ = transform.position.z;
     }
 
-    public void ShakeCamera()
+    public void NormalHitShakeCamera()
     {
         if (!isShaking)
         {
             originalPosition = transform.position;
-            StartCoroutine(Shake(shakeDuration, minshakeMagnitude, maxshakeMagnitude, shakeMagnitude, dampingSpeed));
+            StartCoroutine(Shake(normalAttackShakeDuration, normalAttackMinshakeMagnitude, normalAttackMaxshakeMagnitude, normalAttackShakeMagnitude, normalAttackDampingSpeed));
+        }
+    }
+
+    public void CriticalHitShakeCamera()
+    {
+        if (!isShaking)
+        {
+            originalPosition = transform.position;
+            StartCoroutine(Shake(criticalAttackShakeDuration, criticalAttackMinshakeMagnitude, criticalAttackMaxshakeMagnitude, criticalAttackShakeMagnitude, criticalAttackDampingSpeed));
         }
     }
 

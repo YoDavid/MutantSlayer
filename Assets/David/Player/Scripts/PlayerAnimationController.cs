@@ -12,9 +12,9 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField] private float hitStunDuration = 0.3f;
     private bool isInHitStun = false;
 
-    [Header("Charge Scale Settings")]
-    [SerializeField] private float chargeScale = 0.7f;
-    [SerializeField] private float normalScale = 1f;
+    [Header("RangedAttack Scale Settings")]
+    [SerializeField] private float rangedAttackScale = 0.7f;
+    [SerializeField] private float RangedAttackNormalScale = 1f;
     private bool isCharging = false;
 
     private void Awake()
@@ -49,7 +49,6 @@ public class PlayerAnimationController : MonoBehaviour
     {
         yield return null;
         animator.SetBool("IsAttacking", false);
-        animator.SetInteger("AttackCount", 0);
     }
 
     public void SetJumpState(bool isJumping)
@@ -141,9 +140,9 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetBool("IsHealing", true);
     }
 
-    public void SetChargeStart(bool value)
+    public void SetRangedAttackStart(bool value)
     {
-        animator.SetBool("ChargeStart", value);
+        animator.SetBool("RangedAttackStart", value);
 
         if (value)
         {
@@ -152,9 +151,9 @@ public class PlayerAnimationController : MonoBehaviour
         }
     }
 
-    public void SetChargingLoop(bool value)
+    public void SetRangedAttackLoop(bool value)
     {
-        animator.SetBool("ChargingLoop", value);
+        animator.SetBool("RangedAttackLoop", value);
 
         if (value)
         {
@@ -163,21 +162,52 @@ public class PlayerAnimationController : MonoBehaviour
         }
     }
 
-    public void SetChargeAttack()
+    public void SetRangedAttack()
     {
-        animator.SetBool("ChargeStart", false);
-        animator.SetBool("ChargingLoop", false);
-        animator.SetBool("ChargeAttack", true);
+        animator.SetBool("RangedAttackStart", false);
+        animator.SetBool("RangedAttackLoop", false);
+        animator.SetBool("RangedAttackAttack", true);
 
         AudioManager.Instance.StopSound("Player", "player_charging_range_attack");
         AudioManager.Instance.PlaySwing_00();
     }
 
-    public void ResetChargeAttack()
+    public void ResetRangedAttack()
     {
-        animator.SetBool("ChargeAttack", false);
+        animator.SetBool("RangedAttackAttack", false);
 
         // Now re-enable movement + attack
+        movementController.SetMovementEnabled(true);
+        attackController.SetAttackEnabled(true);
+    }
+
+    public void SetComboAttackStart(bool value)
+    {
+        animator.SetBool("ComboAttackStart", value);
+
+        if (value)
+        {
+            movementController.SetMovementEnabled(false);
+            attackController.SetAttackEnabled(false);
+        }
+    }
+
+    public void SetIsComboAttacking(bool value)
+    {
+        animator.SetBool("IsComboAttacking", value);
+
+        if (value)
+        {
+            movementController.SetMovementEnabled(false);
+            attackController.SetAttackEnabled(false);
+        }
+    }
+
+    public void StopComboAttack()
+    {
+        Debug.Log("Stopping Combo Attack");
+        animator.SetBool("ComboAttackStart", false);
+        animator.SetBool("IsComboAttacking", false);
         movementController.SetMovementEnabled(true);
         attackController.SetAttackEnabled(true);
     }
