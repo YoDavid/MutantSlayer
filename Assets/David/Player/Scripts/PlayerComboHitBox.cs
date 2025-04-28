@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerComboHitbox : MonoBehaviour
@@ -6,6 +7,9 @@ public class PlayerComboHitbox : MonoBehaviour
     [Header("Combo Timing")]
     [SerializeField] private float windupDuration = 2.3f; // Combo windup animation length
     [SerializeField] private float hitInterval = 0.18f;   // Time between hits (0.9s/5 hits)
+
+    [Header("Time Stop Effect")]
+    [SerializeField] private float timeStopDuration = 0.3f; // Duration for time stop after combo ends
 
     [Header("Combat Settings")]
     [SerializeField] private DamageConfig damageConfig;
@@ -16,6 +20,7 @@ public class PlayerComboHitbox : MonoBehaviour
     private DamageDealer damageDealer;
     private AudioManager audioManager;
     private CameraShake cameraShake;
+    private PlayerHealth playerHealth;
 
     // State
     private float comboStartTime;
@@ -27,6 +32,9 @@ public class PlayerComboHitbox : MonoBehaviour
     // Public accessors
     public bool IsComboActive => externalComboActiveState;
     public bool IsComboAttacking => attackPhaseActive;
+
+    private bool isComboSoundPlaying = false;
+    [SerializeField][Range(0f, 1f)] private float timeSlowFactor = 0.2f; // 0 = freeze, 1 = normal speed
 
     private class DetectedHit
     {
@@ -45,9 +53,40 @@ public class PlayerComboHitbox : MonoBehaviour
 
         cameraShake = FindObjectOfType<CameraShake>();
         audioManager = AudioManager.Instance;
+
+        playerHealth = GetComponentInParent<PlayerHealth>();
     }
 
-    // Call this when ComboAttackStart becomes true
+    private void Update()
+    {
+        if (!externalComboActiveState) return;
+
+        float timeSinceComboStart = Time.time - comboStartTime;
+
+        // Check if we should enter attack phase (after windup)
+        if (!attackPhaseActive && timeSinceComboStart >= windupDuration)
+        {
+            attackPhaseActive = true;
+            lastHitTime = Time.time; // Reset for first attack
+
+            // Start combo slash loop sound after windup
+            if (!isComboSoundPlaying && audioManager != null)
+            {
+                playerHealth.isInvulnerable = true;
+                audioManager.PlayComboSlashLoop();
+                isComboSoundPlaying = true;
+            }
+        }
+
+        if (attackPhaseActive)
+        {
+            if (Time.time >= lastHitTime + hitInterval)
+            {
+                AttemptHit();
+            }
+        }
+    }
+
     public void OnComboStarted()
     {
         comboStartTime = Time.time;
@@ -57,40 +96,51 @@ public class PlayerComboHitbox : MonoBehaviour
         detectedHits.Clear();
     }
 
-    // Call this when ComboAttackStart becomes false
     public void OnComboEnded()
     {
+        // Only freeze time if we actually hit something
+        if (detectedHits.Count > 0)
+        {
+            StartCoroutine(TimeStopEffect());
+        }
+
+        // Deactivate combo and attack phase
         externalComboActiveState = false;
         attackPhaseActive = false;
         hitCollider.enabled = false;
 
-        // Process all hits at once
+        // Stop combo slash sound
+        StopComboSlashSound();
+
+        // Process all the hits detected during the combo
         ProcessAllHits();
         detectedHits.Clear();
+
+        // Play the final big slash hit sound (only if we hit something)
+        if (detectedHits.Count > 0 && audioManager != null)
+        {
+            audioManager.PlayComboFinalHit();
+        }
+
+        // Reset combo sound flag
+        isComboSoundPlaying = false;
+        playerHealth.isInvulnerable = false;
     }
 
-    private void Update()
+    private void StopComboSlashSound()
     {
-        if (!externalComboActiveState) return;
-
-        float timeSinceComboStart = Time.time - comboStartTime;
-
-        // Check if we should enter attack phase
-        if (!attackPhaseActive && timeSinceComboStart >= windupDuration)
+        if (audioManager != null)
         {
-            attackPhaseActive = true;
-            lastHitTime = Time.time; // Reset for first attack
+            // Stop the combo slash loop sound
+            audioManager.StopSound("PlayerOthers", "sfx_player_combo_slash_loop");
         }
+    }
 
-        // Attack phase logic
-        if (attackPhaseActive)
-        {
-            // Check if time for next hit
-            if (Time.time >= lastHitTime + hitInterval)
-            {
-                AttemptHit();
-            }
-        }
+    private IEnumerator TimeStopEffect()
+    {
+        Time.timeScale = timeSlowFactor;
+        yield return new WaitForSecondsRealtime(timeStopDuration); // Wait for the real-time duration
+        Time.timeScale = 1f;
     }
 
     private void AttemptHit()
@@ -134,22 +184,22 @@ public class PlayerComboHitbox : MonoBehaviour
     private void ProcessAllHits()
     {
         int hitCount = 0;
+        int spawnCount = 0; // Track how many prefabs spawned
 
         foreach (var hit in detectedHits)
         {
-            // Calculate damage just before applying
             var (damage, isCritical) = damageDealer.CalculateDamage();
 
-            // Apply damage with combo information
             hit.damageable.TakeDamage(damage, isCritical, true, hitCount);
 
-            // Show effects with combo positioning
             CreateComboDamagePopUp(damage, hit.position, hitCount, isCritical, hit.isBoss);
 
-            SpawnHitParticles(hit.position);
-            PlayRandomHitSound();
+            if (spawnCount < 3) // Only instantiate up to 3 times
+            {
+                SpawnHitParticles(hit.position);
+                spawnCount++;
+            }
 
-            // Camera shake for criticals
             if (isCritical && cameraShake != null)
             {
                 cameraShake.CriticalHitShakeCamera();
@@ -189,7 +239,13 @@ public class PlayerComboHitbox : MonoBehaviour
     private void SpawnHitParticles(Vector3 position)
     {
         if (hitParticlePrefab == null) return;
-        position.y -= 2f;
-        Instantiate(hitParticlePrefab, position, Quaternion.identity);
+
+        // Random small offset
+        float randomX = Random.Range(-0.3f, 0.3f);
+        float randomY = Random.Range(-0.1f, 0.1f);
+
+        Vector3 spawnPosition = position + new Vector3(randomX, randomY - 2f, 0f);
+
+        Instantiate(hitParticlePrefab, spawnPosition, Quaternion.identity);
     }
 }

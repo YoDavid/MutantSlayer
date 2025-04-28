@@ -905,6 +905,18 @@ MonoBehaviour:
       clip: {fileID: 8300000, guid: f1547680e7798624ba8669180291e45c, type: 3}
       volume: 0.6
       pitch: 1
+    - name: sfx_player_combo_final_hit
+      clip: {fileID: 8300000, guid: 240de90b834d8224483092e7712fd1f1, type: 3}
+      volume: 1
+      pitch: 1
+    - name: sfx_player_release_range_grunt
+      clip: {fileID: 8300000, guid: 1e209eb11c88d69489509012e20da955, type: 3}
+      volume: 1
+      pitch: 1
+    - name: sfx_player_charge_electricity_loop
+      clip: {fileID: 8300000, guid: bfa9442cf2ecf3c4aa0a092d3f1bae1e, type: 3}
+      volume: 0.6
+      pitch: 1
   - name: PlayerOthers
     source: {fileID: 1903071763769011360}
     sounds:
@@ -936,6 +948,10 @@ MonoBehaviour:
       clip: {fileID: 8300000, guid: 5a72bdfc5c17f8c449369e4f5fd206a0, type: 3}
       volume: 0.5
       pitch: 3
+    - name: sfx_player_combo_slash_loop
+      clip: {fileID: 8300000, guid: 56ae186d839df574f8f016505ac7680c, type: 3}
+      volume: 1
+      pitch: 1
   - name: Enemies
     source: {fileID: 4473733131193264158}
     sounds:

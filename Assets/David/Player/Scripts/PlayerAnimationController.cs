@@ -17,6 +17,11 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField] private float RangedAttackNormalScale = 1f;
     private bool isCharging = false;
 
+    private bool isHealing = false;
+    private float healingTimer = 0f;
+    [SerializeField] private float healingDuration = 1f; // 1 second
+
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -25,7 +30,22 @@ public class PlayerAnimationController : MonoBehaviour
         attackController = GetComponent<PlayerAttackController>();
     }
 
+    private void Update()
+    {
+        if (isHealing)
+        {
+            healingTimer -= Time.deltaTime;
 
+            if (healingTimer <= 0f)
+            {
+                animator.SetBool("IsHealing", false);
+                isHealing = false;
+
+                movementController.SetMovementEnabled(true);
+                attackController.SetAttackEnabled(true);
+            }
+        }
+    }
 
     public void SetSpeed(float speed)
     {
@@ -78,7 +98,12 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void TriggerTakenHit()
     {
-        if (!isInHitStun && !animator.GetBool("IsDashing"))
+        
+        bool isInComboAttack = animator.GetBool("ComboAttackStart") || animator.GetBool("IsComboAttacking");
+        bool isInRangedAttack = animator.GetBool("RangedAttackStart") || animator.GetBool("RangedAttackLoop") || animator.GetBool("RangedAttackAttack");
+        bool isHealingAnimation = animator.GetBool("IsHealing"); // <<< NEW LINE
+
+        if (!isInHitStun && !animator.GetBool("IsDashing") && !isInComboAttack && !isInRangedAttack && !isHealingAnimation) // <<< add healing check
         {
             StartCoroutine(HitStunRoutine());
             FaceAnchor faceAnchor = GetComponentInChildren<FaceAnchor>();
@@ -138,6 +163,11 @@ public class PlayerAnimationController : MonoBehaviour
     public void TriggerHealingAnimation()
     {
         animator.SetBool("IsHealing", true);
+        isHealing = true;
+        healingTimer = healingDuration;
+
+        movementController.SetMovementEnabled(false);
+        attackController.SetAttackEnabled(false);
     }
 
     public void SetRangedAttackStart(bool value)
@@ -154,7 +184,6 @@ public class PlayerAnimationController : MonoBehaviour
     public void SetRangedAttackLoop(bool value)
     {
         animator.SetBool("RangedAttackLoop", value);
-
         if (value)
         {
             movementController.SetMovementEnabled(false);
@@ -169,7 +198,6 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetBool("RangedAttackAttack", true);
 
         AudioManager.Instance.StopSound("Player", "player_charging_range_attack");
-        AudioManager.Instance.PlaySwing_00();
     }
 
     public void ResetRangedAttack()

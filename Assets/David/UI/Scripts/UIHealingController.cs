@@ -4,15 +4,22 @@ using UnityEngine.UI;
 
 public class UIHealingController : MonoBehaviour
 {
-    public Image[] healingIcons; 
+    public Image[] healingIcons;
     public int currentHealing = 3;
+
+    private PlayerMovementController playerMovement;
+
+    private void Awake()
+    {
+        playerMovement = FindObjectOfType<PlayerMovementController>(); // Get reference
+    }
 
     public bool CanHeal => currentHealing > 0;
     public bool CanGainHeal => currentHealing < healingIcons.Length;
 
     public void UseHealing()
     {
-        if (CanHeal)
+        if (CanHeal && playerMovement.isGrounded) // <<< NEW: Check grounded before starting healing
         {
             StartCoroutine(HandleHealingSequence(0.1f));
         }
@@ -33,11 +40,10 @@ public class UIHealingController : MonoBehaviour
         if (CanGainHeal)
         {
             AudioManager.Instance.PlayCreatingHeal();
-            healingIcons[currentHealing].enabled = true; 
+            healingIcons[currentHealing].enabled = true;
             currentHealing++;
         }
     }
-
 
     public int GetCurrentHealingCount() => currentHealing;
 }

@@ -36,7 +36,8 @@ public class AudioManager : MonoBehaviour
         new AudioCategory { name = "Player" },
         new AudioCategory { name = "PlayerOthers" },
         new AudioCategory { name = "Enemies" },
-        new AudioCategory { name = "Boss" }
+        new AudioCategory { name = "Boss" },
+        new AudioCategory { name = "Status" }
     };
 
     [Header("Music")]
@@ -282,6 +283,11 @@ public class AudioManager : MonoBehaviour
     }
     #endregion
 
+    #region Player - Combat: Combo Slashes
+    public void PlayComboSlashLoop() => PlaySFX("PlayerOthers", "sfx_player_combo_slash_loop");
+    public void PlayComboFinalHit() => PlaySFX("Player", "sfx_player_combo_final_hit");
+    #endregion
+
     #region Player - Combat: Attack Hits
     public void PlaySlash_Hit00() => PlaySFX("Player", "sfx_player_attack_hit_00");
     public void PlaySlash_Hit01() => PlaySFX("Player", "sfx_player_attack_hit_01");
@@ -299,6 +305,7 @@ public class AudioManager : MonoBehaviour
     public void PlayerChargingRangeAttack() => PlaySFX("Player", "sfx_player_charge_range_attack");
     public void PlayerChargingSwordDraw() => PlaySFX("PlayerOthers", "sfx_player_charge_sword_draw");
     public void PlayerChargingClimax() => PlaySFX("PlayerOthers", "sfx_player_charge_climax");
+    public void PlayPlayerChargeElectricityLoop() => PlaySFX("Player", "sfx_player_charge_electricity_loop");
     #endregion
 
     #region Player - Movement
@@ -312,7 +319,14 @@ public class AudioManager : MonoBehaviour
 
     #region Player - Projectiles
     public void PlayPlayerProjectileSound() => PlaySFX("PlayerOthers", "sfx_player_projectile");
+    public void PlayPlayerReleaseRangeGrunt() => PlaySFX("Player", "sfx_player_release_range_grunt");
     #endregion
+
+    // ====================== Player - State Effects ======================
+    #region Player - State Effects
+    public void PlayHeartbeatLowHP() => PlaySFX("Status", "sfx_player_heartbeat_lowhp");
+    #endregion
+
 
 
     // ====================== Enemy Sounds ======================
