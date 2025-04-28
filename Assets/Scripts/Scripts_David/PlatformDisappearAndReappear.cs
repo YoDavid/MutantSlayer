@@ -1,79 +1,145 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
-public class PlatformDisappearAndReappear : MonoBehaviour
+[RequireComponent(typeof(TilemapRenderer))]
+[RequireComponent(typeof(TilemapCollider2D))]
+public class TimedDisappearingPlatform : MonoBehaviour
 {
-    public float disappearTime = 3f;
-    public float blinkDuration = 1f;
-    public int blinkCount = 5;
-    public float reappearTime = 5f;
+    [Header("Timing")]
+    [Tooltip("Time before the platform starts its disappear sequence")]
+    public float delayToActivate = 3f;
 
-    private bool playerOnPlatform = false;
-    private float timer = 0f;
-    private SpriteRenderer spriteRenderer;
-    private Collider2D platformCollider;
-    private Vector3 originalPosition;
-    private Color originalColor;
+    [Tooltip("Duration of each blink (on and off)")]
+    public float blinkSpeed = 0.1f;
+
+    [Tooltip("Number of times the platform will blink")]
+    public int numberOfBlinks = 5;
+
+    [Tooltip("Time the platform remains disappeared")]
+    public float disappearTime = 5f;
+
+    [Tooltip("Short delay after the last blink before disappearing")]
+    public float finalDisappearDelay = 0.2f;
+
+    private TilemapRenderer platformRenderer;
+    private TilemapCollider2D platformCollider;
+    private float standingTimer = 0f;
+    private bool isPlayerOn = false;
+    private Coroutine disappearSequenceCoroutine;
 
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        platformCollider = GetComponent<Collider2D>();
-        originalPosition = transform.position;
-        originalColor = spriteRenderer.color;
+        // Get necessary components
+        platformRenderer = GetComponent<TilemapRenderer>();
+        platformCollider = GetComponent<TilemapCollider2D>();
+
+        // Ensure components exist
+        if (!platformRenderer || !platformCollider)
+        {
+            Debug.LogError("TimedDisappearingPlatform requires TilemapRenderer and TilemapCollider2D!");
+            enabled = false;
+        }
     }
 
     void Update()
     {
-        if (playerOnPlatform)
+        // If the player is on the platform, start the timer
+        if (isPlayerOn)
         {
-            timer += Time.deltaTime;
+            standingTimer += Time.deltaTime;
 
-            if (timer >= disappearTime)
+            // If the timer exceeds the activation delay and the disappear sequence hasn't started
+            if (standingTimer >= delayToActivate && disappearSequenceCoroutine == null)
             {
-                StartCoroutine(BlinkAndDisappear());
-                playerOnPlatform = false; 
+                disappearSequenceCoroutine = StartCoroutine(HandleDisappearance());
+                standingTimer = 0f; // Reset the timer
             }
         }
         else
         {
-            timer = 0f; 
+            standingTimer = 0f; // Reset the timer if the player leaves
         }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        // Check if the colliding object is the player
         if (collision.gameObject.CompareTag("Player"))
         {
-            playerOnPlatform = true;
+            isPlayerOn = true;
+            standingTimer = 0f; // Reset the timer when the player enters
         }
     }
 
     void OnCollisionExit2D(Collision2D collision)
     {
+        // Check if the colliding object is the player
         if (collision.gameObject.CompareTag("Player"))
         {
-            playerOnPlatform = false;
+            isPlayerOn = false;
+            standingTimer = 0f;
+
+            // If the disappear sequence is running, stop it and reset the platform's visibility
+            if (disappearSequenceCoroutine != null)
+            {
+                StopCoroutine(disappearSequenceCoroutine);
+                disappearSequenceCoroutine = null;
+                SetPlatformVisible(true); // Make platform visible again
+            }
         }
     }
 
-    IEnumerator BlinkAndDisappear()
+    IEnumerator HandleDisappearance()
     {
-        for (int i = 0; i < blinkCount; i++)
+        // Blinking effect (only control the renderer)
+        for (int i = 0; i < numberOfBlinks; i++)
         {
-            spriteRenderer.color = Color.white;
-            yield return new WaitForSeconds(blinkDuration / (blinkCount * 2));
-            spriteRenderer.color = originalColor;
-            yield return new WaitForSeconds(blinkDuration / (blinkCount * 2));
+            SetPlatformVisible(false); // Turn off visibility
+            yield return new WaitForSeconds(blinkSpeed);
+            SetPlatformVisible(true);  // Turn on visibility
+            yield return new WaitForSeconds(blinkSpeed);
+
+            // Check if the player has left during the blinking phase
+            if (!isPlayerOn)
+            {
+                yield break; // Exit the coroutine early
+            }
         }
 
-        spriteRenderer.enabled = false;
-        platformCollider.enabled = false;
+        // Short delay before final disappearance
+        yield return new WaitForSeconds(finalDisappearDelay);
 
-        yield return new WaitForSeconds(reappearTime);
-        spriteRenderer.enabled = true;
-        platformCollider.enabled = true;
-        transform.position = originalPosition;
-        spriteRenderer.color = originalColor;
+        // Final disappearance (turn off renderer and collider)
+        SetPlatformActive(false);
+
+        // Wait for the platform to reappear
+        yield return new WaitForSeconds(disappearTime);
+
+        // Reappear (turn on renderer and collider)
+        SetPlatformActive(true);
+        disappearSequenceCoroutine = null; // Allow the sequence to run again
+    }
+
+    // Helper function to set the active state (visibility and collision) of the platform
+    void SetPlatformActive(bool active)
+    {
+        if (platformRenderer != null)
+        {
+            platformRenderer.enabled = active;
+        }
+        if (platformCollider != null)
+        {
+            platformCollider.enabled = active;
+        }
+    }
+
+    // Helper function to set the visibility of the platform
+    void SetPlatformVisible(bool visible)
+    {
+        if (platformRenderer != null)
+        {
+            platformRenderer.enabled = visible;
+        }
     }
 }
