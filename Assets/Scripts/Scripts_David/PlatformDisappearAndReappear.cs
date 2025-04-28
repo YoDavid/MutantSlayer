@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 
 [RequireComponent(typeof(TilemapRenderer))]
 [RequireComponent(typeof(TilemapCollider2D))]
-public class TimedDisappearingPlatform : MonoBehaviour
+public class DisappearingTilemapPlatform : MonoBehaviour
 {
     [Header("Timing")]
     [Tooltip("Time before the platform starts its disappear sequence")]
@@ -18,9 +18,6 @@ public class TimedDisappearingPlatform : MonoBehaviour
 
     [Tooltip("Time the platform remains disappeared")]
     public float disappearTime = 5f;
-
-    [Tooltip("Short delay after the last blink before disappearing")]
-    public float finalDisappearDelay = 0.2f;
 
     private TilemapRenderer platformRenderer;
     private TilemapCollider2D platformCollider;
@@ -37,7 +34,7 @@ public class TimedDisappearingPlatform : MonoBehaviour
         // Ensure components exist
         if (!platformRenderer || !platformCollider)
         {
-            Debug.LogError("TimedDisappearingPlatform requires TilemapRenderer and TilemapCollider2D!");
+            Debug.LogError("DisappearingTilemapPlatform requires TilemapRenderer and TilemapCollider2D!");
             enabled = false;
         }
     }
@@ -80,12 +77,12 @@ public class TimedDisappearingPlatform : MonoBehaviour
             isPlayerOn = false;
             standingTimer = 0f;
 
-            // If the disappear sequence is running, stop it and reset the platform's visibility
+            // If the disappear sequence is running, stop it and reset the platform
             if (disappearSequenceCoroutine != null)
             {
                 StopCoroutine(disappearSequenceCoroutine);
                 disappearSequenceCoroutine = null;
-                SetPlatformVisible(true); // Make platform visible again
+                SetPlatformActive(true); // Make platform visible and collidable again
             }
         }
     }
@@ -106,9 +103,6 @@ public class TimedDisappearingPlatform : MonoBehaviour
                 yield break; // Exit the coroutine early
             }
         }
-
-        // Short delay before final disappearance
-        yield return new WaitForSeconds(finalDisappearDelay);
 
         // Final disappearance (turn off renderer and collider)
         SetPlatformActive(false);
