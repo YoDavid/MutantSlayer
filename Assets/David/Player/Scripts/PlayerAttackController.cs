@@ -26,7 +26,7 @@ public class PlayerAttackController : MonoBehaviour
     private Coroutine currentAttackRoutine;
 
     public bool IsAttacking { get; private set; }
-    private bool isAttackEnabled = true;
+    [SerializeField] private bool isAttackEnabled = true;
     #endregion
 
     #region Charge Attack Variables
@@ -79,6 +79,14 @@ public class PlayerAttackController : MonoBehaviour
     [SerializeField] private float chargingSoundDelay = 0.25f;
     [SerializeField] private float swordDrawDelay = 0.4f;
     [SerializeField] private float climaxDelay = 1.15f;
+
+    [Header("Electricity Loop Audio Settings")]
+    [SerializeField] private float electricityLoopStartDelay = 0.2f; // Delay before first play
+    [SerializeField] private float electricityLoopInterval = 0.3f; // Time between plays
+    [SerializeField] private float electricityLoopStopDelay = 0.1f; // Delay after animation ends
+    private Coroutine electricityLoopRoutine;
+    private bool shouldPlayElectricityLoop = false;
+
     #endregion
 
     #region Initialization
@@ -294,7 +302,6 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
-    // New helper method to reset combo input state
     private void ResetComboInputState()
     {
         leftMouseButtonHoldTime = 0f;
@@ -331,6 +338,12 @@ public class PlayerAttackController : MonoBehaviour
             {
                 animationController.SetRangedAttackLoop(true);
                 animationController.SetRangedAttackStart(false);
+
+                // Start electricity loop if not already playing
+                if (!shouldPlayElectricityLoop)
+                {
+                    StartElectricityLoop();
+                }
             }
 
             if (isCharging && !staminaBar.IsEmpty)
@@ -358,7 +371,14 @@ public class PlayerAttackController : MonoBehaviour
                 isCharging = false;
                 animationController.SetRangedAttackStart(false);
                 animationController.SetRangedAttackLoop(false);
+                StopElectricityLoop();
             }
+        }
+
+        // Additional check in case the animation gets interrupted elsewhere
+        if (isCharging && !animationController.animator.GetBool("RangedAttackLoop") && shouldPlayElectricityLoop)
+        {
+            StopElectricityLoop();
         }
     }
 
@@ -455,13 +475,50 @@ public class PlayerAttackController : MonoBehaviour
         animationController.SetRangedAttack();
 
         hasFiredChargeAttack = true;
+        StopElectricityLoop();
         StartCoroutine(FireChargeProjectileAfterDelay());
         StartCoroutine(ResetRangedAttackState());
+    }
+
+    private IEnumerator ElectricityLoopSoundRoutine()
+    {
+        yield return new WaitForSeconds(electricityLoopStartDelay);
+
+        while (shouldPlayElectricityLoop && animationController.animator.GetBool("RangedAttackLoop"))
+        {
+            AudioManager.Instance.PlayPlayerChargeElectricityLoop();
+            yield return new WaitForSeconds(electricityLoopInterval);
+        }
+    }
+
+    private void StartElectricityLoop()
+    {
+        if (electricityLoopRoutine != null)
+            StopCoroutine(electricityLoopRoutine);
+
+        shouldPlayElectricityLoop = true;
+        electricityLoopRoutine = StartCoroutine(ElectricityLoopSoundRoutine());
+    }
+
+    private void StopElectricityLoop()
+    {
+        shouldPlayElectricityLoop = false;
+
+        if (electricityLoopRoutine != null)
+        {
+            StopCoroutine(electricityLoopRoutine);
+            electricityLoopRoutine = null;
+        }
+
+        // Optional: Add a stop sound call if your audio system supports it
+        // AudioManager.Instance.StopPlayerChargeElectricityLoop();
     }
 
     private IEnumerator FireChargeProjectileAfterDelay()
     {
         yield return new WaitForSeconds(chargeProjectileDelay);
+        AudioManager.Instance.PlaySwing_00();
+        AudioManager.Instance.PlayPlayerReleaseRangeGrunt();
 
         if (chargeProjectilePrefab != null && projectileSpawnPoint != null)
         {
@@ -516,7 +573,7 @@ public class PlayerAttackController : MonoBehaviour
     {
         return isAttackEnabled &&
                !IsAttacking &&
-               (attackCount == 0 || Time.time - lastAttackEndTime <= attackResetTime) &&
+               (attackCount < 4 || Time.time - lastAttackEndTime <= attackResetTime) &&
                (!requireGrounded || IsGrounded());
     }
 

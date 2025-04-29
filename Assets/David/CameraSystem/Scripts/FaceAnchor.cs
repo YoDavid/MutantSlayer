@@ -12,14 +12,36 @@ public class FaceAnchor : MonoBehaviour
     public Vector3 runOffset = new Vector3(4f, -0.6f, -10);
     public Vector3 jumpOffset = new Vector3(3.2f, 0.8f, -10);
     public Vector3 fallOffset = new Vector3(3.2f, 0.8f, -10);
-    public Vector3 slideOffset = new Vector3(-1f, -4.5f, -10);
-    public Vector3 rangedStartOffset = new Vector3(0f, 0.5f, -10);
-    public Vector3 rangedAttackOffset = new Vector3(2f, -1f, -10);
+    public Vector3 dashOffset = new Vector3(-1f, -4.5f, -10);
+
+    [Header("Attack Offsets")]
     public Vector3 attack1Offset = new Vector3(3f, -2.15f, -10);
     public Vector3 attack2Offset = new Vector3(0.6f, -3.3f, -10);
     public Vector3 attack3Offset = new Vector3(6f, -3f, -10);
-    public Vector3 takenHitOffset = new Vector3(-2f, 1f, -10);
-    public Vector3 healingOffset = new Vector3(0f, 2.5f, -10);
+
+    [Header("Ranged Attack Offsets")]
+    public Vector3 rangedChargeOffset = new Vector3(0f, -4.5f, -10);
+    public Vector3 rangedReleaseOffset = new Vector3(2f, -1f, -10);
+
+    [Header("Combo Attack Camera")]
+    public Vector3 comboStartOffset = new Vector3(0f, -4.5f, -10);
+    public Vector3 comboActiveOffset = new Vector3(1.5f, -0.5f, -10);
+    [SerializeField] private float comboStartDuration = 6f; // Seconds before snapping to active position
+
+    [Header("Combo Camera Size Control")]
+    [SerializeField] private float normalCameraSize = 0.5f;
+    [SerializeField] private float comboActiveCameraSize = 0.7f; // New size during active phase
+    [SerializeField] private float sizeChangeSpeed = 5f; // How fast size changes
+
+    private Camera targetCamera;
+    private float currentTargetSize;
+    private float comboStateEnterTime;
+    private bool isInComboState;
+    private bool isPastComboStartPhase;
+
+    [Header("Reaction Offsets")]
+    public Vector3 hitOffset = new Vector3(-2f, 1f, -10);
+    public Vector3 healOffset = new Vector3(0f, 2.5f, -10);
 
     [Header("Hit Reaction Settings")]
     public float hitFreezeDuration = 0.3f;
@@ -32,72 +54,176 @@ public class FaceAnchor : MonoBehaviour
     private bool isInHitReaction;
     private string currentState;
     private string previousState;
-
-    // Track if we've processed the current hit
     private bool hitTriggerProcessed = false;
-    private int lastHitFrame = -1;
 
     void Awake()
     {
+        targetCamera = GetComponent<Camera>();
+        currentTargetSize = normalCameraSize;
         animator = GetComponentInParent<Animator>();
         targetPosition = baseOffset;
     }
 
     void LateUpdate()
     {
-        previousState = currentState;
-        currentState = GetCurrentState();
+        bool nowInCombo = animator.GetBool("ComboAttackStart") ||
+                         animator.GetBool("IsComboAttacking");
 
-        // Check for TakenHit trigger in the animator
+        // Handle combo state transitions
+        if (nowInCombo && !isInComboState)
+        {
+            isInComboState = true;
+            isPastComboStartPhase = false;
+            comboStateEnterTime = Time.time;
+        }
+        else if (!nowInCombo && isInComboState)
+        {
+            isInComboState = false;
+            isPastComboStartPhase = false;
+        }
+
+        previousState = currentState;
+        currentState = GetCurrentAnimationState();
+
+        HandleHitReaction();
+
+        if (!isInHitReaction)
+        {
+            UpdateNormalPosition();
+        }
+
+        UpdateCameraSize();
+    }
+
+
+    void UpdateCameraSize()
+    {
+        if (isInComboState && isPastComboStartPhase)
+        {
+            currentTargetSize = comboActiveCameraSize;
+        }
+        else
+        {
+            currentTargetSize = normalCameraSize;
+        }
+
+        if (targetCamera != null)
+        {
+            targetCamera.orthographicSize = Mathf.Lerp(
+                targetCamera.orthographicSize,
+                currentTargetSize,
+                sizeChangeSpeed * Time.deltaTime
+            );
+        }
+    }
+
+    string GetCurrentAnimationState()
+    {
+        if (isInHitReaction) return "Hit";
+        if (animator.GetBool("IsHealing")) return "Heal";
+
+        // Combo attack states
+        if (animator.GetBool("ComboAttackStart") || animator.GetBool("IsComboAttacking"))
+            return "ComboAttack";
+
+        // Ranged attack states
+        if (animator.GetBool("RangedAttackAttack")) return "RangedRelease";
+        if (animator.GetBool("RangedAttackStart") || animator.GetBool("RangedAttackLoop"))
+            return "RangedCharge";
+
+        // Normal attacks
+        if (animator.GetBool("IsAttacking"))
+            return "Attack" + animator.GetInteger("AttackCount");
+
+        // Movement states
+        if (animator.GetBool("IsJumping")) return "Jump";
+        if (animator.GetBool("IsFalling")) return "Fall";
+        if (animator.GetBool("IsDashing")) return "Dash";
+        if (animator.GetFloat("Speed") > 0.1f) return "Run";
+
+        return "Idle";
+    }
+
+    Vector3 GetCurrentOffset()
+    {
+        if (isInComboState)
+        {
+            // Check if we've passed the start phase duration
+            if (!isPastComboStartPhase &&
+                Time.time >= comboStateEnterTime + comboStartDuration)
+            {
+                isPastComboStartPhase = true;
+            }
+
+            return isPastComboStartPhase ? comboActiveOffset : comboStartOffset;
+        }
+
+        switch (currentState)
+        {
+            case "Hit": return hitOffset;
+            case "Heal": return healOffset;
+
+            // Combo attacks
+            case "ComboStart": return comboStartOffset;
+            case "ComboActive": return comboActiveOffset;
+
+            // Ranged attacks
+            case "RangedCharge": return rangedChargeOffset;
+            case "RangedRelease": return rangedReleaseOffset;
+
+            // Normal attacks
+            case "Attack1": return attack1Offset;
+            case "Attack2": return attack2Offset;
+            case "Attack3": return attack3Offset;
+
+            // Movement
+            case "Jump": return jumpOffset;
+            case "Fall": return fallOffset;
+            case "Dash": return dashOffset;
+            case "Run": return runOffset;
+
+            default: return idleOffset;
+        }
+    }
+
+    void HandleHitReaction()
+    {
         bool hitTriggered = animator.GetBool("TakenHit");
 
-        // Reset hit tracking if trigger is no longer active
         if (!hitTriggered)
         {
             hitTriggerProcessed = false;
+            return;
         }
 
-        // Handle hit reaction timing - only when the trigger is first detected
-        if (hitTriggered && !hitTriggerProcessed && !isInHitReaction)
+        if (!hitTriggerProcessed && !isInHitReaction)
         {
-            hitTriggerProcessed = true;
             StartHitReaction();
+            hitTriggerProcessed = true;
         }
 
         if (isInHitReaction)
         {
-            UpdateHitReaction();
-            return; // Skip normal camera updates during hit reaction
+            hitFreezeTimer -= Time.deltaTime;
+            if (hitFreezeTimer <= 0)
+            {
+                isInHitReaction = false;
+                // Force immediate position update on next frame
+                snapAllTransitions = true;
+            }
+            transform.localPosition = hitTargetPosition;
         }
-
-        UpdateNormalCameraPosition();
     }
 
     void StartHitReaction()
     {
         isInHitReaction = true;
         hitFreezeTimer = hitFreezeDuration;
-        // Calculate the hit target position including the offset
-        hitTargetPosition = baseOffset + takenHitOffset;
-        // Snap immediately to hit position
+        hitTargetPosition = baseOffset + hitOffset;
         transform.localPosition = hitTargetPosition;
     }
 
-    void UpdateHitReaction()
-    {
-        hitFreezeTimer -= Time.deltaTime;
-
-        if (hitFreezeTimer <= 0)
-        {
-            isInHitReaction = false;
-            return;
-        }
-
-        // Keep camera at hit offset position
-        transform.localPosition = hitTargetPosition;
-    }
-
-    void UpdateNormalCameraPosition()
+    void UpdateNormalPosition()
     {
         Vector3 currentOffset = GetCurrentOffset();
         targetPosition = baseOffset + currentOffset;
@@ -116,38 +242,8 @@ public class FaceAnchor : MonoBehaviour
         }
     }
 
-    string GetCurrentState()
-    {
-        if (isInHitReaction) return "Hit";
-        if (animator.GetBool("IsHealing")) return "Heal";
-        if (animator.GetBool("RangedAttackAttack")) return "RangedAttackAttack";
-        if (animator.GetBool("RangedAttackStart") || animator.GetBool("RangedAttackLoop")) return "RangedAttackStart";
-        if (animator.GetBool("IsAttacking")) return "Attack" + animator.GetInteger("AttackCount");
-        if (animator.GetBool("IsJumping")) return "Jump";
-        if (animator.GetBool("IsFalling")) return "Fall";
-        if (animator.GetBool("IsDashing")) return "Dash";
-        if (animator.GetFloat("Speed") > 0.1f) return "Run";
-        return "Idle";
-    }
-
-    Vector3 GetCurrentOffset()
-    {
-        switch (currentState)
-        {
-            case "Hit": return takenHitOffset;
-            case "Heal": return healingOffset;
-            case "RangedAttackAttack": return rangedAttackOffset;
-            case "RangedAttackStart": return rangedStartOffset;
-            case "Attack1": return attack1Offset;
-            case "Attack2": return attack2Offset;
-            case "Attack3": return attack3Offset;
-            case "Jump": return jumpOffset;
-            case "Fall": return fallOffset;
-            case "Dash": return slideOffset;
-            case "Run": return runOffset;
-            default: return idleOffset;
-        }
-    }
+    bool StateChanged() => currentState != previousState;
+    bool IsAttackState() => currentState.Contains("Attack") || currentState.Contains("Combo");
 
     public void OnHitAnimationTriggered()
     {
@@ -156,7 +252,4 @@ public class FaceAnchor : MonoBehaviour
             StartHitReaction();
         }
     }
-
-    bool StateChanged() => currentState != previousState;
-    bool IsAttackState() => currentState.StartsWith("Attack");
 }

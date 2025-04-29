@@ -6,20 +6,77 @@ public class PlayerHealth : HealthSystem
     [Header("Player Status")]
     public bool isDead = false;
     [SerializeField] private float invulnerabilityTime = 0.5f;
- 
 
     private PlayerMovementController playerMovement;
     private PlayerHurtbox playerHurtbox;
     private PlayerAnimationController playerAnimation;
-    private bool isInvulnerable = false;
+    public bool isInvulnerable = false;
+
+    private bool isHeartbeatPlaying = false;
+    private Coroutine heartbeatCoroutine;
 
     protected override void Awake()
     {
-        // No need to set MaxHealth here - it's set in the inspector
         base.Awake();
         playerMovement = GetComponent<PlayerMovementController>();
         playerHurtbox = GetComponentInChildren<PlayerHurtbox>();
         playerAnimation = GetComponent<PlayerAnimationController>();
+    }
+
+    private void Update()
+    {
+        CheckHeartbeat();
+    }
+
+    private void CheckHeartbeat()
+    {
+        float healthPercentage = (float)CurrentHealth / MaxHealth;
+        bool shouldPlay = healthPercentage < 0.25f && !isDead;
+
+        if (shouldPlay && !isHeartbeatPlaying)
+        {
+            // Start playing the 32-second heartbeat track
+            AudioManager.Instance.PlayHeartbeatLowHP();
+            isHeartbeatPlaying = true;
+
+            // Start monitoring for when to replay
+            if (heartbeatCoroutine != null) StopCoroutine(heartbeatCoroutine);
+            heartbeatCoroutine = StartCoroutine(MonitorHeartbeat());
+        }
+        else if (!shouldPlay && isHeartbeatPlaying)
+        {
+            // Stop the heartbeat immediately
+            StopHeartbeat();
+        }
+    }
+
+    private IEnumerator MonitorHeartbeat()
+    {
+        while ((float)CurrentHealth / MaxHealth < 0.25f && !isDead)
+        {
+            // Wait for the full 32-second duration
+            yield return new WaitForSeconds(32f);
+
+            // If still below 25% health, play again
+            if ((float)CurrentHealth / MaxHealth < 0.25f && !isDead)
+            {
+                AudioManager.Instance.PlayHeartbeatLowHP();
+            }
+        }
+
+        // Health recovered or player died
+        StopHeartbeat();
+    }
+
+    private void StopHeartbeat()
+    {
+        if (heartbeatCoroutine != null)
+        {
+            StopCoroutine(heartbeatCoroutine);
+            heartbeatCoroutine = null;
+        }
+        AudioManager.Instance.StopSound("Status", "sfx_player_heartbeat_lowhp");
+        isHeartbeatPlaying = false;
     }
 
     public override void TakeDamage(int damage, bool isCritical = false)
@@ -29,12 +86,13 @@ public class PlayerHealth : HealthSystem
         base.TakeDamage(damage, isCritical);
 
         playerAnimation.TriggerTakenHit();
-        PlayRandomTakeHitSound(); 
+        PlayRandomTakeHitSound();
         DamagePopUp.Instance?.CreateDamageText(
             damage, transform.position + Vector3.up * 1.8f,
             isPlayer: true, isBoss: false, isCritical);
 
         StartCoroutine(InvulnerabilityFrame());
+        CheckHeartbeat();
     }
 
     private void PlayRandomTakeHitSound()
@@ -68,8 +126,8 @@ public class PlayerHealth : HealthSystem
         isDead = true;
         playerAnimation.enabled = false;
         playerMovement.enabled = false;
+        StopHeartbeat();
         base.Die();
-       
     }
 
     public void KillPlayer()
@@ -81,13 +139,17 @@ public class PlayerHealth : HealthSystem
 
     public void Heal(int amount)
     {
+        if (!playerMovement.isGrounded) return;
+
         CurrentHealth += amount;
+        CurrentHealth = Mathf.Min(CurrentHealth, MaxHealth);
         OnHealthChanged?.Invoke(CurrentHealth);
+        CheckHeartbeat();
 
         if (playerAnimation != null)
         {
             playerAnimation.TriggerHealingAnimation();
-            StartCoroutine(EndHealingAfterDelay(0.9f)); // adjust time to match your healing animation length
+            StartCoroutine(EndHealingAfterDelay(0.9f));
         }
     }
 
@@ -99,17 +161,19 @@ public class PlayerHealth : HealthSystem
 
     public void HealPercentage(float percentage)
     {
-        int healAmount = Mathf.FloorToInt(MaxHealth * percentage);  
+        if (!playerMovement.isGrounded) return;
+
+        int healAmount = Mathf.FloorToInt(MaxHealth * percentage);
 
         CurrentHealth += healAmount;
-        CurrentHealth = Mathf.Min(CurrentHealth, MaxHealth); 
-
+        CurrentHealth = Mathf.Min(CurrentHealth, MaxHealth);
         OnHealthChanged?.Invoke(CurrentHealth);
+        CheckHeartbeat();
 
         if (playerAnimation != null)
         {
             playerAnimation.TriggerHealingAnimation();
-            StartCoroutine(EndHealingAfterDelay(0.9f)); 
+            StartCoroutine(EndHealingAfterDelay(0.9f));
         }
     }
 
@@ -117,6 +181,7 @@ public class PlayerHealth : HealthSystem
     {
         CurrentHealth = Mathf.Clamp(amount, 0, MaxHealth);
         OnHealthChanged?.Invoke(CurrentHealth);
+        CheckHeartbeat();
     }
 
     public void Revive()

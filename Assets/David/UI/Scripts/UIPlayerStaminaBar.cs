@@ -8,28 +8,34 @@ public class UIPlayerStaminaBar : MonoBehaviour
     public float maxStamina = 100f;
     public float refillRate = 20f;
     public float depletionRate = 100f;
-    public float staminaBlinkSpeed = 0.5f;
+
+    [Header("Blink Settings")]
+    public float fullStaminaBlinkSpeed = 0.5f; // Slower blink when full
+    public float lowStaminaBlinkSpeed = 0.2f;  // Faster blink when low
 
     [Header("Stamina Colors")]
-    public Color fillColor = Color.yellow; // Default yellow, editable in Inspector
-    public Color blinkColor = Color.white; // Blinks to white when full
+    public Color fillColor = Color.yellow;     // Default color
+    public Color blinkColor = Color.white;     // Blinks to white when full
+    public Color lowStaminaColor = Color.red;  // Blinks to red when below 25%
 
     private bool isBlinking = false;
     private Coroutine blinkRoutine;
+    private Image fillImage; // Cache the fill image
 
     public bool IsFull => staminaSlider.value >= maxStamina;
     public bool IsEmpty => staminaSlider.value <= 0;
-
+    public bool IsLowStamina => staminaSlider.value <= maxStamina * 0.25f; // Below 25%
 
     private void Start()
     {
         staminaSlider.maxValue = maxStamina;
         staminaSlider.value = maxStamina;
 
-        // Set initial fill color
+        // Cache the fill image
         if (staminaSlider.fillRect != null)
         {
-            staminaSlider.fillRect.GetComponent<Image>().color = fillColor;
+            fillImage = staminaSlider.fillRect.GetComponent<Image>();
+            fillImage.color = fillColor;
         }
     }
 
@@ -38,40 +44,57 @@ public class UIPlayerStaminaBar : MonoBehaviour
         if (!IsFull)
         {
             staminaSlider.value += refillRate * Time.deltaTime;
-            if (isBlinking)
+
+            // Stop blinking if not full and not low
+            if (isBlinking && !IsLowStamina)
             {
-                StopCoroutine(blinkRoutine);
-                ResetBlink();
+                StopBlinking();
             }
         }
-        else if (!isBlinking)
+
+        // Blink if full or low stamina
+        if (!isBlinking)
         {
-            blinkRoutine = StartCoroutine(BlinkBar());
+            if (IsFull)
+            {
+                blinkRoutine = StartCoroutine(BlinkBar(blinkColor, fullStaminaBlinkSpeed));
+            }
+            else if (IsLowStamina)
+            {
+                blinkRoutine = StartCoroutine(BlinkBar(lowStaminaColor, lowStaminaBlinkSpeed));
+            }
         }
     }
 
-    private IEnumerator BlinkBar()
+    private IEnumerator BlinkBar(Color targetColor, float blinkSpeed)
     {
         isBlinking = true;
-        Image fill = staminaSlider.fillRect.GetComponent<Image>();
 
-        while (IsFull)
+        while ((IsFull || IsLowStamina) && fillImage != null)
         {
-            fill.color = blinkColor; // Blink to white
-            yield return new WaitForSeconds(staminaBlinkSpeed);
-            fill.color = fillColor; // Return to yellow
-            yield return new WaitForSeconds(staminaBlinkSpeed);
+            fillImage.color = targetColor; // Blink to target color
+            yield return new WaitForSeconds(blinkSpeed);
+            fillImage.color = fillColor;  // Return to default
+            yield return new WaitForSeconds(blinkSpeed);
         }
 
-        fill.color = fillColor; // Reset to yellow when not full
+        // Reset to default color when done
+        if (fillImage != null)
+        {
+            fillImage.color = fillColor;
+        }
         isBlinking = false;
     }
 
-    private void ResetBlink()
+    private void StopBlinking()
     {
-        if (staminaSlider.fillRect != null)
+        if (blinkRoutine != null)
         {
-            staminaSlider.fillRect.GetComponent<Image>().color = fillColor;
+            StopCoroutine(blinkRoutine);
+        }
+        if (fillImage != null)
+        {
+            fillImage.color = fillColor;
         }
         isBlinking = false;
     }

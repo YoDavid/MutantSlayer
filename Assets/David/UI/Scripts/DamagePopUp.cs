@@ -41,6 +41,7 @@ public class DamagePopUp : MonoBehaviour
     [SerializeField] private float comboSpacing = 0.5f;  // Space between combo numbers
     [SerializeField] private float comboVerticalSpread = 0.3f;
     [SerializeField] private float comboRandomness = 0.2f;  // Small position variation
+    [SerializeField] private float comboDelay = 1f;  // Delay before showing combo numbers
 
     [Header("Flash Effect")]
     [SerializeField] private Image flashImage;
@@ -61,6 +62,23 @@ public class DamagePopUp : MonoBehaviour
     public void CreateDamageText(int damage, Vector3 position, bool isPlayer, bool isBoss,
                                bool isCritical = false, bool isCombo = false, int comboIndex = 0)
     {
+        if (isCombo)
+        {
+            // For combos, delay everything by comboDelay seconds
+            LeanTween.delayedCall(comboDelay, () => {
+                CreatePopUp(damage, position, isPlayer, isBoss, isCritical, isCombo, comboIndex);
+            });
+        }
+        else
+        {
+            // For non-combos, create immediately
+            CreatePopUp(damage, position, isPlayer, isBoss, isCritical, isCombo, comboIndex);
+        }
+    }
+
+    private void CreatePopUp(int damage, Vector3 position, bool isPlayer, bool isBoss,
+                           bool isCritical, bool isCombo, int comboIndex)
+    {
         Vector3 spawnPosition = CalculateSpawnPosition(position, isPlayer, isBoss, isCombo, comboIndex);
 
         if (isCritical)
@@ -72,7 +90,7 @@ public class DamagePopUp : MonoBehaviour
         TextMeshPro text = popUp.GetComponent<TextMeshPro>();
         text.text = $"-{damage}";
 
-        // Set visual properties (same as regular attacks)
+        // Set visual properties
         text.color = isCritical ? critColor :
                     (isPlayer ? playerColor :
                     (isBoss ? bossColor : defaultColor));

@@ -179,7 +179,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1890701361
-  m_SortingLayer: 11
+  m_SortingLayer: 12
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &8141151732480384338
@@ -413,4 +413,8 @@ MonoBehaviour:
   critMaxFloatDistance: 3.5
   critMinDuration: 1
   critMaxDuration: 1.5
+  comboSpacing: 0.1
+  comboVerticalSpread: 1
+  comboRandomness: 0.1
+  comboDelay: 0.2
   flashImage: {fileID: 8640560150844483992}
