@@ -116,14 +116,14 @@ public class PlayerMovementController : MonoBehaviour
 
     private void HandleStepSound(float move)
     {
-        bool shouldPlaySteps = Mathf.Abs(move) > 0.1f && isGrounded;
+        bool shouldPlaySteps = Mathf.Abs(move) > 0.1f && isGrounded && isMovementEnabled; // Added isMovementEnabled check
 
         if (shouldPlaySteps && !isPlayingSteps && !isDashing)
         {
             stepCoroutine = StartCoroutine(PlayStepSoundLoop());
             isPlayingSteps = true;
         }
-        else if (!shouldPlaySteps && isPlayingSteps || isDashing)
+        else if ((!shouldPlaySteps && isPlayingSteps) || isDashing || !isMovementEnabled) // Added !isMovementEnabled
         {
             if (stepCoroutine != null) StopCoroutine(stepCoroutine);
             isPlayingSteps = false;
@@ -142,6 +142,19 @@ public class PlayerMovementController : MonoBehaviour
         }
     }
 
+    public void StopStepSounds()
+    {
+        if (isPlayingSteps)
+        {
+            if (stepCoroutine != null)
+            {
+                StopCoroutine(stepCoroutine);
+            }
+            isPlayingSteps = false;
+        }
+    }
+
+    ///    Take CARE!!!!!!!!!!
     private bool CanJumpAfterDash()
     {
         return !isDashing && (lastDashEndTime < 0 || Time.time - lastDashEndTime >= dashJumpCooldown);
@@ -225,9 +238,12 @@ public class PlayerMovementController : MonoBehaviour
     public void SetMovementEnabled(bool enabled)
     {
         isMovementEnabled = enabled;
+
         if (!enabled)
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
+            playerAnimationController.SetSpeed(0);
+            StopStepSounds(); // Add this line
         }
     }
 

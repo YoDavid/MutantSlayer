@@ -301,6 +301,102 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6021447871000286383}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5952435196632053257
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2451579294162058202}
+  - component: {fileID: 1101972368711608473}
+  - component: {fileID: 7584950835914374080}
+  m_Layer: 0
+  m_Name: PlayerEarlyExitAttackCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2451579294162058202
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5952435196632053257}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 11.493732, y: 9.83083, z: 13.60305}
+  m_LocalScale: {x: 3.333333, y: 3.333333, z: 3.333333}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6021447871000286383}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1101972368711608473
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5952435196632053257}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.52, y: -3.96}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3.85, y: 7.65}
+  m_EdgeRadius: 0
+--- !u!114 &7584950835914374080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5952435196632053257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c9ba635e4310754cbf2b32bc70c6336, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitDelay: 0.35
+  timeSlowDuration: 0.3
+  audioManager: {fileID: 0}
+  cameraShake: {fileID: 0}
+  hitParticlePrefab: {fileID: 7083328916205589662, guid: 5c10bf981bb4654419448c8c69696181, type: 3}
+  damageConfig: {fileID: 11400000, guid: 37cb60be3a1f33d44a087144d8626d47, type: 2}
 --- !u!1 &7253434483809274145
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,18 +531,24 @@ MonoBehaviour:
   baseOffset: {x: -1, y: -5, z: -10}
   followSharpness: 15
   snapAllTransitions: 1
-  idleOffset: {x: 0, y: 0, z: -10}
+  idleOffset: {x: 0.3, y: 0.4, z: -10}
   runOffset: {x: 4, y: -0.6, z: -10}
   jumpOffset: {x: 3.2, y: 0.8, z: -10}
   fallOffset: {x: 3.2, y: 0.8, z: -10}
-  slideOffset: {x: -1, y: -4.5, z: -10}
-  rangedStartOffset: {x: 0, y: -7, z: -10}
-  rangedAttackOffset: {x: 5, y: -2, z: -10}
+  dashOffset: {x: -1, y: -4.5, z: -10}
   attack1Offset: {x: 3, y: -2.15, z: -10}
   attack2Offset: {x: 0.6, y: -3.3, z: -10}
   attack3Offset: {x: 6, y: -3, z: -10}
-  takenHitOffset: {x: 0.9, y: -3, z: -10}
-  healingOffset: {x: 2, y: -0.7, z: -10}
+  rangedChargeOffset: {x: 0, y: -4.5, z: -10}
+  rangedReleaseOffset: {x: 2, y: -1, z: -10}
+  comboStartOffset: {x: 0, y: -4.5, z: -10}
+  comboActiveOffset: {x: 4, y: -2, z: -10}
+  comboStartDuration: 2.3
+  normalCameraSize: 0.5
+  comboActiveCameraSize: 1.5
+  sizeChangeSpeed: 5
+  hitOffset: {x: -2, y: 1, z: -10}
+  healOffset: {x: 0, y: 2.5, z: -10}
   hitFreezeDuration: 0.4
   hitRecoveryCurve:
     serializedVersion: 2
@@ -514,6 +616,7 @@ Transform:
   - {fileID: 7718894815750935042}
   - {fileID: 4494550968159967690}
   - {fileID: 5840821952179143899}
+  - {fileID: 2451579294162058202}
   - {fileID: 1041172249927486458}
   - {fileID: 7531278889185884571}
   - {fileID: 4743698568555562021}
@@ -725,13 +828,14 @@ MonoBehaviour:
   - 0.3
   chargeStartDelay: 0.25
   staminaDrainRate: 25
-  chargeProjectileDelay: 0.75
+  chargeProjectileDelay: 0.4
   chargingSoundDelay: 0.25
   swordDrawDelay: 0.2
   climaxDelay: 0.95
   electricityLoopStartDelay: 0.2
   electricityLoopInterval: 0.63
   electricityLoopStopDelay: 0.2
+  earlyExitAttack: {fileID: 0}
 --- !u!114 &6739346586538796022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -802,6 +906,7 @@ MonoBehaviour:
   damageBlinkColor: {r: 1, g: 1, b: 1, a: 0}
   isDead: 0
   invulnerabilityTime: 0.2
+  isInvulnerable: 0
 --- !u!114 &5511253337465613968
 MonoBehaviour:
   m_ObjectHideFlags: 0

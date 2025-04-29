@@ -14,38 +14,85 @@ public class ChargeProjectile : MonoBehaviour
     public int damage = 10;
     public bool isCritical = false;
 
+    [Header("Multi Hit Settings")]
+    public float sizeThreshold = 0.3f; // Size threshold for multi-hit
+    public int maxHits = 3; // Maximum number of hits
+    public float timeSlowDuration = 3f; // Duration for time slow effect
+    [Range(0.1f, 1f)] public float timeScaleDuringSlow = 0.5f; // Time scale during slow effect
+
     private float lifetime;
     private float currentSpeed;
     private Rigidbody2D rb;
     private bool isMovingRight; // Track movement direction
     private bool soundPlayed = false; // Track if sound has been played
+    private int hitCount = 0; // Track number of hits
+    private bool shouldSlowTime = false; // Track if time should be slowed
+    private PauseMenuController pauseMenu; // Reference to pause menu
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         currentSpeed = baseSpeed;
+        pauseMenu = FindObjectOfType<PauseMenuController>(); // Get reference to pause menu
     }
 
     private void Start()
     {
         // Play sound immediately when projectile is created
         PlayProjectileSound();
+
+        // Check if we should slow time based on size
+        shouldSlowTime = transform.localScale.x >= sizeThreshold;
+        if (shouldSlowTime && !IsGamePaused())
+        {
+            // Start time slow if within the duration
+            if (lifetime < timeSlowDuration)
+            {
+                Time.timeScale = timeScaleDuringSlow;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            }
+        }
     }
 
     private void Update()
     {
-        lifetime += Time.deltaTime;
-        if (lifetime >= maxLifetime)
+        // Only update lifetime and check for destruction if game is not paused
+        if (!IsGamePaused())
         {
-            Destroy(gameObject);
+            lifetime += Time.unscaledDeltaTime;
+
+            if (shouldSlowTime && lifetime >= timeSlowDuration)
+            {
+                RestoreNormalTime();
+                shouldSlowTime = false;
+            }
+
+            if (lifetime >= maxLifetime)
+            {
+                Destroy(gameObject);
+            }
+
+            // Gradually increase the speed over time
+            currentSpeed = Mathf.Min(baseSpeed + (acceleration * lifetime), maxSpeed);
+
+            // Update velocity while maintaining direction
+            float direction = isMovingRight ? 1 : -1;
+            rb.velocity = new Vector2(currentSpeed * direction, rb.velocity.y);
         }
+    }
 
-        // Gradually increase the speed over time
-        currentSpeed = Mathf.Min(baseSpeed + (acceleration * lifetime), maxSpeed);
+    private bool IsGamePaused()
+    {
+        return pauseMenu != null && pauseMenu.IsVisible;
+    }
 
-        // Update velocity while maintaining direction
-        float direction = isMovingRight ? 1 : -1;
-        rb.velocity = new Vector2(currentSpeed * direction, rb.velocity.y);
+    private void RestoreNormalTime()
+    {
+        if (!IsGamePaused())
+        {
+            Time.timeScale = 1f;
+            Time.fixedDeltaTime = 0.02f;
+        }
     }
 
     private void PlayProjectileSound()
@@ -75,31 +122,42 @@ public class ChargeProjectile : MonoBehaviour
     {
         Vector3 popupPosition = collision.transform.position;
 
-        if (collision.CompareTag("Enemy"))
+        if (collision.CompareTag("Enemy") || collision.CompareTag("BossEnemy"))
         {
+            bool isBoss = collision.CompareTag("BossEnemy");
+
             DamagePopUp.Instance?.CreateDamageText(
                 damage,
                 popupPosition,
                 isPlayer: false,
-                isBoss: false,
+                isBoss: isBoss,
                 isCritical: isCritical
             );
+
             AudioManager.Instance.PlayProjectileHit();
             AudioManager.Instance.StopSound("PlayerOthers", "projectile_player");
-            Destroy(gameObject);
+
+            // Check if we should multi-hit
+            if (transform.localScale.x >= sizeThreshold)
+            {
+                hitCount++;
+                if (hitCount >= maxHits)
+                {
+                    Destroy(gameObject);
+                }
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
-        else if (collision.CompareTag("BossEnemy"))
+    }
+
+    private void OnDestroy()
+    {
+        if (!IsGamePaused())
         {
-            DamagePopUp.Instance?.CreateDamageText(
-                damage,
-                popupPosition,
-                isPlayer: false,
-                isBoss: true,
-                isCritical: isCritical
-            );
-            AudioManager.Instance.PlayProjectileHit();
-            AudioManager.Instance.StopSound("PlayerOthers", "projectile_player");
-            Destroy(gameObject);
+            RestoreNormalTime();
         }
     }
 }

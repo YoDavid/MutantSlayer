@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class PlayerComboHitbox : MonoBehaviour
 {
     [Header("Combo Timing")]
-    [SerializeField] private float windupDuration = 2.3f; // Combo windup animation length
+    [SerializeField] public float windupDuration = 2.3f; // Combo windup animation length
     [SerializeField] private float hitInterval = 0.18f;   // Time between hits (0.9s/5 hits)
 
     [Header("Time Stop Effect")]
@@ -21,6 +21,8 @@ public class PlayerComboHitbox : MonoBehaviour
     private AudioManager audioManager;
     private CameraShake cameraShake;
     private PlayerHealth playerHealth;
+    private PlayerMovementController playerMovement;
+    private PlayerAnimationController playerAnimation;
 
     // State
     private float comboStartTime;
@@ -55,13 +57,22 @@ public class PlayerComboHitbox : MonoBehaviour
         audioManager = AudioManager.Instance;
 
         playerHealth = GetComponentInParent<PlayerHealth>();
+        playerMovement = GetComponentInParent<PlayerMovementController>();
+        playerAnimation = GetComponentInParent<PlayerAnimationController>();
     }
 
     private void Update()
     {
+
         if (!externalComboActiveState) return;
 
         float timeSinceComboStart = Time.time - comboStartTime;
+
+        if (playerMovement != null && !playerMovement.isGrounded)
+        {
+            playerAnimation.ResetAirborneActions();
+            return;
+        }
 
         // Check if we should enter attack phase (after windup)
         if (!attackPhaseActive && timeSinceComboStart >= windupDuration)
@@ -89,6 +100,12 @@ public class PlayerComboHitbox : MonoBehaviour
 
     public void OnComboStarted()
     {
+        // Only start combo if player is grounded
+        if (playerMovement != null && !playerMovement.isGrounded)
+        {
+            return; // Exit if not grounded
+        }
+
         comboStartTime = Time.time;
         lastHitTime = comboStartTime;
         externalComboActiveState = true;

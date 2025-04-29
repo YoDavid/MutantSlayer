@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using DG.Tweening; // Add this namespace
 
-public class MenuButton : MonoBehaviour,  ISelectHandler,  IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
+public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Visuals")]
     [SerializeField] private Image targetImage;
@@ -11,18 +12,19 @@ public class MenuButton : MonoBehaviour,  ISelectHandler,  IDeselectHandler, IPo
     [SerializeField] private float fadeDuration = 0.1f;
 
     [Header("Scaling")]
-    [SerializeField] private float selectedScale = 1.8f;
-    [SerializeField] private float normalScale = 1.3f;
+    [SerializeField] private float selectedScale = 1.1f;
+    [SerializeField] private float normalScale = 0.95f;
     [SerializeField] private float scaleDuration = 0.15f;
-
 
     [Header("References")]
     public Button button;
 
+    private bool _isSelected = false;
+    private Tweener _scaleTweener;
+    private Tweener _colorTweener;
+
     public void OnPointerEnter(PointerEventData eventData) => Select();
     public void OnPointerExit(PointerEventData eventData) => Deselect();
-
-    private bool _isSelected = false;
 
     private void Awake()
     {
@@ -42,10 +44,19 @@ public class MenuButton : MonoBehaviour,  ISelectHandler,  IDeselectHandler, IPo
         if (_isSelected) return;
 
         _isSelected = true;
-        targetImage.color = highlightedColor;
 
-        // Scale up
-        LeanTween.scale(gameObject, Vector3.one * selectedScale, scaleDuration).setEaseOutBack();
+        // Kill any ongoing tweens to prevent conflicts
+        _scaleTweener?.Kill();
+        _colorTweener?.Kill();
+
+        // Color change with DOTween
+        _colorTweener = targetImage.DOColor(highlightedColor, fadeDuration)
+            .SetUpdate(true); // This makes it ignore Time.timeScale
+
+        // Scale animation with DOTween
+        _scaleTweener = transform.DOScale(Vector3.one * selectedScale, scaleDuration)
+            .SetEase(Ease.OutBack)
+            .SetUpdate(true); // Ignore Time.timeScale
 
         if (!fromEventSystem)
         {
@@ -56,20 +67,29 @@ public class MenuButton : MonoBehaviour,  ISelectHandler,  IDeselectHandler, IPo
     public void Deselect()
     {
         _isSelected = false;
-        targetImage.color = normalColor;
 
-        // Scale down
-        LeanTween.scale(gameObject, Vector3.one * normalScale, scaleDuration).setEaseInBack();
+        // Kill any ongoing tweens
+        _scaleTweener?.Kill();
+        _colorTweener?.Kill();
+
+        // Color change with DOTween
+        _colorTweener = targetImage.DOColor(normalColor, fadeDuration)
+            .SetUpdate(true);
+
+        // Scale animation with DOTween
+        _scaleTweener = transform.DOScale(Vector3.one * normalScale, scaleDuration)
+            .SetEase(Ease.InBack)
+            .SetUpdate(true);
     }
-
 
     public void SetAlpha(float alpha)
     {
         if (targetImage != null)
         {
-            Color c = targetImage.color;
-            c.a = alpha;
-            targetImage.color = c;
+            // Use DOTween for alpha changes too
+            _colorTweener?.Kill();
+            _colorTweener = targetImage.DOFade(alpha, fadeDuration)
+                .SetUpdate(true);
         }
     }
 
@@ -81,5 +101,12 @@ public class MenuButton : MonoBehaviour,  ISelectHandler,  IDeselectHandler, IPo
     public void OnDeselect(BaseEventData eventData)
     {
         Deselect();
+    }
+
+    private void OnDestroy()
+    {
+        // Clean up tweens when the object is destroyed
+        _scaleTweener?.Kill();
+        _colorTweener?.Kill();
     }
 }

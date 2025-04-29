@@ -28,6 +28,7 @@ public class GameOverMenuController : BaseMenuController
 
     public bool IsVisible { get; private set; }
 
+
     protected override void Start()
     {
         base.Start();
@@ -143,12 +144,10 @@ public class GameOverMenuController : BaseMenuController
 
         if (CheckpointManager.Instance.HasCheckpoint())
         {
-            // Use SceneLoader for smooth transition
             SceneLoader.Instance.LoadSceneWithFade(SceneManager.GetActiveScene().name);
         }
         else
         {
-            // Fallback to regular restart
             SceneLoader.Instance.LoadSceneWithFade(SceneManager.GetActiveScene().name);
         }
     }
