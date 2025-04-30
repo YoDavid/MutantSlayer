@@ -4,7 +4,6 @@ public class PauseMenuController : BaseMenuController
 {
     [Header("Pause Settings")]
     [SerializeField] private GameObject optionsMenu;
-    [SerializeField] private float pauseTimeScale = 0f;
 
     public bool IsVisible { get; private set; }
 
@@ -17,31 +16,32 @@ public class PauseMenuController : BaseMenuController
     {
         IsVisible = visible;
         gameObject.SetActive(visible);
-        Time.timeScale = visible ? pauseTimeScale : 1f;
 
         if (visible)
         {
+            TimeManager.Instance?.PauseGame();
             SelectButton(0);
             AudioManager.Instance.PlayMenuOpen();
             if (optionsMenu) optionsMenu.SetActive(false);
         }
         else
         {
+            TimeManager.Instance?.ResumeGame();
             AudioManager.Instance.PlayMenuClose();
         }
     }
 
     public void OnResumePressed() => SetVisible(false);
+
     public void OnOptionsPressed() => optionsMenu.SetActive(true);
 
     public void OnMainMenuPressed()
     {
         AudioManager.Instance.PlayButtonClick();
 
-        Time.timeScale = 1f;
+        TimeManager.Instance?.ResumeGame();
 
         SetVisible(false);
-
         SceneLoader.Instance.LoadSceneWithFade("Scene_MainMenu");
     }
 }

@@ -89,9 +89,9 @@ public class PlayerAttackController : MonoBehaviour
 
     [SerializeField] private PlayerEarlyExitAttack earlyExitAttack;
 
-    private bool wasComboInterrupted = false;
-    private bool wasRangedInterrupted = false;
-    private bool requireNewRangedInput = false;
+    [SerializeField] private bool wasComboInterrupted = false;
+    [SerializeField] private bool wasRangedInterrupted = false;
+    [SerializeField] private bool requireNewRangedInput = false;
 
     #endregion
 
@@ -369,49 +369,68 @@ public class PlayerAttackController : MonoBehaviour
     #region Ranged Attack Methods
     private void HandleRangedAttackInput()
     {
-        // First check grounded state
-        if (!IsGrounded())
+        bool isRightMouseHeld = Input.GetMouseButton(1);
+        bool isRightMouseReleased = Input.GetMouseButtonUp(1);
+        bool isRightMousePressed = Input.GetMouseButtonDown(1);
+
+        // Reset charge start time if we're airborne and trying to charge
+        if (!IsGrounded() && isRightMousePressed)
         {
-            if (isCharging || hasFiredChargeAttack || animationController.animator.GetBool("RangedAttackLoop"))
-            {
-                ResetRangedAttack();
-            }
             chargeStartTime = 0f;
             return;
         }
 
+        // Full reset if we become airborne during any part of the ranged attack
+        if (!IsGrounded() && (isCharging || hasFiredChargeAttack || animationController.animator.GetBool("RangedAttackLoop")))
+        {
+            ResetRangedAttack();
+            return;
+        }
+
         // If we need fresh input and button is still held, wait for release
-        if (requireNewRangedInput && Input.GetMouseButton(1))
+        if (requireNewRangedInput && isRightMouseHeld)
         {
             return;
         }
 
         // Clear the requirement if button was released
-        if (requireNewRangedInput && !Input.GetMouseButton(1))
+        if (requireNewRangedInput && !isRightMouseHeld)
         {
             requireNewRangedInput = false;
         }
 
-        // Only start new charge if we have fresh input
-        if (Input.GetMouseButtonDown(1) && !requireNewRangedInput)
+        // Only start new charge if we have fresh input and are grounded
+        if (isRightMousePressed && !requireNewRangedInput && IsGrounded())
         {
             chargeStartTime = Time.time;
+            wasRangedInterrupted = false; // Reset interruption flag on new press
         }
 
-        // Handle charging only with fresh input
-        if (Input.GetMouseButton(1) && !requireNewRangedInput)
+        // Handle charging only with fresh input and while grounded
+        if (isRightMouseHeld && !requireNewRangedInput && IsGrounded())
         {
+            // Don't start charging if we were interrupted until button is released
+            if (wasRangedInterrupted)
+                return;
+
             if (!isCharging && Time.time - chargeStartTime >= chargeStartDelay)
             {
                 if (staminaBar.GetStamina() >= 25f)
                 {
-                    animationController.SetRangedAttackStart(true);
-                    isCharging = true;
-                    playedSwordDraw = false;
-                    playedClimax = false;
+                    StartRangedCharge();
+                }
+            }
 
-                    if (chargeAudioRoutine != null) StopCoroutine(chargeAudioRoutine);
-                    chargeAudioRoutine = StartCoroutine(HandleRangedAttackSounds());
+            // STAMINA DEPLETION - RESTORED FROM PREVIOUS VERSION
+            if (isCharging && !staminaBar.IsEmpty)
+            {
+                float staminaUsed = staminaDrainRate * Time.deltaTime;
+                staminaDepleted += staminaUsed;
+                staminaBar.DepleteStamina(staminaUsed);
+
+                if (staminaBar.IsEmpty && !hasFiredChargeAttack)
+                {
+                    TriggerRangedAttackSequence();
                 }
             }
 
@@ -425,40 +444,19 @@ public class PlayerAttackController : MonoBehaviour
                     StartElectricityLoop();
                 }
             }
-
-            if (isCharging && !staminaBar.IsEmpty)
-            {
-                float staminaUsed = staminaDrainRate * Time.deltaTime;
-                staminaDepleted += staminaUsed;
-                staminaBar.DepleteStamina(staminaUsed);
-            }
-
-            if (isCharging && staminaBar.IsEmpty && !hasFiredChargeAttack)
-            {
-                TriggerRangedAttackSequence();
-            }
         }
 
-        if (Input.GetMouseButtonUp(1))
+        // Handle button release
+        if (isRightMouseReleased)
         {
             if (isCharging && !hasFiredChargeAttack)
             {
                 TriggerRangedAttackSequence();
             }
-
-            if (hasFiredChargeAttack)
+            else if (hasFiredChargeAttack)
             {
-                isCharging = false;
-                animationController.SetRangedAttackStart(false);
-                animationController.SetRangedAttackLoop(false);
-                StopElectricityLoop();
+                CleanUpRangedAttack();
             }
-        }
-
-        // Additional check in case the animation gets interrupted elsewhere
-        if (isCharging && !animationController.animator.GetBool("RangedAttackLoop") && shouldPlayElectricityLoop)
-        {
-            StopElectricityLoop();
         }
     }
 
@@ -564,6 +562,27 @@ public class PlayerAttackController : MonoBehaviour
         StartCoroutine(ResetRangedAttackState());
     }
 
+    private void StartRangedCharge()
+    {
+        animationController.SetRangedAttackStart(true);
+        isCharging = true;
+        playedSwordDraw = false;
+        playedClimax = false;
+        wasRangedInterrupted = false;
+
+        if (chargeAudioRoutine != null) StopCoroutine(chargeAudioRoutine);
+        chargeAudioRoutine = StartCoroutine(HandleRangedAttackSounds());
+    }
+
+    private void CleanUpRangedAttack()
+    {
+        isCharging = false;
+        animationController.SetRangedAttackStart(false);
+        animationController.SetRangedAttackLoop(false);
+        StopElectricityLoop();
+    }
+
+
     private IEnumerator ElectricityLoopSoundRoutine()
     {
         yield return new WaitForSeconds(electricityLoopStartDelay);
@@ -649,40 +668,35 @@ public class PlayerAttackController : MonoBehaviour
 
     private void ResetRangedAttack()
     {
-        if (isCharging || hasFiredChargeAttack || animationController.animator.GetBool("RangedAttackLoop"))
+        // Reset all possible states
+        isCharging = false;
+        hasFiredChargeAttack = false;
+        wasRangedInterrupted = true;
+        requireNewRangedInput = true;
+        chargeStartTime = 0f;
+        staminaDepleted = 0f;
+
+        // Reset animation states
+        animationController.SetRangedAttackStart(false);
+        animationController.SetRangedAttackLoop(false);
+        animationController.ResetRangedAttack();
+
+        // Stop all audio
+        StopElectricityLoop();
+        if (chargeAudioRoutine != null)
         {
-            isCharging = false;
-            hasFiredChargeAttack = false;
-            wasRangedInterrupted = true;
-            requireNewRangedInput = true;
-
-            // Force reset all animation states
-            animationController.SetRangedAttackStart(false);
-            animationController.SetRangedAttackLoop(false);
-            animationController.ResetRangedAttack();
-
-            // Stop all audio
-            StopElectricityLoop();
-            if (chargeAudioRoutine != null)
-            {
-                StopCoroutine(chargeAudioRoutine);
-                chargeAudioRoutine = null;
-            }
-            AudioManager.Instance.StopSound("Player", "sfx_player_charge_range_attack");
-            AudioManager.Instance.StopSound("Player", "sfx_player_charge_electricity_loop");
-
-            // Stop step sounds if playing
-            if (movementController != null)
-            {
-                movementController.StopStepSounds();
-            }
-
-            // Reset all state variables
-            playedSwordDraw = false;
-            playedClimax = false;
-            staminaDepleted = 0f;
-            chargeStartTime = 0f;
+            StopCoroutine(chargeAudioRoutine);
+            chargeAudioRoutine = null;
         }
+        AudioManager.Instance.StopSound("Player", "sfx_player_charge_range_attack");
+        AudioManager.Instance.StopSound("Player", "sfx_player_charge_electricity_loop");
+
+        // Reset sound flags
+        playedSwordDraw = false;
+        playedClimax = false;
+
+        // Stop step sounds if playing
+        movementController?.StopStepSounds();
     }
     #endregion
 

@@ -186,10 +186,10 @@ MonoBehaviour:
   baseSpeed: 0.2
   acceleration: 40
   maxSpeed: 50
-  maxLifetime: 10
+  maxLifetime: 5
   damage: 10
   isCritical: 0
   sizeThreshold: 0.3
   maxHits: 3
-  timeSlowDuration: 3
-  timeScaleDuringSlow: 0.1
+  timeSlowDuration: 1
+  timeScaleDuringSlow: 0.2

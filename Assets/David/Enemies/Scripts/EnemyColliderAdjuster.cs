@@ -15,7 +15,6 @@ public class EnemyColliderAdjuster : MonoBehaviour
 
     private void Update()
     {
-        // Adjust collider based on facing direction
         Vector2 targetOffset = spriteRenderer.flipX ? config.leftFacingColliderOffset : config.rightFacingColliderOffset;
         mainCollider.offset = targetOffset;
     }

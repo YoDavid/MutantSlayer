@@ -14,6 +14,7 @@ public class PlayerHurtbox : MonoBehaviour
     public void SetInvincible(bool isInvincible)
     {
         // Enable or disable the hurtbox collider depending on invincibility
-        hurtboxCollider.enabled = !isInvincible;  // Disable the collider when invincible
+        hurtboxCollider.enabled = !isInvincible;
     }
+
 }

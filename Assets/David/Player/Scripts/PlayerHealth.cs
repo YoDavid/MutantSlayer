@@ -15,6 +15,10 @@ public class PlayerHealth : HealthSystem
     private bool isHeartbeatPlaying = false;
     private Coroutine heartbeatCoroutine;
 
+    [SerializeField] private float comboInvulnerabilityTime = 1.5f; // Combo-specific invulnerability time
+    [SerializeField] private bool isComboInvulnerable = false;
+
+
     protected override void Awake()
     {
         base.Awake();
@@ -81,7 +85,7 @@ public class PlayerHealth : HealthSystem
 
     public override void TakeDamage(int damage, bool isCritical = false)
     {
-        if (isDead || isInvulnerable || playerHurtbox == null || !playerHurtbox.enabled) return;
+        if (isDead || isInvulnerable || isComboInvulnerable || playerHurtbox == null || !playerHurtbox.enabled) return;
 
         base.TakeDamage(damage, isCritical);
 
@@ -91,9 +95,23 @@ public class PlayerHealth : HealthSystem
             damage, transform.position + Vector3.up * 1.8f,
             isPlayer: true, isBoss: false, isCritical);
 
+        // Check if the player is not grounded after taking damage
+        if (!playerMovement.isGrounded)
+        {
+            // Reset the Rigidbody's velocity (X and Y axis)
+            Rigidbody2D rb = playerMovement.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.velocity = Vector2.zero; // Reset velocity
+                Debug.Log("Rigidbody velocity reset due to being airborne after hit.");
+            }
+        }
+
         StartCoroutine(InvulnerabilityFrame());
         CheckHeartbeat();
     }
+
+
 
     private void PlayRandomTakeHitSound()
     {
@@ -115,9 +133,17 @@ public class PlayerHealth : HealthSystem
     private IEnumerator InvulnerabilityFrame()
     {
         isInvulnerable = true;
-        yield return new WaitForSeconds(invulnerabilityTime);
+        if (playerHurtbox != null)
+            playerHurtbox.SetInvincible(true); // Disable hurtbox collider
+
+        // Use real-time instead of scaled time to prevent time slowing from affecting invulnerability
+        yield return new WaitForSecondsRealtime(invulnerabilityTime);
+
         isInvulnerable = false;
+        if (playerHurtbox != null)
+            playerHurtbox.SetInvincible(false); // Enable hurtbox collider
     }
+
 
     protected override void Die()
     {
@@ -190,4 +216,11 @@ public class PlayerHealth : HealthSystem
         playerAnimation.enabled = true;
         playerMovement.enabled = true;
     }
+
+    public void SetComboInvulnerability(bool value)
+    {
+        isComboInvulnerable = value;
+        playerHurtbox?.SetInvincible(value);
+    }
+
 }

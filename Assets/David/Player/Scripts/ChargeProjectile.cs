@@ -48,7 +48,7 @@ public class ChargeProjectile : MonoBehaviour
             // Start time slow if within the duration
             if (lifetime < timeSlowDuration)
             {
-                Time.timeScale = timeScaleDuringSlow;
+                TimeManager.Instance?.SetTimeScale(timeScaleDuringSlow);
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
             }
         }
@@ -88,11 +88,7 @@ public class ChargeProjectile : MonoBehaviour
 
     private void RestoreNormalTime()
     {
-        if (!IsGamePaused())
-        {
-            Time.timeScale = 1f;
-            Time.fixedDeltaTime = 0.02f;
-        }
+        TimeManager.Instance?.ResetTimeScale();
     }
 
     private void PlayProjectileSound()

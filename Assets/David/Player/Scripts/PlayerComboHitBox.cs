@@ -18,7 +18,6 @@ public class PlayerComboHitbox : MonoBehaviour
     // Components
     private Collider2D hitCollider;
     private DamageDealer damageDealer;
-    private AudioManager audioManager;
     private CameraShake cameraShake;
     private PlayerHealth playerHealth;
     private PlayerMovementController playerMovement;
@@ -29,7 +28,7 @@ public class PlayerComboHitbox : MonoBehaviour
     private float lastHitTime;
     private List<DetectedHit> detectedHits = new List<DetectedHit>();
     private bool externalComboActiveState = false;
-    private bool attackPhaseActive = false;
+    [SerializeField] private bool attackPhaseActive = false;
 
     // Public accessors
     public bool IsComboActive => externalComboActiveState;
@@ -54,8 +53,6 @@ public class PlayerComboHitbox : MonoBehaviour
         damageDealer.config = damageConfig;
 
         cameraShake = FindObjectOfType<CameraShake>();
-        audioManager = AudioManager.Instance;
-
         playerHealth = GetComponentInParent<PlayerHealth>();
         playerMovement = GetComponentInParent<PlayerMovementController>();
         playerAnimation = GetComponentInParent<PlayerAnimationController>();
@@ -63,32 +60,35 @@ public class PlayerComboHitbox : MonoBehaviour
 
     private void Update()
     {
-
+        // Skip if combo isn't active
         if (!externalComboActiveState) return;
 
         float timeSinceComboStart = Time.time - comboStartTime;
 
+        // Reset actions if the player isn't grounded
         if (playerMovement != null && !playerMovement.isGrounded)
         {
             playerAnimation.ResetAirborneActions();
             return;
         }
 
-        // Check if we should enter attack phase (after windup)
+        // Step 4: Check for the attack phase after windup
         if (!attackPhaseActive && timeSinceComboStart >= windupDuration)
         {
             attackPhaseActive = true;
-            lastHitTime = Time.time; // Reset for first attack
+            lastHitTime = Time.time;
 
-            // Start combo slash loop sound after windup
-            if (!isComboSoundPlaying && audioManager != null)
+            // Debug for attack phase
+
+            if (!isComboSoundPlaying)
             {
-                playerHealth.isInvulnerable = true;
-                audioManager.PlayComboSlashLoop();
+                playerHealth.SetComboInvulnerability(true);
+                AudioManager.Instance.PlayComboSlashLoop();
                 isComboSoundPlaying = true;
             }
         }
 
+        // Step 5: Handle attacks in the active phase
         if (attackPhaseActive)
         {
             if (Time.time >= lastHitTime + hitInterval)
@@ -98,66 +98,56 @@ public class PlayerComboHitbox : MonoBehaviour
         }
     }
 
+
     public void OnComboStarted()
     {
-        // Only start combo if player is grounded
         if (playerMovement != null && !playerMovement.isGrounded)
-        {
-            return; // Exit if not grounded
-        }
+            return;
 
         comboStartTime = Time.time;
         lastHitTime = comboStartTime;
         externalComboActiveState = true;
         attackPhaseActive = false;
         detectedHits.Clear();
+
     }
+
 
     public void OnComboEnded()
     {
-        // Only freeze time if we actually hit something
         if (detectedHits.Count > 0)
-        {
             StartCoroutine(TimeStopEffect());
-        }
 
-        // Deactivate combo and attack phase
         externalComboActiveState = false;
         attackPhaseActive = false;
         hitCollider.enabled = false;
 
-        // Stop combo slash sound
         StopComboSlashSound();
-
-        // Process all the hits detected during the combo
         ProcessAllHits();
         detectedHits.Clear();
 
-        // Play the final big slash hit sound (only if we hit something)
-        if (detectedHits.Count > 0 && audioManager != null)
-        {
-            audioManager.PlayComboFinalHit();
-        }
+        if (detectedHits.Count > 0)
+            AudioManager.Instance.PlayComboFinalHit();
 
-        // Reset combo sound flag
         isComboSoundPlaying = false;
-        playerHealth.isInvulnerable = false;
+
+        playerHealth.SetComboInvulnerability(false);
     }
+
 
     private void StopComboSlashSound()
     {
-        if (audioManager != null)
-        {
-            // Stop the combo slash loop sound
-            audioManager.StopSound("PlayerOthers", "sfx_player_combo_slash_loop");
-        }
+
+
+        AudioManager.Instance.StopSound("PlayerOthers", "sfx_player_combo_slash_loop");
+        
     }
 
     private IEnumerator TimeStopEffect()
     {
-        Time.timeScale = timeSlowFactor;
-        yield return new WaitForSecondsRealtime(timeStopDuration); // Wait for the real-time duration
-        Time.timeScale = 1f;
+        TimeManager.Instance?.SetTimeScale(timeSlowFactor);
+        yield return new WaitForSecondsRealtime(timeStopDuration);
+        TimeManager.Instance?.ResetTimeScale();
     }
 
     private void AttemptHit()
@@ -248,9 +238,8 @@ public class PlayerComboHitbox : MonoBehaviour
 
     private void PlayRandomHitSound()
     {
-        if (audioManager == null) return;
         int rand = Random.Range(0, 4);
-        audioManager.PlaySFX("Player", $"sfx_player_attack_hit_0{rand}");
+        AudioManager.Instance.PlaySFX("Player", $"sfx_player_attack_hit_0{rand}");
     }
 
     private void SpawnHitParticles(Vector3 position)

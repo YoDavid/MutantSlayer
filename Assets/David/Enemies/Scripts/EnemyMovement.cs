@@ -49,6 +49,9 @@ public class EnemyMovement : MonoBehaviour
     public Vector2 SpawnPosition => spawnPosition;
     public bool MovementLocked { get; private set; }
 
+    [SerializeField] private bool isFacingLeft = false;
+    private BoxCollider2D mainCollider;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -56,7 +59,10 @@ public class EnemyMovement : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         spawnPosition = transform.position;
+        mainCollider = GetComponent<BoxCollider2D>();
+        isFacingLeft = true;
     }
+
 
     private void Update()
     {
@@ -100,7 +106,12 @@ public class EnemyMovement : MonoBehaviour
         {
             UpdateFacingTowardsPlayer();
         }
+        else if (!isInCombat && wasInCombat && patrolSettings.enablePatrol)
+        {
+            FaceInPatrolDirection();
+        }
     }
+
 
     private void PatrolBehavior()
     {
@@ -123,8 +134,11 @@ public class EnemyMovement : MonoBehaviour
         {
             Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
             rb.velocity = direction * patrolSettings.patrolSpeed;
-            UpdateSpriteFacing(direction);
+
+            FaceInPatrolDirection();
+
             animator.SetBool("IsMoving", true);
+
         }
     }
 
@@ -186,7 +200,14 @@ public class EnemyMovement : MonoBehaviour
 
     private void UpdateSpriteFacing(Vector2 movementDirection)
     {
-        spriteRenderer.flipX = movementDirection.x < 0;
+        bool shouldFaceLeft = movementDirection.x < 0;
+
+        if (shouldFaceLeft != isFacingLeft)
+        {
+            isFacingLeft = shouldFaceLeft;
+            spriteRenderer.flipX = shouldFaceLeft;
+            UpdateColliderOffset(); // Ensures collider matches new facing
+        }
     }
 
     public void LockMovement() => MovementLocked = true;
@@ -236,4 +257,17 @@ public class EnemyMovement : MonoBehaviour
         Gizmos.color = new Color(1, 0, 1, 0.2f);
         Gizmos.DrawWireSphere(transform.position, minDistanceFromPlayer);
     }
+
+    private void UpdateColliderOffset()
+    {
+        if (mainCollider == null || config == null) return;
+
+        mainCollider.offset = isFacingLeft ? config.leftFacingColliderOffset : config.rightFacingColliderOffset;
+    }
+
+    private void FaceInPatrolDirection()
+    {
+        UpdateSpriteFacing(isMovingRight ? Vector2.right : Vector2.left);
+    }
+
 }

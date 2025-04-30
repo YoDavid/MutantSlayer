@@ -82,18 +82,17 @@ public class UIManager : MonoBehaviour
         pauseMenu.SetVisible(shouldPause);
         SetHUDVisible(!shouldPause);
 
-        // Safely pause/unpause game time
-        Time.timeScale = shouldPause ? 0f : 1f;
+        if (shouldPause)
+            TimeManager.Instance?.PauseGame();
+        else
+            TimeManager.Instance?.ResumeGame();
 
-        // Enable/disable player movement
         if (playerMovement != null)
             playerMovement.SetMovementEnabled(!shouldPause);
 
-        // Disable/enable the PlayerAttackController when pausing/unpausing
         if (playerAttackController != null)
             playerAttackController.enabled = !shouldPause;
     }
-
 
     private void HandleBossHealthBarVisibility()
     {
@@ -109,7 +108,7 @@ public class UIManager : MonoBehaviour
 
     public void ShowGameOver()
     {
-        Time.timeScale = 1f; // Resume time just in case
+        TimeManager.Instance?.ResumeGame();
 
         SetHUDVisible(false);
 

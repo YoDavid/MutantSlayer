@@ -24,9 +24,9 @@ MonoBehaviour:
   hitCooldown: 0.5
   enemyBlinkDuration: 0.1
   enemyBlinkCount: 2
-  enemyBlinkColor: {r: 1, g: 1, b: 1, a: 1}
+  enemyBlinkColor: {r: 1, g: 1, b: 1, a: 0.2509804}
   rightFacingColliderOffset: {x: -9, y: -3}
-  leftFacingColliderOffset: {x: 9, y: -3}
+  leftFacingColliderOffset: {x: 9.8, y: -3}
   rightFacingOffset: {x: 15, y: 0}
   leftFacingOffset: {x: -5, y: 0}
   isWormEnemy: 1

@@ -1,0 +1,63 @@
+using System.Collections;
+using UnityEngine;
+
+public class TimeManager : MonoBehaviour
+{
+    public static TimeManager Instance;
+
+    [Header("Time Scales")]
+    public float normalTimeScale = 1f;
+    public float pauseTimeScale = 0f;
+
+    private float currentTimeScale = 1f;
+    private bool isPaused = false;
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+
+        SetTimeScale(normalTimeScale);
+    }
+
+    public void SetTimeScale(float scale)
+    {
+        currentTimeScale = scale;
+        Time.timeScale = scale;
+    }
+
+    public void PauseGame()
+    {
+        isPaused = true;
+        SetTimeScale(pauseTimeScale);
+    }
+
+    public void ResumeGame()
+    {
+        isPaused = false;
+        SetTimeScale(normalTimeScale);
+    }
+
+    public void TemporarilySlowTime(float newTimeScale, float duration)
+    {
+        StopAllCoroutines();
+        StartCoroutine(SlowTimeRoutine(newTimeScale, duration));
+    }
+
+    private IEnumerator SlowTimeRoutine(float newTimeScale, float duration)
+    {
+        SetTimeScale(newTimeScale);
+        yield return new WaitForSecondsRealtime(duration);
+        if (!isPaused)
+            SetTimeScale(normalTimeScale);
+    }
+
+    public void ResetTimeScale()
+    {
+        if (!isPaused)
+            SetTimeScale(normalTimeScale);
+    }
+
+
+    public bool IsPaused => isPaused;
+}

@@ -178,7 +178,7 @@ public class PlayerAnimationController : MonoBehaviour
             animator.SetBool("RangedAttackLoop", false);
             animator.SetBool("ComboAttackStart", false);
             animator.SetBool("IsComboAttacking", false);
-            animator.SetBool("SetEarlyComboExit", false);
+            animator.SetBool("EarlyComboExit", false);
 
             // Also reset any related states
             isHealing = false;

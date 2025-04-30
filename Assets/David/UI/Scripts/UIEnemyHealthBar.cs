@@ -1,3 +1,4 @@
+// UIEnemyHealthBar.cs
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,28 +8,24 @@ public class UIEnemyHealthBar : MonoBehaviour
     [SerializeField] private Image fillImage;
     [SerializeField] private Color fullHealthColor = Color.red;
     [SerializeField] private Color zeroHealthColor = Color.black;
+    [SerializeField] private float yOffset = 50f;
 
-    private EnemyHealth enemyHealth;
+    private RectTransform rectTransform;
+    public EnemyHealth enemyHealth;
+    private Camera mainCamera;
 
-    private void Awake()
+    public void Initialize(EnemyHealth health, Camera cam)
     {
-        enemyHealth = GetComponentInParent<EnemyHealth>();
-        if (enemyHealth == null)
-        {
-            Debug.LogError("EnemyHealth component not found in parent!", this);
-            return;
-        }
+        enemyHealth = health;
+        mainCamera = cam;
+        rectTransform = GetComponent<RectTransform>();
 
-        InitializeHealthBar();
-        enemyHealth.OnHealthChanged += UpdateHealthBar;
-        enemyHealth.OnDeath += HandleEnemyDeath;
-    }
-
-    private void InitializeHealthBar()
-    {
         healthSlider.maxValue = enemyHealth.config.maxHealth;
         healthSlider.value = enemyHealth.config.maxHealth;
         fillImage.color = fullHealthColor;
+
+        enemyHealth.OnHealthChanged += UpdateHealthBar;
+        enemyHealth.OnDeath += HandleEnemyDeath;
     }
 
     private void UpdateHealthBar(int currentHealth)
@@ -40,8 +37,17 @@ public class UIEnemyHealthBar : MonoBehaviour
 
     private void HandleEnemyDeath()
     {
-        // Optional: Add death animation to health bar
-        gameObject.SetActive(false); // Or Destroy(gameObject);
+        gameObject.SetActive(false);
+        Destroy(gameObject, 1f); // Optional delay for any fade effects
+    }
+
+    private void Update()
+    {
+        if (enemyHealth != null && mainCamera != null)
+        {
+            Vector3 screenPosition = mainCamera.WorldToScreenPoint(enemyHealth.transform.position);
+            rectTransform.position = new Vector3(screenPosition.x, screenPosition.y + yOffset, screenPosition.z);
+        }
     }
 
     private void OnDestroy()

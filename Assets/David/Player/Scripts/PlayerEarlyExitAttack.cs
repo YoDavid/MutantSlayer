@@ -13,11 +13,17 @@ public class PlayerEarlyExitAttack : MonoBehaviour
     [SerializeField] private GameObject hitParticlePrefab;
     [SerializeField] private DamageConfig damageConfig;
     [SerializeField] private PauseMenuController pauseMenuController;
+    [SerializeField] private PlayerComboHitbox playerComboHitbox;
 
     private Collider2D hitCollider;
     private DamageDealer damageDealer;
     private PlayerMovementController playerMovement;
     private bool isAttackActive;
+
+    private float leftMouseButtonHoldTime = 0f;
+    [SerializeField] private float minHoldTime = 0.25f; // Minimum time to trigger early exit
+
+
 
     private void Awake()
     {
@@ -31,11 +37,28 @@ public class PlayerEarlyExitAttack : MonoBehaviour
         cameraShake = FindAnyObjectByType<CameraShake>();
         pauseMenuController = FindAnyObjectByType<PauseMenuController>();
         playerMovement = GetComponentInParent<PlayerMovementController>();
+        playerComboHitbox = FindAnyObjectByType<PlayerComboHitbox>(); // Get reference to ComboHitbox
     }
+
+    private void Update()
+    {
+        if (Input.GetMouseButton(0)) // Left mouse button held
+        {
+            leftMouseButtonHoldTime += Time.deltaTime;
+        }
+        else if (Input.GetMouseButtonUp(0)) // Left mouse button released
+        {
+            if (leftMouseButtonHoldTime >= minHoldTime && leftMouseButtonHoldTime <= playerComboHitbox.windupDuration)
+            {
+                ExecuteEarlyExit();
+            }
+            leftMouseButtonHoldTime = 0f; // Reset hold time after button release
+        }
+    }
+
 
     public void ExecuteEarlyExit()
     {
-        // Prevent execution if already attacking or not grounded
         if (isAttackActive || (playerMovement != null && !playerMovement.isGrounded))
         {
             return;
@@ -65,17 +88,15 @@ public class PlayerEarlyExitAttack : MonoBehaviour
         // Time slowdown effect - only if not paused
         if (!IsGamePaused())
         {
-            Time.timeScale = timeSlowDuration;
-            Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            TimeManager.Instance?.SetTimeScale(timeSlowDuration);
             yield return new WaitForSecondsRealtime(0.1f); // Short slowdown duration
 
-            // Restore time only if not paused
             if (!IsGamePaused())
             {
-                Time.timeScale = 1f;
-                Time.fixedDeltaTime = 0.02f;
+                TimeManager.Instance?.ResetTimeScale();
             }
         }
+
         else
         {
             // If paused, just wait without time slowdown
