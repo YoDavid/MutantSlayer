@@ -95,6 +95,7 @@ MonoBehaviour:
   timeStopDuration: 1
   damageConfig: {fileID: 11400000, guid: 37cb60be3a1f33d44a087144d8626d47, type: 2}
   hitParticlePrefab: {fileID: 4501868321521990437, guid: 361828f1cec2e764e8d1417f686a9f47, type: 3}
+  attackPhaseActive: 0
   timeSlowFactor: 0.1
 --- !u!1 &2796465483129043920
 GameObject:
@@ -295,7 +296,7 @@ Transform:
   m_GameObject: {fileID: 5545429896931029101}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.5, y: -4.05, z: 0}
+  m_LocalPosition: {x: 5.5, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -392,11 +393,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitDelay: 0.35
-  timeSlowDuration: 0.3
+  timeSlowDuration: 0.1
   audioManager: {fileID: 0}
   cameraShake: {fileID: 0}
   hitParticlePrefab: {fileID: 7083328916205589662, guid: 5c10bf981bb4654419448c8c69696181, type: 3}
   damageConfig: {fileID: 11400000, guid: 37cb60be3a1f33d44a087144d8626d47, type: 2}
+  pauseMenuController: {fileID: 0}
+  playerComboHitbox: {fileID: 5081834767453675036}
+  minHoldTime: 0.25
 --- !u!1 &7253434483809274145
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,6 +800,7 @@ MonoBehaviour:
   lastAttackTime: 265.0994
   lastAttackEndTime: 265.53345
   isAttackEnabled: 1
+  chargeStartTime: 0
   leftMouseButtonHoldTime: 0
   isComboAttackTriggered: 0
   comboChargingSoundDelay: 0.25
@@ -827,7 +832,7 @@ MonoBehaviour:
   - 0.2
   - 0.3
   chargeStartDelay: 0.25
-  staminaDrainRate: 25
+  staminaDrainRate: 20
   chargeProjectileDelay: 0.4
   chargingSoundDelay: 0.25
   swordDrawDelay: 0.2
@@ -836,6 +841,9 @@ MonoBehaviour:
   electricityLoopInterval: 0.63
   electricityLoopStopDelay: 0.2
   earlyExitAttack: {fileID: 0}
+  wasComboInterrupted: 0
+  wasRangedInterrupted: 0
+  requireNewRangedInput: 0
 --- !u!114 &6739346586538796022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -907,6 +915,8 @@ MonoBehaviour:
   isDead: 0
   invulnerabilityTime: 0.2
   isInvulnerable: 0
+  comboInvulnerabilityTime: 1.5
+  isComboInvulnerable: 0
 --- !u!114 &5511253337465613968
 MonoBehaviour:
   m_ObjectHideFlags: 0

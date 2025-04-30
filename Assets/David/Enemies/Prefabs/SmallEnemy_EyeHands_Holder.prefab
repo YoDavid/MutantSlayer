@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: 3440643567496449479}
   - component: {fileID: 6443694963126290252}
   - component: {fileID: 2470467694308827178}
+  - component: {fileID: 2959003568044056461}
   m_Layer: 9
   m_Name: SmallEnemy
   m_TagString: Enemy
@@ -71,7 +72,6 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5156834349442767278}
-  - {fileID: 3712923788542328544}
   m_Father: {fileID: 7867078081392041594}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3248375310025752595
@@ -305,107 +305,20 @@ MonoBehaviour:
   minDistanceFromPlayer: 4
   playerPositionCheckInterval: 0.2
   isFacingLeft: 0
---- !u!1 &6364133983447942810
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3712923788542328544}
-  - component: {fileID: 5854262717921625223}
-  - component: {fileID: 4552819926615439906}
-  - component: {fileID: 5874762841358123814}
-  m_Layer: 9
-  m_Name: EnemyHealthBarCanvas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &3712923788542328544
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6364133983447942810}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.6993906}
-  m_LocalScale: {x: 2.0196755, y: 2.0196755, z: 2.0196755}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 3016576325088695008}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 2174.9038, y: 1140.8839}
-  m_SizeDelta: {x: 1921.1007, y: 1079.3813}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &5854262717921625223
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6364133983447942810}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 1890701361
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
---- !u!114 &4552819926615439906
+--- !u!114 &2959003568044056461
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6364133983447942810}
+  m_GameObject: {fileID: 4354679935050727372}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fd1f27a12e91b342be63b5578e8edea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
---- !u!114 &5874762841358123814
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6364133983447942810}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
+  healthBarPrefab: {fileID: 7777798268813226099, guid: b0cc26a2ff068554f82d3c531bc7e520, type: 3}
+  uiManager: {fileID: 0}
 --- !u!1 &7784693186551805891
 GameObject:
   m_ObjectHideFlags: 0
