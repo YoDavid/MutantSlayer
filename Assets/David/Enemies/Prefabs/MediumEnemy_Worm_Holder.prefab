@@ -143,7 +143,6 @@ GameObject:
   - component: {fileID: 3792425004387424343}
   - component: {fileID: 8002824957288676789}
   - component: {fileID: 7349595776294256227}
-  - component: {fileID: 1544167529607017702}
   m_Layer: 9
   m_Name: MediumEnemy
   m_TagString: Enemy
@@ -375,6 +374,7 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: e4e06320e66f69a4082b02d80ba8fee1, type: 2}
   overrideHealth: 0
   customMaxHealth: 30
+  enemyType: 1
 --- !u!114 &7349595776294256227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,17 +398,3 @@ MonoBehaviour:
   minDistanceFromPlayer: 4
   playerPositionCheckInterval: 0.2
   isFacingLeft: 0
---- !u!114 &1544167529607017702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7234279108582347050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fd1f27a12e91b342be63b5578e8edea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthBarPrefab: {fileID: 7777798268813226099, guid: b0cc26a2ff068554f82d3c531bc7e520, type: 3}
-  uiManager: {fileID: 0}

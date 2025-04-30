@@ -248,11 +248,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98ce6492f3df50e40a36ef9f658803a6, type: 3}
---- !u!4 &250500337 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1264735410416687577, guid: ed5300a798306264f8c832093c79fe55, type: 3}
-  m_PrefabInstance: {fileID: 1917224550}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &297730127
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,10 +603,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1544167529607017702, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
-      propertyPath: uiManager
-      value: 
-      objectReference: {fileID: 250500337}
     - target: {fileID: 6711579145647092560, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_Name
       value: MediumEnemy_Worm_Holder
@@ -704,17 +695,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: SmallEnemy_EyeHands_Holder
       objectReference: {fileID: 0}
-    - target: {fileID: 2959003568044056461, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
-      propertyPath: uiManager
-      value: 
-      objectReference: {fileID: 250500337}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.4
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -149.92
+      value: -151.62
       objectReference: {fileID: 0}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.z

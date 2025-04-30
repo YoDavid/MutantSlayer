@@ -17,6 +17,9 @@ public class EnemyHealth : HealthSystem, IDamageable
     private bool screamedAt50 = false;
     private bool screamedAt25 = false;
 
+    public enum EnemyType { Small, Medium }
+    public EnemyType enemyType; 
+
     protected override void Awake()
     {
         MaxHealth = overrideHealth ? customMaxHealth : config.maxHealth;

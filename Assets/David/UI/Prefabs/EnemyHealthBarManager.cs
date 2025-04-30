@@ -1,27 +1,20 @@
-// EnemyHealthBarManager.cs
 using UnityEngine;
 
 public class EnemyHealthBarManager : MonoBehaviour
 {
     [SerializeField] private GameObject healthBarPrefab;
-    [SerializeField] private Transform healthBarParent;
-    [SerializeField] private Camera mainCamera; // Assign in inspector
+    [SerializeField] private Transform healthBarParent; // Assign a dedicated UI panel
+    [SerializeField] private Camera mainCamera;
 
     private void Start()
     {
-        if (mainCamera == null)
-        {
-            mainCamera = Camera.main;
-        }
-
+        if (mainCamera == null) mainCamera = Camera.main;
         SpawnHealthBarsForAllEnemies();
     }
 
     private void SpawnHealthBarsForAllEnemies()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-
-        foreach (GameObject enemy in enemies)
+        foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
         {
             SpawnHealthBarForEnemy(enemy);
         }
@@ -29,12 +22,12 @@ public class EnemyHealthBarManager : MonoBehaviour
 
     public void SpawnHealthBarForEnemy(GameObject enemy)
     {
-        GameObject healthBar = Instantiate(healthBarPrefab, healthBarParent);
-        UIEnemyHealthBar healthBarScript = healthBar.GetComponent<UIEnemyHealthBar>();
+        var healthBar = Instantiate(healthBarPrefab, healthBarParent);
+        var healthBarScript = healthBar.GetComponent<UIEnemyHealthBar>();
 
-        if (healthBarScript != null)
+        if (healthBarScript != null && enemy.TryGetComponent(out EnemyHealth health))
         {
-            healthBarScript.Initialize(enemy.GetComponent<EnemyHealth>(), mainCamera);
+            healthBarScript.Initialize(health, mainCamera);
         }
     }
 }
