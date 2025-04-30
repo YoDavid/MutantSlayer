@@ -47,12 +47,12 @@ public class SceneLoader : MonoBehaviour
     public void LoadSceneWithFade(string sceneName)
     {
         if (isTransitioningScene) return;
-
         StartCoroutine(FadeAndLoadScene(sceneName));
     }
 
     private IEnumerator FadeAndLoadScene(string sceneName)
     {
+        ResetTimeScale();
         isTransitioningScene = true;  // Mark that a transition is in progress
 
         // Fade out
@@ -138,5 +138,11 @@ public class SceneLoader : MonoBehaviour
                 return true;
         }
         return false;
+    }
+
+    private void ResetTimeScale()
+    {
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
     }
 }

@@ -183,9 +183,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b56d04989811ff5449f2f738e4018885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseSpeed: 0.1
+  baseSpeed: 0.2
   acceleration: 40
   maxSpeed: 50
-  maxLifetime: 5
+  maxLifetime: 10
   damage: 10
   isCritical: 0
+  sizeThreshold: 0.3
+  maxHits: 3
+  timeSlowDuration: 3
+  timeScaleDuringSlow: 0.1

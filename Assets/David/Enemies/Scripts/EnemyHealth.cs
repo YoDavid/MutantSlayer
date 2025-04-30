@@ -27,7 +27,6 @@ public class EnemyHealth : HealthSystem, IDamageable
         if (audioObj != null) audioManager = audioObj.GetComponent<AudioManager>();
     }
 
-    // Implement TakeDamage from IDamageable interface
     public void TakeDamage(int damage, bool isCritical = false, bool isCombo = false, int comboCount = 0)
     {
         if (CurrentHealth <= 0) return;

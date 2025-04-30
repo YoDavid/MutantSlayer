@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
+
     public static AudioManager Instance;
 
     [System.Serializable]
@@ -23,10 +24,11 @@ public class AudioManager : MonoBehaviour
         public AudioSource source;
         public List<Sound> sounds = new List<Sound>();
         [HideInInspector] public Dictionary<string, Sound> soundDict;
+        [HideInInspector] public float originalVolume; // Store original volume for pause/unpause
     }
 
     [SerializeField] private float musicFadeDuration = 0.5f;
-
+    private bool isPaused = false;
 
     [Header("Audio Sources")]
     [SerializeField]
@@ -45,6 +47,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private List<Sound> musicTracks = new List<Sound>();
     private Dictionary<string, Sound> musicDict = new Dictionary<string, Sound>();
     private string currentMusic;
+    private float musicOriginalVolume; // Store original music volume
+
 
     private void Awake()
     {
@@ -60,6 +64,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+
     private void InitializeAudioSystem()
     {
         // Initialize music
@@ -70,6 +75,7 @@ public class AudioManager : MonoBehaviour
                 musicDict.Add(track.name, track);
             }
         }
+        musicOriginalVolume = musicSource.volume;
 
         // Initialize SFX categories
         foreach (var category in categories)
@@ -82,22 +88,21 @@ public class AudioManager : MonoBehaviour
                     category.soundDict.Add(sound.name, sound);
                 }
             }
+            category.originalVolume = category.source.volume;
         }
     }
 
     public void PlaySFX(string categoryName, string soundName, float volumeMultiplier = 1f, float pitchMultiplier = 1f)
     {
+        if (isPaused) return; // Don't play new sounds while paused
+
         foreach (var category in categories)
         {
             if (category.name == categoryName)
             {
                 if (category.soundDict.TryGetValue(soundName, out Sound sound))
                 {
-
-                    // Log the volume being played for this sound
                     float effectiveVolume = sound.volume * volumeMultiplier;
-
-                    // Immediately play the sound
                     category.source.PlayOneShot(sound.clip, effectiveVolume);
                     category.source.pitch = sound.pitch * pitchMultiplier;
                     return;
@@ -108,6 +113,32 @@ public class AudioManager : MonoBehaviour
                 }
                 return;
             }
+        }
+    }
+
+    public void SetPauseState(bool paused)
+    {
+        if (isPaused == paused) return;
+
+        isPaused = paused;
+
+        if (paused)
+        {
+            // Pause all sounds
+            foreach (var category in categories)
+            {
+                category.source.Pause();
+            }
+            musicSource.Pause();
+        }
+        else
+        {
+            // Unpause all sounds
+            foreach (var category in categories)
+            {
+                category.source.UnPause();
+            }
+            musicSource.UnPause();
         }
     }
 

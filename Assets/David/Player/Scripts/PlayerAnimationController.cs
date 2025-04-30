@@ -32,6 +32,8 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void Update()
     {
+        ResetAirborneActions();
+
         if (isHealing)
         {
             healingTimer -= Time.deltaTime;
@@ -45,6 +47,7 @@ public class PlayerAnimationController : MonoBehaviour
                 attackController.SetAttackEnabled(true);
             }
         }
+
     }
 
     public void SetSpeed(float speed)
@@ -101,9 +104,10 @@ public class PlayerAnimationController : MonoBehaviour
         
         bool isInComboAttack = animator.GetBool("ComboAttackStart") || animator.GetBool("IsComboAttacking");
         bool isInRangedAttack = animator.GetBool("RangedAttackStart") || animator.GetBool("RangedAttackLoop") || animator.GetBool("RangedAttackAttack");
-        bool isHealingAnimation = animator.GetBool("IsHealing"); // <<< NEW LINE
+        bool isHealingAnimation = animator.GetBool("IsHealing");
+        bool isPerformingEarlyComboExitAttack = animator.GetBool("EarlyComboExit");
 
-        if (!isInHitStun && !animator.GetBool("IsDashing") && !isInComboAttack && !isInRangedAttack && !isHealingAnimation) // <<< add healing check
+        if (!isInHitStun && !animator.GetBool("IsDashing") && !isInComboAttack && !isInRangedAttack && !isHealingAnimation && !isPerformingEarlyComboExitAttack)
         {
             StartCoroutine(HitStunRoutine());
             FaceAnchor faceAnchor = GetComponentInChildren<FaceAnchor>();
@@ -158,6 +162,32 @@ public class PlayerAnimationController : MonoBehaviour
 
         SetSpeed(move);
         SetDashingState(isDashing);
+
+      
+    }
+
+    public void ResetAirborneActions()
+    {
+        bool shouldReset = !animator.GetBool("IsGrounded");
+
+        if (shouldReset)
+        {
+            animator.SetBool("IsDashing", false);
+            animator.SetBool("IsHealing", false);
+            animator.SetBool("RangedAttackStart", false);
+            animator.SetBool("RangedAttackLoop", false);
+            animator.SetBool("ComboAttackStart", false);
+            animator.SetBool("IsComboAttacking", false);
+            animator.SetBool("SetEarlyComboExit", false);
+
+            // Also reset any related states
+            isHealing = false;
+            healingTimer = 0f;
+
+            // Re-enable movement and attacks if they were disabled
+            movementController.SetMovementEnabled(true);
+            attackController.SetAttackEnabled(true);
+        }
     }
 
     public void TriggerHealingAnimation()
@@ -172,6 +202,10 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetRangedAttackStart(bool value)
     {
+        if (value && !animator.GetBool("IsGrounded"))
+        {
+            value = false;
+        }
         animator.SetBool("RangedAttackStart", value);
 
         if (value)
@@ -183,7 +217,12 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetRangedAttackLoop(bool value)
     {
+        if (value && !animator.GetBool("IsGrounded"))
+        {
+            value = false;
+        }
         animator.SetBool("RangedAttackLoop", value);
+
         if (value)
         {
             movementController.SetMovementEnabled(false);
@@ -204,9 +243,14 @@ public class PlayerAnimationController : MonoBehaviour
     {
         animator.SetBool("RangedAttackAttack", false);
 
-        // Now re-enable movement + attack
-        movementController.SetMovementEnabled(true);
-        attackController.SetAttackEnabled(true);
+        // Start a delayed enable using Invoke
+        Invoke("EnableControls", 0.3f);
+    }
+
+    private void EnableControls()
+    {
+        if (movementController != null) movementController.SetMovementEnabled(true);
+        if (attackController != null) attackController.SetAttackEnabled(true);
     }
 
     public void SetComboAttackStart(bool value)
@@ -233,9 +277,27 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void StopComboAttack()
     {
-        Debug.Log("Stopping Combo Attack");
         animator.SetBool("ComboAttackStart", false);
         animator.SetBool("IsComboAttacking", false);
+        movementController.SetMovementEnabled(true);
+        attackController.SetAttackEnabled(true);
+    }
+
+    public void SetEarlyComboExit(bool value)
+    {
+        animator.SetBool("EarlyComboExit", value);
+
+        if (value)
+        {
+            movementController.SetMovementEnabled(false);
+            attackController.SetAttackEnabled(false);
+        }
+    }
+
+    public IEnumerator ResetEarlyComboExit()
+    {
+        yield return new WaitForSeconds(0.7f);
+        animator.SetBool("EarlyComboExit", false); 
         movementController.SetMovementEnabled(true);
         attackController.SetAttackEnabled(true);
     }
