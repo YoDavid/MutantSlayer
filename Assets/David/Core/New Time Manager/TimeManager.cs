@@ -30,12 +30,14 @@ public class TimeManager : MonoBehaviour
     {
         isPaused = true;
         SetTimeScale(pauseTimeScale);
+        AudioManager.Instance?.SetPauseState(true); // Add this line
     }
 
     public void ResumeGame()
     {
         isPaused = false;
         SetTimeScale(normalTimeScale);
+        AudioManager.Instance?.SetPauseState(false); // Add this line
     }
 
     public void TemporarilySlowTime(float newTimeScale, float duration)

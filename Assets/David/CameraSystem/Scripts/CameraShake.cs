@@ -54,6 +54,7 @@ public class CameraShake : MonoBehaviour
     {
         if (!isShaking)
         {
+            Debug.Log("Shake");
             originalPosition = transform.position;
             StartCoroutine(Shake(normalAttackShakeDuration, normalAttackMinshakeMagnitude, normalAttackMaxshakeMagnitude, normalAttackShakeMagnitude, normalAttackDampingSpeed));
         }
@@ -63,6 +64,7 @@ public class CameraShake : MonoBehaviour
     {
         if (!isShaking)
         {
+            Debug.Log("Shake");
             originalPosition = transform.position;
             StartCoroutine(Shake(criticalAttackShakeDuration, criticalAttackMinshakeMagnitude, criticalAttackMaxshakeMagnitude, criticalAttackShakeMagnitude, criticalAttackDampingSpeed));
         }
@@ -72,6 +74,7 @@ public class CameraShake : MonoBehaviour
     {
         if (!isShaking)
         {
+            Debug.Log("Shake");
             originalPosition = transform.position;
             StartCoroutine(Shake(comboShakeDuration, comboMinShakeMagnitude, comboMaxShakeMagnitude, comboShakeMagnitude, comboDampingSpeed));
         }
@@ -81,6 +84,7 @@ public class CameraShake : MonoBehaviour
     {
         if (!isShaking)
         {
+            Debug.Log("Shake");
             originalPosition = transform.position;
             StartCoroutine(Shake(aoeShakeDuration, aoeMinShakeMagnitude, aoeMaxShakeMagnitude, aoeShakeMagnitude, aoeDampingSpeed));
         }
@@ -90,6 +94,7 @@ public class CameraShake : MonoBehaviour
     {
         if (!isShaking)
         {
+            Debug.Log("Shake");
             originalPosition = transform.position;
             StartCoroutine(Shake(jumpSmashShakeDuration, jumpSmashMinShakeMagnitude, jumpSmashMaxShakeMagnitude, jumpSmashShakeMagnitude, jumpSmashDampingSpeed));
         }

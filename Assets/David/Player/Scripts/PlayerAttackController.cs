@@ -621,7 +621,6 @@ public class PlayerAttackController : MonoBehaviour
     {
         yield return new WaitForSeconds(chargeProjectileDelay);
         AudioManager.Instance.PlaySwing_00();
-        Debug.Log("Playing swing");
         AudioManager.Instance.PlayPlayerReleaseRangeGrunt();
 
         if (chargeProjectilePrefab != null && projectileSpawnPoint != null)
@@ -648,12 +647,14 @@ public class PlayerAttackController : MonoBehaviour
             ChargeProjectile cp = projectile.GetComponent<ChargeProjectile>();
             if (cp != null)
             {
-                bool isFacingRight = transform.localScale.x > 0f;
+                // Changed this to use the player's facing direction more reliably
+                bool isFacingRight = movementController.IsFacingRight(); // Or your preferred method to get facing
                 cp.damage = damage;
                 cp.Launch(isFacingRight);
             }
         }
     }
+
 
     private IEnumerator ResetRangedAttackState()
     {

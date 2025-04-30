@@ -47,8 +47,6 @@ public class PlayerMovementController : MonoBehaviour
     private float jumpTimeCounter;
     private bool isMovementEnabled = true;
 
-    private int lockedFacingDirection;
-
 
     [Header("Step Sound Settings")]
     [SerializeField] private float stepInterval = 0.4f; // How often steps play
@@ -72,7 +70,6 @@ public class PlayerMovementController : MonoBehaviour
 
     private void HandleInput()
     {
-
         if (!isMovementEnabled) return;
 
         float move = 0f;
@@ -82,15 +79,8 @@ public class PlayerMovementController : MonoBehaviour
             else if (Input.GetKey(KeyCode.D)) move = 1f;
         }
 
-        // Check for dash cancel (opposite direction input during dash)
-        if (isDashing && Mathf.Sign(move) == -Mathf.Sign(lockedFacingDirection) && move != 0)
-        {
-            StopDashEarly();
-        }
-
         Move(move);
         HandleStepSound(move);
-
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -173,11 +163,7 @@ public class PlayerMovementController : MonoBehaviour
     private void Move(float move)
     {
         HandleFlip(move);
-
-        // Skip movement calculations if dashing
-        if (isDashing) return;
-
-        float targetSpeed = move * moveSpeed; // Removed dash multiplier from here
+        float targetSpeed = move * (isDashing ? moveSpeed * dashMoveSpeedMultiplier : moveSpeed);
 
         if (Mathf.Abs(rb.velocity.x - targetSpeed) > 0.1f &&
             Mathf.Abs(rb.velocity.x) < moveSpeed * 3f)
@@ -187,16 +173,8 @@ public class PlayerMovementController : MonoBehaviour
         }
     }
 
-
     private void HandleFlip(float move)
     {
-        if (isDashing)
-        {
-            // Force maintain locked direction during dash
-            transform.localScale = new Vector3(lockedFacingDirection, 1, 1);
-            return;
-        }
-
         if (move < 0) facingDirection = -1;
         else if (move > 0) facingDirection = 1;
         transform.localScale = new Vector3(facingDirection, 1, 1);
@@ -238,39 +216,23 @@ public class PlayerMovementController : MonoBehaviour
 
         isDashing = true;
         lastDashTime = Time.time;
-        lockedFacingDirection = facingDirection;
 
         playerHurtbox.SetInvincible(true);
-        rb.velocity = new Vector2(lockedFacingDirection * dashSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(facingDirection * dashSpeed, rb.velocity.y);
 
         AudioManager.Instance.PlayDash();
+
         StartCoroutine(StopDash());
     }
-
-    private void StopDashEarly()
-    {
-        StopCoroutine("StopDash");
-        isDashing = false;
-        lastDashEndTime = Time.time;
-        playerHurtbox.SetInvincible(false);
-
-        // Preserve some momentum if desired (optional)
-        rb.velocity = new Vector2(rb.velocity.x * 0.5f, rb.velocity.y);
-    }
-
 
     private IEnumerator StopDash()
     {
         yield return new WaitForSeconds(dashDuration);
 
-        // Only stop dash if it wasn't already cancelled
-        if (isDashing)
-        {
-            rb.velocity = new Vector2(0, rb.velocity.y);
-            playerHurtbox.SetInvincible(false);
-            isDashing = false;
-            lastDashEndTime = Time.time;
-        }
+        playerHurtbox.SetInvincible(false);
+        rb.velocity = new Vector2(0, rb.velocity.y);
+        isDashing = false;
+        lastDashEndTime = Time.time;
     }
 
     public void SetMovementEnabled(bool enabled)
@@ -301,5 +263,8 @@ public class PlayerMovementController : MonoBehaviour
         }
     }
 
-
+    public bool IsFacingRight()
+    {
+        return facingDirection == 1;
+    }
 }

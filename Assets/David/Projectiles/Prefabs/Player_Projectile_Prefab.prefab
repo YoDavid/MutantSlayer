@@ -169,7 +169,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -11.793182, y: -2.9482899}
-  m_Size: {x: 9.885803, y: 35.06342}
+  m_Size: {x: 10, y: 35}
   m_Direction: 0
 --- !u!114 &-9220976090336000816
 MonoBehaviour:
@@ -186,10 +186,44 @@ MonoBehaviour:
   baseSpeed: 0.2
   acceleration: 40
   maxSpeed: 50
+  hitSpeed: 10
   maxLifetime: 5
   damage: 10
   isCritical: 0
+  adjustColliderDirection: 1
+  rightFacingOffset: {x: 0, y: 0}
+  rightFacingSize: {x: 10, y: 35}
+  leftFacingOffset: {x: 0, y: 0}
+  leftFacingSize: {x: 10, y: 35}
+  rightFacingDirection: 1
+  leftFacingDirection: 1
   sizeThreshold: 0.3
-  maxHits: 3
-  timeSlowDuration: 1
-  timeScaleDuringSlow: 0.2
+  enableTimeEffects: 1
+  enableTimeSlowOnSpawn: 1
+  delayTimeSlowAfterSpawn: 0.1
+  spawnTimeSlowDuration: 1
+  spawnTimeScale: 0.3
+  enableTimeStopOnHit: 1
+  hitTimeStopDuration: 0.03
+  postHitTimeScale: 0.15
+  postHitSlowDuration: 0.07
+  enableHitSlowdown: 1
+  stopAccelerationAfterHit: 1
+  maxHits: 4
+  minTimeBetweenHits: 0.07
+  initialScale: {x: 0, y: 0, z: 0}
+  startScale: {x: 0, y: 0, z: 0}
+  calculatedSize: 0
+  isLargeEnough: 0
+  lifetime: 0
+  currentSpeed: 0
+  rb: {fileID: 7027763459934341977}
+  capsuleCollider: {fileID: -6220768918096555683}
+  isMovingRight: 0
+  soundPlayed: 0
+  hitCount: 0
+  hasHitEnemy: 0
+  originalOffset: {x: 0, y: 0}
+  originalSize: {x: 0, y: 0}
+  lastHitTime: 0
+  lastSoundPlayTime: 0

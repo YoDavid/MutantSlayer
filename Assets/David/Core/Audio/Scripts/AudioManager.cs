@@ -28,7 +28,7 @@ public class AudioManager : MonoBehaviour
     }
 
     [SerializeField] private float musicFadeDuration = 0.5f;
-    private bool isPaused = false;
+    [SerializeField] private bool isPaused = false;
 
     [Header("Audio Sources")]
     [SerializeField]
@@ -94,7 +94,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX(string categoryName, string soundName, float volumeMultiplier = 1f, float pitchMultiplier = 1f)
     {
-        if (isPaused) return; // Don't play new sounds while paused
+        if (isPaused && categoryName != "UI") return;
 
         foreach (var category in categories)
         {
@@ -124,20 +124,19 @@ public class AudioManager : MonoBehaviour
 
         if (paused)
         {
-            // Pause all sounds
+            // Stop all sounds EXCEPT UI
             foreach (var category in categories)
             {
-                category.source.Pause();
+                if (category.name != "UI") // Skip UI sounds
+                {
+                    category.source.Stop();
+                }
             }
-            musicSource.Pause();
+            musicSource.Pause(); // Pause music (optional)
         }
         else
         {
-            // Unpause all sounds
-            foreach (var category in categories)
-            {
-                category.source.UnPause();
-            }
+            // Unpause music (if needed)
             musicSource.UnPause();
         }
     }
