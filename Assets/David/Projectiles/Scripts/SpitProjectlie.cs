@@ -74,6 +74,8 @@ public class SpitProjectile : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (playerHurtBoxCollider != null) { 
+
         if (collision == playerHurtBoxCollider)
         {
             if (playerHealth != null)
@@ -82,6 +84,7 @@ public class SpitProjectile : MonoBehaviour
                 playerHealth.TakeDamage(damage, isCritical); 
             }
             Destroy(gameObject);
+        }
         }
     }
 

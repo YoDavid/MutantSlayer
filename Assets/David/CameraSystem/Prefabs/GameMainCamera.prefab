@@ -180,14 +180,14 @@ MonoBehaviour:
     name: Regular Enemy
     enemyTag: Enemy
     detectionRange: 28.5
-    zoomSize: 13
-    yOffset: 4
+    zoomSize: 17
+    yOffset: 7
     gizmoColor: {r: 1, g: 0, b: 0, a: 1}
   bossEnemyProfile:
     name: Boss Enemy
     enemyTag: BossEnemy
     detectionRange: 55
-    zoomSize: 18
+    zoomSize: 20
     yOffset: 5
     gizmoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   zoomSmoothTime: 0.3

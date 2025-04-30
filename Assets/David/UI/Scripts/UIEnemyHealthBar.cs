@@ -23,6 +23,12 @@ public class UIEnemyHealthBar : MonoBehaviour
         mainCamera = cam;
         rectTransform = GetComponent<RectTransform>();
 
+        CameraParallax parallaxCam = FindObjectOfType<CameraParallax>();
+        if (parallaxCam != null)
+        {
+            mainCamera = parallaxCam.GetComponent<Camera>();
+        }
+
         // Set the correct Y-offset based on enemy type
         if (enemyHealth.enemyType == EnemyHealth.EnemyType.Small)
             currentYOffset = smallEnemyYOffset;
