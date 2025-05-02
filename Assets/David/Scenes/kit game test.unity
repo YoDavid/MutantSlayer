@@ -2769,7 +2769,11 @@ PrefabInstance:
       objectReference: {fileID: 542809628}
     - target: {fileID: 2342704723376403555, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: _maxHealth
-      value: 10
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2342704723376403555, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: _currentHealth
+      value: 999
       objectReference: {fileID: 0}
     - target: {fileID: 2616876883140300564, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: attackDurations.Array.data[2]
@@ -2829,11 +2833,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6021447871000286383, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1277
+      value: 3057.3
       objectReference: {fileID: 0}
     - target: {fileID: 6021447871000286383, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 157.9
+      value: -768
       objectReference: {fileID: 0}
     - target: {fileID: 6163233028793770750, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_SortingLayer
@@ -2844,8 +2848,16 @@ PrefabInstance:
       value: 568015659
       objectReference: {fileID: 0}
     - target: {fileID: 6739346586538796022, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: dashSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6739346586538796022, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: jumpForce
       value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 6739346586538796022, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: dashMoveSpeedMultiplier
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7080602009743092478, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_IsTrigger
