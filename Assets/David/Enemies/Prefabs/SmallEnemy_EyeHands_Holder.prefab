@@ -112,7 +112,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 568015659
-  m_SortingLayer: 11
+  m_SortingLayer: 12
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8ec86a1189cfebb42bd711a85d1a5acb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -297,11 +297,11 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 381bf157cb8e54749af0658368dc3e25, type: 2}
   patrolSettings:
     enablePatrol: 1
-    patrolLeftBound: -10
-    patrolRightBound: 10
-    patrolSpeed: 1.5
+    patrolLeftBound: -11
+    patrolRightBound: 11
+    patrolSpeed: 2
     idleTimeAtEdges: 1
-  maxChaseRangeFromBounds: 0
+  maxChaseRangeFromBounds: 4.3
   minDistanceFromPlayer: 4
   playerPositionCheckInterval: 0.2
   isFacingLeft: 0
