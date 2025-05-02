@@ -100,12 +100,9 @@ MonoBehaviour:
   spikePrefabSmall: {fileID: 8616781862503564922, guid: a3099af109fa97641a18284338e12c1c, type: 3}
   spikePrefabMedium: {fileID: 3132921814636310096, guid: b5ba91cd9d62dfe4fade00d1a48bdfe0, type: 3}
   spikePrefabLarge: {fileID: 2326690689521592541, guid: b95d64af36804e04fa60273002559d39, type: 3}
-  warningPrefab: {fileID: 0}
-  spawnRangeX: 5
-  warningDuration: 0.3
-  warningYPosition: 0.3
-  smashMinCount: 3
-  smashMaxCount: 7
-  aoeSmallCount: 1
-  aoeMediumCount: 1
-  aoeLargeCount: 1
+  warningPrefab: {fileID: 9044719592563161829, guid: 7b0b5d73d16548848ad03e833a542f53, type: 3}
+  spawnRangeX: 32
+  warningDuration: 3
+  warningYPosition: -424
+  smashMinCount: 2
+  smashMaxCount: 4

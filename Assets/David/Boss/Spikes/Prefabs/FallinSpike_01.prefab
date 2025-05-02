@@ -73,9 +73,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 568015659
+  m_SortingLayer: 12
+  m_SortingOrder: 99
   m_Sprite: {fileID: 21300000, guid: 828cdea1dea708a479f704a732526997, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -163,5 +163,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   breakEffectPrefab: {fileID: 4647388484711977732, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
-  crashSound: {fileID: 8300000, guid: 4fe418d90d276944e9a115e7aa230918, type: 3}
-  audioSource: {fileID: 0}

@@ -39,6 +39,7 @@ public class UIManager : MonoBehaviour
 
         if (bossHealthBarContainer != null)
             bossHealthBarContainer.SetActive(false);
+
     }
 
     private void Update()
