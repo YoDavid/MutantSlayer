@@ -75,6 +75,9 @@ TagManager:
   - name: 9-InbiuldPalatform
     uniqueID: 2481495577
     locked: 0
+  - name: Enemy
+    uniqueID: 4287740421
+    locked: 0
   - name: 10-BuildOut
     uniqueID: 1289081979
     locked: 0
