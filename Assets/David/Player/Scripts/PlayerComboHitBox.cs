@@ -22,6 +22,7 @@ public class PlayerComboHitbox : MonoBehaviour
     private PlayerHealth playerHealth;
     private PlayerMovementController playerMovement;
     private PlayerAnimationController playerAnimation;
+    private BloodSplashParticlesPool bloodSplashParticlesPool;
 
     // State
     private float comboStartTime;
@@ -56,6 +57,7 @@ public class PlayerComboHitbox : MonoBehaviour
         damageDealer.config = damageConfig;
 
         cameraShake = FindObjectOfType<CameraShake>();
+        bloodSplashParticlesPool = FindObjectOfType<BloodSplashParticlesPool>();
         playerHealth = GetComponentInParent<PlayerHealth>();
         playerMovement = GetComponentInParent<PlayerMovementController>();
         playerAnimation = GetComponentInParent<PlayerAnimationController>();
@@ -206,7 +208,7 @@ public class PlayerComboHitbox : MonoBehaviour
 
             if (spawnCount < 3) // Only instantiate up to 3 times
             {
-                SpawnHitParticles(hit.position);
+                bloodSplashParticlesPool.PlayHitSplash(hit.position);
                 spawnCount++;
             }
 
@@ -245,16 +247,5 @@ public class PlayerComboHitbox : MonoBehaviour
         AudioManager.Instance.PlaySFX("Player", $"sfx_player_attack_hit_0{rand}");
     }
 
-    private void SpawnHitParticles(Vector3 position)
-    {
-        if (hitParticlePrefab == null) return;
 
-        // Random small offset
-        float randomX = Random.Range(-0.3f, 0.3f);
-        float randomY = Random.Range(-0.1f, 0.1f);
-
-        Vector3 spawnPosition = position + new Vector3(randomX, randomY - 2f, 0f);
-
-        Instantiate(hitParticlePrefab, spawnPosition, Quaternion.identity);
-    }
 }

@@ -37,7 +37,7 @@ public class PlayerEarlyExitAttack : MonoBehaviour
         cameraShake = FindAnyObjectByType<CameraShake>();
         pauseMenuController = FindAnyObjectByType<PauseMenuController>();
         playerMovement = GetComponentInParent<PlayerMovementController>();
-        playerComboHitbox = FindAnyObjectByType<PlayerComboHitbox>(); // Get reference to ComboHitbox
+        playerComboHitbox = FindAnyObjectByType<PlayerComboHitbox>(); 
     }
 
     private void Update()
@@ -55,7 +55,6 @@ public class PlayerEarlyExitAttack : MonoBehaviour
             leftMouseButtonHoldTime = 0f; // Reset hold time after button release
         }
     }
-
 
     public void ExecuteEarlyExit()
     {
@@ -109,7 +108,6 @@ public class PlayerEarlyExitAttack : MonoBehaviour
         CleanUpAttack();
     }
 
-    // Helper method to check pause state
     private bool IsGamePaused()
     {
         return pauseMenuController != null && pauseMenuController.IsVisible;

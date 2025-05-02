@@ -13,19 +13,19 @@ public class HealingParticlesPool : MonoBehaviour
     {
         for (int i = 0; i < poolSize; i++)
         {
-            GameObject obj = Instantiate(particlePrefab);
+            GameObject obj = Instantiate(particlePrefab, transform);
             obj.SetActive(false);
             particlePool.Enqueue(obj);
         }
     }
 
+
     public void PlayParticles(Vector3 position)
     {
-        GameObject particle = particlePool.Count > 0 ? particlePool.Dequeue() : Instantiate(particlePrefab);
+        GameObject particle = particlePool.Count > 0 ? particlePool.Dequeue() : Instantiate(particlePrefab, transform);
         particle.transform.position = position;
         particle.SetActive(true);
 
-        // Optional: Reset the particle system
         var ps = particle.GetComponent<ParticleSystem>();
         ps?.Play();
 

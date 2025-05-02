@@ -40,7 +40,6 @@ public class PlayerAttackHitbox : MonoBehaviour
         bool isCritical = false;
         Vector3 hitPosition = transform.position; // Default fallback
 
-        // Handle both small enemies and bosses
         if (other.TryGetComponent<EnemyHealth>(out var enemyHealth))
         {
             var (damage, critical) = damageDealer.CalculateDamage();

@@ -7,6 +7,7 @@ public class EnemyHealth : HealthSystem, IDamageable
     public EnemyConfig config;
     [SerializeField] private bool overrideHealth = false;
     [SerializeField] private int customMaxHealth = 30;
+    private BloodSplashParticlesPool bloodSplashPool;
 
     // Components
     private AudioManager audioManager;
@@ -32,6 +33,9 @@ public class EnemyHealth : HealthSystem, IDamageable
         GameObject audioObj = GameObject.Find("AudioManager");
         if (audioObj != null)
             audioManager = audioObj.GetComponent<AudioManager>();
+
+        if (bloodSplashPool == null)
+            bloodSplashPool = FindObjectOfType<BloodSplashParticlesPool>();
     }
 
     public void TakeDamage(int damage, bool isCritical = false, bool isCombo = false, int comboCount = 0)
@@ -101,11 +105,17 @@ public class EnemyHealth : HealthSystem, IDamageable
 
     protected override void Die()
     {
+        if (CurrentHealth > 0) return;
+
         GetComponent<Collider2D>().enabled = false;
-        base.Die();
+
+        if (bloodSplashPool != null)
+            bloodSplashPool.PlayDeathSplash(transform.position);
 
         GameObject toDestroy = transform.parent != null ? transform.parent.gameObject : gameObject;
         Destroy(toDestroy, 1f);
+
+        OnDeath?.Invoke();
     }
 
     protected override IEnumerator BlinkEffect()

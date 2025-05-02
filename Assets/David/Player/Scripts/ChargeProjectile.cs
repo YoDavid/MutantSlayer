@@ -133,7 +133,6 @@ public class ChargeProjectile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Enemy") && !other.CompareTag("BossEnemy")) return;
-        Debug.Log("Hit Enemy");
         HandleEnemyHit(other);
     }
     #endregion
@@ -197,10 +196,6 @@ public class ChargeProjectile : MonoBehaviour
     {
         if (Time.time - lastHitTime < minTimeBetweenHits)
             return;
-
-        Debug.Log($"Hit #{hitCount + 1} at {Time.time:F2}s | " +
-                 $"Enemy: {enemy.name} | " +
-                 $"Projectile Speed: {currentSpeed:F1}");
 
         lastHitTime = Time.time;
         ShowDamagePopup(enemy);

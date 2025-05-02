@@ -17,47 +17,75 @@ public class BloodSplashParticlesPool : MonoBehaviour
 
     private void Awake()
     {
-        for (int i = 0; i < deathPoolSize; i++)
-        {
-            var obj = Instantiate(deathSplashPrefab, transform);
-            obj.SetActive(false);
-            deathPool.Enqueue(obj);
-        }
+        // Ensure this object is active
+        gameObject.SetActive(true);
 
-        for (int i = 0; i < hitPoolSize; i++)
+        InitializePool(deathPool, deathSplashPrefab, deathPoolSize);
+        InitializePool(hitPool, hitSplashPrefab, hitPoolSize);
+    }
+
+    private void InitializePool(Queue<GameObject> pool, GameObject prefab, int size)
+    {
+        for (int i = 0; i < size; i++)
         {
-            var obj = Instantiate(hitSplashPrefab, transform);
+            var obj = Instantiate(prefab, transform);
             obj.SetActive(false);
-            hitPool.Enqueue(obj);
+            pool.Enqueue(obj);
         }
     }
 
     public void PlayDeathSplash(Vector3 position)
     {
+        if (!gameObject.activeInHierarchy)
+            gameObject.SetActive(true);
+
+        Debug.Log("Death splash"); // <-- Added debug
         PlaySplash(deathPool, deathSplashPrefab, position);
     }
 
     public void PlayHitSplash(Vector3 position)
     {
+        if (!gameObject.activeInHierarchy)
+            gameObject.SetActive(true);
+
+        Debug.Log("Hit splash"); // <-- Added debug
         PlaySplash(hitPool, hitSplashPrefab, position);
     }
 
     private void PlaySplash(Queue<GameObject> pool, GameObject prefab, Vector3 position)
     {
-        GameObject obj = pool.Count > 0 ? pool.Dequeue() : Instantiate(prefab, transform);
+        if (pool == null || prefab == null) return;
+
+        // Instantiate without parenting if this object is persistent
+        bool isPersistent = gameObject.scene.name == "DontDestroyOnLoad";
+        GameObject obj = pool.Count > 0 ? pool.Dequeue() :
+            (isPersistent ? Instantiate(prefab) : Instantiate(prefab, transform));
+
+        if (obj == null) return;
+
         obj.transform.position = position;
         obj.SetActive(true);
 
         var ps = obj.GetComponent<ParticleSystem>();
-        if (ps != null) ps.Play();
-
-        StartCoroutine(ReturnToPoolAfterDelay(obj, 0.5f, pool));
+        if (ps != null)
+        {
+            ps.Play();
+            StartCoroutine(ReturnToPoolAfterDelay(obj, ps.main.duration, pool));
+        }
+        else
+        {
+            StartCoroutine(ReturnToPoolAfterDelay(obj, 0.5f, pool));
+        }
     }
 
     private IEnumerator ReturnToPoolAfterDelay(GameObject obj, float delay, Queue<GameObject> pool)
     {
         yield return new WaitForSeconds(delay);
-        obj.SetActive(false);
-        pool.Enqueue(obj);
+
+        if (obj != null)
+        {
+            obj.SetActive(false);
+            if (pool != null) pool.Enqueue(obj);
+        }
     }
 }

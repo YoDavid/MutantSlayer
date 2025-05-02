@@ -738,7 +738,6 @@ public class PlayerAttackController : MonoBehaviour
     private void ResetNormalAttackCount()
     {
         attackCount = 0;
-        Debug.Log("Combo Reset");
         animationController.SetAttackState(0);
     }
     #endregion

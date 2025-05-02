@@ -54,7 +54,6 @@ public class CameraShake : MonoBehaviour
     {
         if (!isShaking)
         {
-            Debug.Log("Shake");
             originalPosition = transform.position;
             StartCoroutine(Shake(normalAttackShakeDuration, normalAttackMinshakeMagnitude, normalAttackMaxshakeMagnitude, normalAttackShakeMagnitude, normalAttackDampingSpeed));
         }
