@@ -618,13 +618,29 @@ PrefabInstance:
       propertyPath: healingController
       value: 
       objectReference: {fileID: 2101069020}
+    - target: {fileID: 237825488570196162, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: healingParticlePool
+      value: 
+      objectReference: {fileID: 6943169161548024556}
+    - target: {fileID: 237825488570196162, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: healingEffectYOffset
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 237825488570196162, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: healingEffectSpawnPoint
+      value: 
+      objectReference: {fileID: 1675225084}
     - target: {fileID: 2616876883140300564, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: staminaBar
       value: 
       objectReference: {fileID: 221344254}
+    - target: {fileID: 2785907083817325805, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: bloodSplashPool
+      value: 
+      objectReference: {fileID: 2001051352}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -62.4
+      value: -62.446815
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -632,23 +648,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.13252664
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9999701
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.0077357395
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -656,7 +672,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -0.886
       objectReference: {fileID: 0}
     - target: {fileID: 2998746881342463500, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -698,6 +714,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MediumEnemy_Worm_Holder
       objectReference: {fileID: 0}
+    - target: {fileID: 8002824957288676789, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+      propertyPath: bloodSplashPool
+      value: 
+      objectReference: {fileID: 2001051352}
     - target: {fileID: 8405502297264867710, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
       propertyPath: m_LocalPosition.x
       value: 40.9
@@ -743,6 +763,39 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13062b466be219e4e8f69956c0b13338, type: 3}
+--- !u!1 &1553851510
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1553851511}
+  m_Layer: 0
+  m_Name: Pools
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1553851511
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553851510}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -68.6485, y: 5.087186, z: -2.8634896}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 146688797606091836}
+  - {fileID: 2001051351}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1605158232
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,6 +839,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SmallEnemy_EyeHands_Holder
       objectReference: {fileID: 0}
+    - target: {fileID: 6115125865990785060, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
+      propertyPath: bloodSplashPool
+      value: 
+      objectReference: {fileID: 2001051352}
     - target: {fileID: 7867078081392041594, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.4
@@ -831,6 +888,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
+--- !u!4 &1675225084 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6021447871000286383, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+  m_PrefabInstance: {fileID: 1247220054}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1917224550
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -969,6 +1031,22 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
+--- !u!4 &2001051351 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5997200540804497192, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+  m_PrefabInstance: {fileID: 6955832700836453676}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2001051352 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5906679973359978872, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+  m_PrefabInstance: {fileID: 6955832700836453676}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69d3200ceb3eeee48ae41e419d3fef5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2072783231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1017,6 +1095,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
+      propertyPath: categories.Array.data[6].sounds.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 25579fe5dc0cffb4c94c4e4dfd492d26, type: 3}
     - target: {fileID: 5587642829418137772, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: m_Name
       value: AudioManager
@@ -1037,6 +1119,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 740eadc728e510440aea7321e96e3204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &146688797606091836 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5387575253662398073, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+  m_PrefabInstance: {fileID: 5246033348394773061}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1209708696957831949
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1208,6 +1295,139 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d11fe603f8c08d4980f9f0577f1f036, type: 3}
+--- !u!1001 &5246033348394773061
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1553851511}
+    m_Modifications:
+    - target: {fileID: 2792436067403333810, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+      propertyPath: m_Name
+      value: HealingParticlesPool
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387575253662398073, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387575253662398073, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387575253662398073, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387575253662398073, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387575253662398073, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387575253662398073, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387575253662398073, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387575253662398073, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387575253662398073, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387575253662398073, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+--- !u!114 &6943169161548024556 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2924718632722768041, guid: 0f48ba46721938a4eb534f8b074f3682, type: 3}
+  m_PrefabInstance: {fileID: 5246033348394773061}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c5c851e71ef234597469d0cae5e995, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &6955832700836453676
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1553851511}
+    m_Modifications:
+    - target: {fileID: 1547469088672289648, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: m_Name
+      value: BloodSplashParticlesPool
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906679973359978872, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: hitSplashPrefab
+      value: 
+      objectReference: {fileID: 7083328916205589662, guid: 5c10bf981bb4654419448c8c69696181, type: 3}
+    - target: {fileID: 5906679973359978872, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: deathSplashPrefab
+      value: 
+      objectReference: {fileID: 4501868321521990437, guid: 361828f1cec2e764e8d1417f686a9f47, type: 3}
+    - target: {fileID: 5997200540804497192, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5997200540804497192, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5997200540804497192, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5997200540804497192, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5997200540804497192, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5997200540804497192, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5997200540804497192, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5997200540804497192, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5997200540804497192, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5997200540804497192, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6ad34ac84a5cf4549b3c51670530db67, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1228,3 +1448,4 @@ SceneRoots:
   - {fileID: 1320005972}
   - {fileID: 5231317659386515321}
   - {fileID: 5022026362713220708}
+  - {fileID: 1553851511}

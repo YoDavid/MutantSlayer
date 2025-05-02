@@ -11,7 +11,7 @@ public class BossHealth : MonoBehaviour, IDamageable
     [SerializeField] private Vector3 popupOffset = new Vector3(0, 2f, 0);
     private Coroutine blinkRoutine;
 
-    [SerializeField] private GameObject bloodSplashPrefab;
+    [SerializeField] private BloodSplashParticlesPool bloodSplashPool;
 
     public int currentHealth;
     private SpriteRenderer spriteRenderer;
@@ -20,6 +20,7 @@ public class BossHealth : MonoBehaviour, IDamageable
     public event System.Action<int> OnHealthChanged;
     public event System.Action OnDeath;
     public int MaxHealth => maxHealth;
+
 
     private void Awake()
     {
@@ -90,11 +91,10 @@ public class BossHealth : MonoBehaviour, IDamageable
 
     private void Die()
     {
-        if (bloodSplashPrefab != null)
+        if (bloodSplashPool != null)
         {
-            Instantiate(bloodSplashPrefab, transform.position, Quaternion.identity);
+            bloodSplashPool.PlayDeathSplash(transform.position);
         }
-
         OnDeath?.Invoke();
         Destroy(gameObject);
     }

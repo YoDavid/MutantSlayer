@@ -12,6 +12,11 @@ public class PlayerHealingController : MonoBehaviour
     [SerializeField] private float holdTimer = 0f;
     [SerializeField] private bool isHolding = false;
 
+    [SerializeField] private HealingParticlesPool healingParticlePool;
+    [SerializeField] private Transform healingEffectSpawnPoint;
+    [SerializeField] private float healingEffectYOffset = 1.0f;
+
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
@@ -47,11 +52,17 @@ public class PlayerHealingController : MonoBehaviour
             // Heal if the health is not full and there are healing charges available
             if (holdTimer < holdThreshold && playerHealth.CurrentHealth < playerHealth.MaxHealth && healingController.CanHeal)
             {
-                playerHealth.Heal(Mathf.RoundToInt(playerHealth.MaxHealth * healPercentage)); // Heal by percentage of max health
-                healingController.UseHealing(); // Use one healing charge
+                playerHealth.Heal(Mathf.RoundToInt(playerHealth.MaxHealth * healPercentage));
+                healingController.UseHealing();
+
+                Vector3 spawnPosition = healingEffectSpawnPoint.position + new Vector3(0, healingEffectYOffset, 0);
+                healingParticlePool.PlayParticles(spawnPosition);
+
             }
 
             holdTimer = 0f;
         }
     }
+
+
 }

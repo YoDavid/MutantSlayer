@@ -9,6 +9,7 @@ public class HealthSystem : MonoBehaviour
 
     [Header("Death Effects")]
     [SerializeField] private GameObject bloodSplashPrefab;  // Keep here
+    [SerializeField] private BloodSplashParticlesPool bloodSplashPool;
 
     public int MaxHealth
     {
@@ -56,7 +57,8 @@ public class HealthSystem : MonoBehaviour
 
     protected virtual void Die()
     {
-        Instantiate(bloodSplashPrefab, transform.position, Quaternion.identity);
+        if (bloodSplashPool != null)
+            bloodSplashPool.PlayDeathSplash(transform.position);
         Destroy(gameObject);
         OnDeath?.Invoke();
     }

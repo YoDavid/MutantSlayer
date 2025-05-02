@@ -11,10 +11,9 @@ GameObject:
   - component: {fileID: 3980730739955672650}
   - component: {fileID: 1570438300503813919}
   - component: {fileID: 1685739033637109096}
-  - component: {fileID: 1791742191414798498}
   - component: {fileID: -6954329372850706597}
   m_Layer: 5
-  m_Name: BloodSplash
+  m_Name: OnDeathBloodSplash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4856,7 +4855,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1890701361
-  m_SortingLayer: 8
+  m_SortingLayer: 13
   m_SortingOrder: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -4890,18 +4889,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &1791742191414798498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4501868321521990437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27b8849ace479e04ebc6100d5e5c0d73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &-6954329372850706597
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4941,7 +4928,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1890701361
-  m_SortingLayer: 8
+  m_SortingLayer: 13
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

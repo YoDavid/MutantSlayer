@@ -6,7 +6,7 @@ public class PlayerAttackHitbox : MonoBehaviour
     [Header("Attack Settings")]
     [SerializeField] private DamageConfig damageConfig;
     [SerializeField] private float hitCooldown = 0.3f;
-    [SerializeField] private GameObject hitParticlePrefab; // <-- Assign this in the Inspector
+    [SerializeField] private BloodSplashParticlesPool bloodSplashPool;
 
     private float lastHitTime;
 
@@ -91,12 +91,13 @@ public class PlayerAttackHitbox : MonoBehaviour
 
     private void SpawnHitParticles(Vector3 position)
     {
-        if (hitParticlePrefab != null)
+        if (bloodSplashPool != null)
         {
-            // Adjust the Y position to be 2 units lower
             position.y -= 2f;
-            Instantiate(hitParticlePrefab, position, hitParticlePrefab.transform.rotation);
+            bloodSplashPool.PlayHitSplash(position);
         }
+
+
     }
 
 }
