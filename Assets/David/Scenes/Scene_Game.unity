@@ -4100,6 +4100,7 @@ MonoBehaviour:
   targetTag: Player
   fadeDuration: 0.25
   pauseDuration: 1
+  autoTeleportLevelName: to level 3
   player: {fileID: 0}
   movementController: {fileID: 0}
   attackController: {fileID: 0}
@@ -35622,6 +35623,7 @@ MonoBehaviour:
   targetTag: Player
   fadeDuration: 1.5
   pauseDuration: 1.2
+  autoTeleportLevelName: Level-3
   player: {fileID: 0}
   movementController: {fileID: 0}
   attackController: {fileID: 0}
@@ -165671,6 +165673,7 @@ MonoBehaviour:
   targetTag: Player
   fadeDuration: 0.5
   pauseDuration: 2
+  autoTeleportLevelName: Level-3
   player: {fileID: 646856362}
   movementController: {fileID: 0}
   attackController: {fileID: 0}

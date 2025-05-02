@@ -7,6 +7,7 @@ public class Teleport : MonoBehaviour
     public string targetTag = "Player";
     public float fadeDuration = 0.5f;
     public float pauseDuration = 2f;
+    public string autoTeleportLevelName = "to level 3"; // Name of the level where auto-teleport should occur
 
     [SerializeField] private GameObject player;
     [SerializeField] private PlayerMovementController movementController;
@@ -30,9 +31,11 @@ public class Teleport : MonoBehaviour
 
     private void Update()
     {
-        if (isPlayerInZone && Input.GetKeyDown(KeyCode.F))
+        bool isAutoTeleportLevel = transform.name == autoTeleportLevelName || gameObject.scene.name == autoTeleportLevelName;
+
+        if (isPlayerInZone && (Input.GetKeyDown(KeyCode.F) || isAutoTeleportLevel))
         {
-            Debug.Log("Teleport: F pressed. Starting teleport...");
+            Debug.Log("Teleport: Starting teleport..." + (isAutoTeleportLevel ? " (Auto-triggered)" : " (F pressed)"));
             StartCoroutine(TeleportWithFade());
         }
     }
@@ -43,6 +46,14 @@ public class Teleport : MonoBehaviour
         {
             isPlayerInZone = true;
             Debug.Log("Teleport: Player entered teleport zone.");
+
+            // Immediate teleport if this is the auto-teleport level
+            bool isAutoTeleportLevel = transform.name == autoTeleportLevelName || gameObject.scene.name == autoTeleportLevelName;
+            if (isAutoTeleportLevel)
+            {
+                Debug.Log("Teleport: Auto-teleport level detected. Triggering teleport.");
+                StartCoroutine(TeleportWithFade());
+            }
         }
     }
 
@@ -57,6 +68,9 @@ public class Teleport : MonoBehaviour
 
     private IEnumerator TeleportWithFade()
     {
+        // Prevent multiple triggers
+        if (!isPlayerInZone) yield break;
+
         isPlayerInZone = false;
 
         if (movementController != null) movementController.enabled = false;
