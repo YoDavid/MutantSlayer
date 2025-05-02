@@ -215,74 +215,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1008380765
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1008380766}
-  - component: {fileID: 1008380767}
-  m_Layer: 0
-  m_Name: SlideShowManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1008380766
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008380765}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.199622, y: 0.3941442, z: 8.847949}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1008380767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008380765}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 643074edbed0f5a44801e6b9c306137d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  images:
-  - {fileID: 21300000, guid: e5f11a33c76aab447bf298fa8439c068, type: 3}
-  - {fileID: 21300000, guid: 298ae66fbfef49740b44567722e6287e, type: 3}
-  - {fileID: 21300000, guid: 43355b21507656145a093214b02e780d, type: 3}
-  - {fileID: 21300000, guid: fc6d04f2b86358b489f302cbf785df47, type: 3}
-  texts:
-  - The world descended into ruin when particles of the star ____ fell on Earth.
-  - its powerful radioactive energy turning animals into mutations, humans into liquids,
-    and causing 60% of the population to die within the first six months.
-  - 'The world began to split into two factions: one technological, fighting the
-    mutations with advanced technology, and the other barbaric, experimenting on
-    animals and humans to create animal weapons.'
-  - One of the laboratories of the barbaric faction exploded due to a failed experiment,
-    and only one survived, an individual with a human body connected to tubes, likely
-    the cause of the entire incident."
-  imageComponent: {fileID: 1478922133}
-  storyTextComponent: {fileID: 1523366424}
-  nextSceneName: Scene_Game
-  fadeDuration: 0.5
-  autoAdvanceDelay: 10
-  spacePromptBlinkRate: 0.8
-  playTransitionSound: 1
-  spacePromptText: {fileID: 1591552012}
-  skipPromptText: {fileID: 2016144273}
 --- !u!1001 &1144915280
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1071,6 +1003,79 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2016144271}
   m_CullTransparentMesh: 1
+--- !u!1001 &4051273215605271114
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3391358259317788492, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.199622
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391358259317788492, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.3941442
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391358259317788492, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 8.847949
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391358259317788492, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391358259317788492, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391358259317788492, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391358259317788492, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391358259317788492, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391358259317788492, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391358259317788492, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377621258863745811, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: m_Name
+      value: SlideShowManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6862411451082095404, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: imageComponent
+      value: 
+      objectReference: {fileID: 1478922133}
+    - target: {fileID: 6862411451082095404, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: skipPromptText
+      value: 
+      objectReference: {fileID: 2016144273}
+    - target: {fileID: 6862411451082095404, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: spacePromptText
+      value: 
+      objectReference: {fileID: 1591552012}
+    - target: {fileID: 6862411451082095404, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
+      propertyPath: storyTextComponent
+      value: 
+      objectReference: {fileID: 1523366424}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 046ecfac34c64344a9c69f1753c94380, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1079,5 +1084,5 @@ SceneRoots:
   - {fileID: 99585129}
   - {fileID: 1433710968}
   - {fileID: 1492104144}
-  - {fileID: 1008380766}
+  - {fileID: 4051273215605271114}
   - {fileID: 1191087270}

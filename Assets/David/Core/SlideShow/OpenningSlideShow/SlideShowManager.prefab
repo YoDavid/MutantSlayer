@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4377621258863745811
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3391358259317788492}
+  - component: {fileID: 6862411451082095404}
+  m_Layer: 0
+  m_Name: SlideShowManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3391358259317788492
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4377621258863745811}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.199622, y: 0.3941442, z: 8.847949}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6862411451082095404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4377621258863745811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 643074edbed0f5a44801e6b9c306137d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  images:
+  - {fileID: 21300000, guid: 4e632e64e61339245aa97978038dfc4e, type: 3}
+  - {fileID: 21300000, guid: 4e632e64e61339245aa97978038dfc4e, type: 3}
+  - {fileID: 21300000, guid: 15b5207e83966924087f81fe484547d2, type: 3}
+  - {fileID: 21300000, guid: 65f3d949ca3de8c43b1c0e23aa4249b9, type: 3}
+  - {fileID: 21300000, guid: 6e5d46ce1691f64459ab94d357ec16c6, type: 3}
+  - {fileID: 21300000, guid: 9acde40feb4da284e8f6142403298ce8, type: 3}
+  - {fileID: 21300000, guid: 810af3a01e4f04a43ac9f4ec23ae7445, type: 3}
+  - {fileID: 21300000, guid: 8a222ae2214dda749bc84412c45c7ad9, type: 3}
+  - {fileID: 21300000, guid: 36564994136c7114998176363cb8500f, type: 3}
+  - {fileID: 21300000, guid: 1f995f6bdef6ef8459a099ba0d67b357, type: 3}
+  - {fileID: 21300000, guid: 7338f25d66e39394591110f0040ac51d, type: 3}
+  - {fileID: 21300000, guid: 980ddc03b023c10499776b92e2a3600e, type: 3}
+  - {fileID: 21300000, guid: 7b18649186574d144bc3eafec5cd49f2, type: 3}
+  texts:
+  - "It began with Saturn\u2019s demise. The planet cracked, its remains hurled across
+    the stars, as if the heavens themselves rejected what it had become"
+  - "When the fragments struck Earth, they didn\u2019t just destroy\u2014they corrupted.
+    The impact warped the land, and the fragments twisted life into something new
+    and grotesque"
+  - "Five years passed. The world was fractured\u2014its people even more so. Two
+    factions emerged: the Dominion, seeking order through technology, and the Vagabonds,
+    thriving in chaos and mutation"
+  - To eliminate the growing threat, Dominion forces were deployed into the Vagabond-controlled
+    wild zones. They underestimated what awaited them
+  - "But the wastelands were not empty. The Vagabonds had grown stronger\u2014armed
+    with salvaged tech, mutant beasts, and doctrine. The Dominion squad was outnumbered,
+    overwhelmed... and taken. Dragged beneath the surface into labs fueled by madness"
+  - "One of the marines endured. Subjected to unspeakable experiments, his mind drowned
+    in chemicals meant to make him a puppet. But something within broke through.
+    Rage, instinct, memory\u2014they tore apart the drugs meant to chain him. He
+    awoke in fury, tearing free of his chains and ripping through the Vagabond scientists
+    with brutal force\u2014turning the lab into a slaughterhouse of blood and fire"
+  - "His name is forgotten. His past\u2014erased. But his purpose burned bright:
+    to cleanse the world of beasts and those who made him one"
+  - "Now he hunts. Mutated creatures, twisted warlords, corrupted factions\u2026
+    all fall beneath his blade. He is no longer a soldier\u2014he is the reckoning"
+  - "No allies. No name. Only a path carved in blood. This is his world now. This...
+    is the age of the\_Mutant\_Slayer"
+  imageComponent: {fileID: 0}
+  storyTextComponent: {fileID: 0}
+  nextSceneName: Scene_Game
+  fadeDuration: 0.5
+  autoAdvanceDelay: 10
+  spacePromptBlinkRate: 0.8
+  playTransitionSound: 1
+  spacePromptText: {fileID: 0}
+  skipPromptText: {fileID: 0}
