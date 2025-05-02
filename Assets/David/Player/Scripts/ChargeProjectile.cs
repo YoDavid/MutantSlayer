@@ -88,6 +88,13 @@ public class ChargeProjectile : MonoBehaviour
     private float lastHitTime;
     #endregion
 
+    #region Particle Effects
+    [Header("Particle Effects")]
+    public GameObject destroyParticlePrefab;
+    public float particleSpawnOffsetX = 0f;
+
+    #endregion
+
     #region Unity Lifecycle
     private void Awake()
     {
@@ -217,6 +224,9 @@ public class ChargeProjectile : MonoBehaviour
     private void IncrementHitCount()
     {
         hitCount++;
+        // Calculate spawn position with offset
+        Vector3 spawnPosition = transform.position + new Vector3(particleSpawnOffsetX * (isMovingRight ? 1 : -1), 0, 0);
+        GameObject particles = Instantiate(destroyParticlePrefab, spawnPosition, Quaternion.identity);
         if (hitCount >= maxHits || !isLargeEnough)
         {
             DestroyProjectile();
@@ -337,6 +347,12 @@ public class ChargeProjectile : MonoBehaviour
     {
         if (currentTimeEffect != null) StopCoroutine(currentTimeEffect);
         RestoreNormalTime();
+        if (destroyParticlePrefab != null)
+        {
+            // Calculate spawn position with offset
+            Vector3 spawnPosition = transform.position + new Vector3(particleSpawnOffsetX * (isMovingRight ? 1 : -1), 0, 0);
+            GameObject particles = Instantiate(destroyParticlePrefab, spawnPosition, Quaternion.identity);
+        }
         Destroy(gameObject);
     }
 

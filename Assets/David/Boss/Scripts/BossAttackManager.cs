@@ -48,6 +48,9 @@ public class BossAttackManager : MonoBehaviour
     private Vector3 spitPositionFacingLeft = new Vector3(-40f, -21.4f, 0f);
     private Vector3 spitPositionFacingRight = new Vector3(40f, -21.4f, 0f);
 
+    [Header("Falling Spikes")]
+    [SerializeField] private FallingSpikeSpawner fallingSpikeSpawner;
+
 
 
     void Start()
@@ -65,6 +68,7 @@ public class BossAttackManager : MonoBehaviour
         spitSpawnPoint = transform.Find("Spit_Position_Instantiaion");
         bossAOEAttack = GetComponentInChildren<BossAOEAttack>();
         cameraShake = Camera.main?.GetComponent<CameraShake>();
+        fallingSpikeSpawner = FindAnyObjectByType<FallingSpikeSpawner>();
     }
 
     public void ComboAttackBehavior()
@@ -162,22 +166,17 @@ public class BossAttackManager : MonoBehaviour
         bool forcedDrop = false;
 
         // Step 1: Anticipation before jump
-        Debug.Log("Step 1: Anticipation before jump");
         animator.SetTrigger("JumpAnticipation");
         yield return new WaitForSeconds(jumpAnticipationTime);
 
         // Step 2: Jump vertically out of screen
-        Debug.Log("Step 2: Jump vertically out of screen");
         float jumpForce = Mathf.Sqrt(2 * Mathf.Abs(Physics2D.gravity.y) * jumpHeight);
         bossAI.rb.velocity = new Vector2(0, jumpForce);
         animator.SetTrigger("JumpUpwardMovement");
         cameraShake.ShakeCameraAOEAttack();
 
-        // Step 3: Wait until boss starts falling OR max air time is reached
-        Debug.Log("Step 3: Wait for fall or timeout");
         yield return new WaitUntil(() =>
         {
-            // Check if we've exceeded max air time
             if (Time.time - jumpStartTime > maxTimeInAir && bossAI.rb.velocity.y > 0)
             {
                 forcedDrop = true;
@@ -186,44 +185,35 @@ public class BossAttackManager : MonoBehaviour
             return bossAI.rb.velocity.y <= 0;
         });
 
-        // If we forced the drop, immediately zero out upward velocity
         if (forcedDrop)
         {
             bossAI.rb.velocity = new Vector2(bossAI.rb.velocity.x, 0);
         }
 
-        // Step 4: Pause in air (simulate off-screen delay)
-        Debug.Log("Step 4: Pause in air (simulate off-screen delay)");
         bossAI.rb.velocity = Vector2.zero;
         bossAI.rb.isKinematic = true;
         bossSpriteRenderer.enabled = false;
 
         yield return new WaitForSeconds(timeOffscreenBeforeDrop);
 
-        // Step 5: Lock target and teleport above player
-        Debug.Log("Step 5: Lock target and teleport above player");
         jumpTargetPosition = bossAI.player.position;
         transform.position = new Vector3(jumpTargetPosition.x, transform.position.y, transform.position.z);
         bossSpriteRenderer.enabled = true;
         bossAI.rb.isKinematic = false;
 
-        // Step 6: Fall rapidly toward player
-        Debug.Log("Step 6: Fall rapidly toward player");
         bossAI.rb.velocity = new Vector2(0, dropSpeed); // Now using the serialized dropSpeed
         animator.SetTrigger("JumpFalling");
 
-        // Step 7: Wait for ground contact
-        Debug.Log("Step 7: Wait for ground contact");
         yield return new WaitUntil(() => bossAI.isGrounded);
 
-        // Step 8: Land and smash
-        Debug.Log("Step 8: Land and smash");
         if (!isJumpingSmash)
         {
             animator.SetTrigger("JumpGroundSmash");
             isJumpingSmash = true;
             bossJumpAttackHitbox.ActivateJumpAttackCollider(!bossAI.isFacingLeft);
             cameraShake.ShakeCameraJumpSmashAttack();
+
+            fallingSpikeSpawner?.SpawnSpikesSmash();
 
             float smashDuration = animator.GetCurrentAnimatorStateInfo(0).length;
             yield return new WaitForSeconds(smashDuration);

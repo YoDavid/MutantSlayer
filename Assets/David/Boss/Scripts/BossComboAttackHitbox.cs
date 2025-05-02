@@ -24,12 +24,14 @@ public class BossComboAttackHitbox : MonoBehaviour
     private CameraShake cameraShake;
 
     [SerializeField] private GameObject rockParticlesPrefab;
+    [SerializeField] private FallingSpikeSpawner fallingSpikeSpawner;
 
     private void Awake()
     {
         InitializeComponents();
         damageDealer = gameObject.AddComponent<DamageDealer>(); // NEW
         damageDealer.config = damageConfig; // NEW
+        fallingSpikeSpawner = FindAnyObjectByType<FallingSpikeSpawner>();
     }
 
     private void Start()
@@ -85,8 +87,9 @@ public class BossComboAttackHitbox : MonoBehaviour
     {
         float startTime = Time.time;
 
-        foreach (float attackTime in attackTimings)
+        for (int i = 0; i < attackTimings.Length; i++)
         {
+            float attackTime = attackTimings[i];
             float waitTime = attackTime - (Time.time - startTime);
             if (waitTime > 0)
                 yield return new WaitForSeconds(waitTime);
@@ -99,6 +102,12 @@ public class BossComboAttackHitbox : MonoBehaviour
             {
                 Vector2 spawnPos = new Vector2(attackCollider.bounds.center.x, attackCollider.bounds.min.y + 2f);
                 Instantiate(rockParticlesPrefab, spawnPos, Quaternion.identity);
+            }
+
+            // Check if this is the last attack in the combo
+            if (i == attackTimings.Length - 1 && fallingSpikeSpawner != null)
+            {
+                fallingSpikeSpawner.SpawnSpikes2(); // Spawn two spikes
             }
 
             cameraShake.ShakeCameraComboAttack();

@@ -943,6 +943,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicFadeDuration: 0.5
+  isPaused: 0
   categories:
   - name: UI
     source: {fileID: 2827213357372201616}
@@ -1036,7 +1037,7 @@ MonoBehaviour:
       volume: 0.6
       pitch: 1
     - name: sfx_player_combo_final_hit
-      clip: {fileID: 8300000, guid: 240de90b834d8224483092e7712fd1f1, type: 3}
+      clip: {fileID: 8300000, guid: cfe95039a55aa34459b67aa349d0d277, type: 3}
       volume: 1
       pitch: 1
     - name: sfx_player_release_range_grunt
@@ -1046,6 +1047,10 @@ MonoBehaviour:
     - name: sfx_player_charge_electricity_loop
       clip: {fileID: 8300000, guid: bfa9442cf2ecf3c4aa0a092d3f1bae1e, type: 3}
       volume: 0.6
+      pitch: 1
+    - name: sfx_player_attack_early_exit
+      clip: {fileID: 8300000, guid: 0f903832621ecfe46848be6de8d4ca62, type: 3}
+      volume: 1
       pitch: 1
     originalVolume: 0
   - name: PlayerOthers

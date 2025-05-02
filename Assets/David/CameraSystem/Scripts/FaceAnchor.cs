@@ -3,12 +3,12 @@ using UnityEngine;
 public class FaceAnchor : MonoBehaviour
 {
     [Header("Base Settings")]
-    public Vector3 baseOffset = new Vector3(0, 1.5f, -10);
+    public Vector3 baseOffset = new Vector3(-1, -5f, -10);
     public float followSharpness = 15f;
     public bool snapAllTransitions = true;
 
     [Header("Animation Offsets")]
-    public Vector3 idleOffset = new Vector3(0f, 0, -10);
+    public Vector3 idleOffset = new Vector3(0.3f, 0.4f, -10);
     public Vector3 runOffset = new Vector3(4f, -0.6f, -10);
     public Vector3 jumpOffset = new Vector3(3.2f, 0.8f, -10);
     public Vector3 fallOffset = new Vector3(3.2f, 0.8f, -10);
@@ -25,12 +25,12 @@ public class FaceAnchor : MonoBehaviour
 
     [Header("Combo Attack Camera")]
     public Vector3 comboStartOffset = new Vector3(0f, -4.5f, -10);
-    public Vector3 comboActiveOffset = new Vector3(1.5f, -0.5f, -10);
+    public Vector3 comboActiveOffset = new Vector3(4f, -2f, -10);
     [SerializeField] private float comboStartDuration = 6f; // Seconds before snapping to active position
 
     [Header("Combo Camera Size Control")]
     [SerializeField] private float normalCameraSize = 0.5f;
-    [SerializeField] private float comboActiveCameraSize = 0.7f; // New size during active phase
+    [SerializeField] private float comboActiveCameraSize = 1.5f; // New size during active phase
     [SerializeField] private float sizeChangeSpeed = 5f; // How fast size changes
 
     private Camera targetCamera;
@@ -44,7 +44,7 @@ public class FaceAnchor : MonoBehaviour
     public Vector3 healOffset = new Vector3(0f, 2.5f, -10);
 
     [Header("Hit Reaction Settings")]
-    public float hitFreezeDuration = 0.3f;
+    public float hitFreezeDuration = 0.4f;
     public AnimationCurve hitRecoveryCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     private Animator animator;
@@ -87,14 +87,24 @@ public class FaceAnchor : MonoBehaviour
 
         HandleHitReaction();
 
-        if (!isInHitReaction)
-        {
-            UpdateNormalPosition();
-        }
+        // Always update position, but let HandleHitReaction control during hit
+        UpdatePosition();
 
         UpdateCameraSize();
     }
 
+    void UpdatePosition()
+    {
+        if (isInHitReaction)
+        {
+            // During hit reaction, we only care about maintaining hit position
+            transform.localPosition = hitTargetPosition;
+        }
+        else
+        {
+            UpdateNormalPosition();
+        }
+    }
 
     void UpdateCameraSize()
     {
@@ -193,6 +203,12 @@ public class FaceAnchor : MonoBehaviour
         if (!hitTriggered)
         {
             hitTriggerProcessed = false;
+            // Ensure we reset the position when hit ends
+            if (isInHitReaction)
+            {
+                isInHitReaction = false;
+                snapAllTransitions = true;
+            }
             return;
         }
 
@@ -208,10 +224,10 @@ public class FaceAnchor : MonoBehaviour
             if (hitFreezeTimer <= 0)
             {
                 isInHitReaction = false;
-                // Force immediate position update on next frame
                 snapAllTransitions = true;
+                // Immediately update to correct position
+                UpdateNormalPosition();
             }
-            transform.localPosition = hitTargetPosition;
         }
     }
 
@@ -231,6 +247,7 @@ public class FaceAnchor : MonoBehaviour
         if (snapAllTransitions || StateChanged() || IsAttackState())
         {
             transform.localPosition = targetPosition;
+            snapAllTransitions = false; // Reset after snapping
         }
         else
         {
@@ -243,6 +260,7 @@ public class FaceAnchor : MonoBehaviour
     }
 
     bool StateChanged() => currentState != previousState;
+
     bool IsAttackState() => currentState.Contains("Attack") || currentState.Contains("Combo");
 
     public void OnHitAnimationTriggered()

@@ -83,7 +83,6 @@ public class PlayerAttackController : MonoBehaviour
     [Header("Electricity Loop Audio Settings")]
     [SerializeField] private float electricityLoopStartDelay = 0.2f; // Delay before first play
     [SerializeField] private float electricityLoopInterval = 0.3f; // Time between plays
-    [SerializeField] private float electricityLoopStopDelay = 0.1f; // Delay after animation ends
     private Coroutine electricityLoopRoutine;
     private bool shouldPlayElectricityLoop = false;
 

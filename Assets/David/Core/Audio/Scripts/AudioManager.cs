@@ -39,7 +39,8 @@ public class AudioManager : MonoBehaviour
         new AudioCategory { name = "PlayerOthers" },
         new AudioCategory { name = "Enemies" },
         new AudioCategory { name = "Boss" },
-        new AudioCategory { name = "Status" }
+        new AudioCategory { name = "Status" },
+        new AudioCategory { name = "Spikes" }
     };
 
     [Header("Music")]
@@ -391,6 +392,11 @@ public class AudioManager : MonoBehaviour
     public void PlayAOEAttackBoss() => PlaySFX("Boss", "sfx_boss_attack_aoe");
     public void PlayJumpAttackBoss() => PlaySFX("Boss", "sfx_boss_attack_jump");
     public void PlaySpitAttackBoss() => PlaySFX("Boss", "sfx_boss_attack_spit");
+    #endregion
+
+    // ====================== Spikes Sounds ======================
+    #region Spikes - Traps
+    public void PlaySpikeHit() => PlaySFXWithRandomPitch("Spikes", "sfx_fallin_spike_hit");
     #endregion
 
     // ====================== Music ======================

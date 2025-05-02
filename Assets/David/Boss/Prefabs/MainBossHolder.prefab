@@ -161,6 +161,7 @@ MonoBehaviour:
   sideSpikesInterval: 0.4
   sideSpikesActive: 0
   rockParticlesPrefab: {fileID: 4647388484711977732, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
+  fallingSpikeSpawner: {fileID: 0}
 --- !u!1 &1287259514076753074
 GameObject:
   m_ObjectHideFlags: 0
@@ -1209,7 +1210,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 568015659
-  m_SortingLayer: 10
+  m_SortingLayer: 12
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: f848983238a91d4458e8427f1103e2d0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1384,6 +1385,7 @@ MonoBehaviour:
   isJumping: 0
   isJumpingSmash: 0
   jumpTargetPosition: {x: 0, y: 0}
+  fallingSpikeSpawner: {fileID: 0}
 --- !u!114 &4773310631470295469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1415,7 +1417,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  blinkColor: {r: 1, g: 1, b: 1, a: 0}
+  blinkColor: {r: 1, g: 1, b: 1, a: 0.5019608}
   blinkDuration: 0.1
   blinkCount: 1
   popupOffset: {x: 0, y: -1.5, z: 0}

@@ -26,7 +26,7 @@ public class PlayerComboHitbox : MonoBehaviour
     // State
     private float comboStartTime;
     private float lastHitTime;
-    private List<DetectedHit> detectedHits = new List<DetectedHit>();
+    [SerializeField] private List<DetectedHit> detectedHits = new List<DetectedHit>();
     private bool externalComboActiveState = false;
     [SerializeField] private bool attackPhaseActive = false;
 
@@ -37,11 +37,14 @@ public class PlayerComboHitbox : MonoBehaviour
     private bool isComboSoundPlaying = false;
     [SerializeField][Range(0f, 1f)] private float timeSlowFactor = 0.2f; // 0 = freeze, 1 = normal speed
 
-    private class DetectedHit
+    [System.Serializable] // Add this attribute
+    public class DetectedHit
     {
         public Vector3 position;
         public bool isBoss;
-        public IDamageable damageable; // Interface reference
+        // Note: IDamageable won't show in inspector as it's an interface
+        // You might want to add a GameObject reference for visualization
+        [System.NonSerialized] public IDamageable damageable; // Mark as non-serialized
     }
 
     private void Awake()
@@ -126,8 +129,6 @@ public class PlayerComboHitbox : MonoBehaviour
         ProcessAllHits();
         detectedHits.Clear();
 
-        if (detectedHits.Count > 0)
-            AudioManager.Instance.PlayComboFinalHit();
 
         isComboSoundPlaying = false;
 
@@ -137,10 +138,12 @@ public class PlayerComboHitbox : MonoBehaviour
 
     private void StopComboSlashSound()
     {
-
-
+        if (detectedHits.Count > 0)
+        {
+            AudioManager.Instance.PlayComboFinalHit();
+        }
         AudioManager.Instance.StopSound("PlayerOthers", "sfx_player_combo_slash_loop");
-        
+
     }
 
     private IEnumerator TimeStopEffect()

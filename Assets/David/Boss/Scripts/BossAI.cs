@@ -54,12 +54,12 @@ public class BossAI : MonoBehaviour
     [SerializeField] private bool showGizmos = false;
 
     [Header("Boss Scream Settings")]
-    [SerializeField] private float minScreamDelay = 5f;
-    [SerializeField] private float maxScreamDelay = 10f;
+    [SerializeField] private float minScreamDelay = 1f;
+    [SerializeField] private float maxScreamDelay = 5f;
     private bool isScreamPlaying = false;
-    [SerializeField] private float screamDuration = 1.5f; 
+    [SerializeField] private float screamDuration = 1.5f;
 
-    private float nextScreamTimer;
+    [SerializeField] private float nextScreamTimer;
     private bool isWalkingSoundPlaying = false;
 
 
@@ -78,7 +78,7 @@ public class BossAI : MonoBehaviour
         groundCheckRadius = 0.62f;
     }
 
-    void FindReferences()
+   void FindReferences()
     {
         bossAttackHitbox = GetComponentInChildren<BossComboAttackHitbox>();
         bossMovement = GetComponent<BossMovement>();
@@ -113,11 +113,10 @@ public class BossAI : MonoBehaviour
                 }
                 else
                 {
-                    nextScreamTimer = Random.Range(minScreamDelay, maxScreamDelay);
+                    ResetScreamTimer(); // Reset if player is out of range
                 }
             }
         }
-
 
         UpdateWalkingSound();
     }
@@ -377,30 +376,29 @@ public class BossAI : MonoBehaviour
         return false;
     }
 
+    private void ResetScreamTimer()
+    {
+        nextScreamTimer = Random.Range(minScreamDelay, maxScreamDelay);
+    }
+
     IEnumerator PlayBossScreamWithCooldown()
     {
         isScreamPlaying = true;
 
+        // Play random scream
         int index = Random.Range(0, 4);
         switch (index)
         {
-            case 0:
-                AudioManager.Instance.PlayBossScream_00();
-                break;
-            case 1:
-                AudioManager.Instance.PlayBossScream_01();
-                break;
-            case 2:
-                AudioManager.Instance.PlayBossScream_02();
-                break;
-            case 3:
-                AudioManager.Instance.PlayBossScream_03();
-                break;
+            case 0: AudioManager.Instance.PlayBossScream_00(); break;
+            case 1: AudioManager.Instance.PlayBossScream_01(); break;
+            case 2: AudioManager.Instance.PlayBossScream_02(); break;
+            case 3: AudioManager.Instance.PlayBossScream_03(); break;
         }
 
-        yield return new WaitForSeconds(screamDuration); 
+        yield return new WaitForSeconds(screamDuration);
+
         isScreamPlaying = false;
-        nextScreamTimer = Random.Range(minScreamDelay, maxScreamDelay);
+        ResetScreamTimer(); // Reset timer after scream finishes
     }
 
     private void OnDrawGizmos()

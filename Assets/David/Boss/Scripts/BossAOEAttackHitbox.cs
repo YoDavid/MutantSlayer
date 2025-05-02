@@ -22,6 +22,9 @@ public class BossAOEAttack : MonoBehaviour
 
     [SerializeField] private GameObject rockParticlesPrefab;
 
+    [Header("Falling Spikes")]
+    [SerializeField] private FallingSpikeSpawner fallingSpikeSpawner;
+
     private void Start()
     {
         foreach (var spike in spikes)
@@ -37,51 +40,55 @@ public class BossAOEAttack : MonoBehaviour
         {
             Debug.LogError("CameraShake component not found in the scene.");
         }
+        fallingSpikeSpawner = FindAnyObjectByType<FallingSpikeSpawner>();
     }
 
     public void ActivateAOEAttack()
     {
         StartCoroutine(HandleAOEAttack());
+        if (enableSideSpikes && sideSpikesCoroutine == null)
+        {
+            sideSpikesCoroutine = StartCoroutine(HandleSideSpikes());  // Start side spikes coroutine
+        }
     }
+
 
     private IEnumerator HandleAOEAttack()
     {
         yield return new WaitForSeconds(initialDelay);
 
-        if (enableSideSpikes)
-        {
-            sideSpikesCoroutine = StartCoroutine(HandleSideSpikes());
-        }
-
-        // Wave 1: Activate Spike 1 and 2
-        ToggleSpikes(0, 1, true); // Enable Spike 1 and 2
-        cameraShake?.ShakeCameraAOEAttack(); // Trigger camera shake
-
+        // Wave 1: Spawn 1 spike
+        ToggleSpikes(0, 1, true);
+        fallingSpikeSpawner?.SpawnSpikes1();  // Triggers Wave 1 with 1 spike
+        cameraShake?.ShakeCameraAOEAttack();
         AudioManager.Instance.PlayAOEAttackBoss();
-        yield return new WaitForSeconds(spikeActiveDuration); // Wait for 0.8 seconds
-        ToggleSpikes(0, 1, false); // Disable Spike 1 and 2
+        yield return new WaitForSeconds(spikeActiveDuration);
+        ToggleSpikes(0, 1, false);
 
-        // Wave 2: Activate Spike 3 and 4
-        ToggleSpikes(2, 3, true); // Enable Spike 3 and 4
-        cameraShake?.ShakeCameraAOEAttack(); // Trigger camera shake
+        // Wave 2: Spawn 2 spikes
+        ToggleSpikes(2, 3, true);
+        fallingSpikeSpawner?.SpawnSpikes2();  // Triggers Wave 2 with 2 spikes
+        cameraShake?.ShakeCameraAOEAttack();
         AudioManager.Instance.PlayAOEAttackBoss();
-        yield return new WaitForSeconds(spikeActiveDuration); // Wait for 0.8 seconds
-        ToggleSpikes(2, 3, false); // Disable Spike 3 and 4
+        yield return new WaitForSeconds(spikeActiveDuration);
+        ToggleSpikes(2, 3, false);
 
-        // Wave 3: Activate Spike 5 and 6
-        ToggleSpikes(4, 5, true); // Enable Spike 5 and 6
-        cameraShake?.ShakeCameraAOEAttack(); // Trigger camera shake
+        // Wave 3: Spawn 3 spikes
+        ToggleSpikes(4, 5, true);
+        fallingSpikeSpawner?.SpawnSpikes3();  // Triggers Wave 3 with 3 spikes
+        cameraShake?.ShakeCameraAOEAttack();
         AudioManager.Instance.PlayAOEAttackBoss();
-        yield return new WaitForSeconds(spikeActiveDuration); // Wait for 0.8 seconds
-        ToggleSpikes(4, 5, false); // Disable Spike 5 and 6
+        yield return new WaitForSeconds(spikeActiveDuration);
+        ToggleSpikes(4, 5, false);
 
-        // Stop the side spikes timer after the attack sequence ends
+        // Cleanup
         if (enableSideSpikes && sideSpikesCoroutine != null)
         {
             StopCoroutine(sideSpikesCoroutine);
-            ToggleSideSpikes(false); // Ensure side spikes are turned off
+            ToggleSideSpikes(false);
         }
     }
+
 
     private IEnumerator HandleSideSpikes()
     {
