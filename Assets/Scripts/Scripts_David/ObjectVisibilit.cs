@@ -23,18 +23,19 @@ public class ObjectVisibility : MonoBehaviour
         {
             isPlayerInside = true;
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
+            if (targetObject != null)
             {
-                // If player is alive, hide immediately
-                if (!playerHealth.isDead)
+                if (playerHealth != null)
+                {
+                    if (!playerHealth.isDead)
+                    {
+                        targetObject.SetActive(false);
+                    }
+                }
+                else
                 {
                     targetObject.SetActive(false);
                 }
-                // If player is dead, do nothing (object stays visible)
-            }
-            else
-            {
-                targetObject.SetActive(false);
             }
         }
     }
@@ -47,14 +48,13 @@ public class ObjectVisibility : MonoBehaviour
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null && playerHealth.isDead)
             {
-                // If player was dead when exiting, start 3-second countdown
                 if (delayedDisableCoroutine != null)
                 {
                     StopCoroutine(delayedDisableCoroutine);
                 }
                 delayedDisableCoroutine = StartCoroutine(DelayedDisable());
             }
-            else
+            else if (targetObject != null)
             {
                 targetObject.SetActive(true);
             }
@@ -64,8 +64,7 @@ public class ObjectVisibility : MonoBehaviour
     private IEnumerator DelayedDisable()
     {
         yield return new WaitForSeconds(3f);
-        // Only disable if player is no longer inside (prevent race condition)
-        if (!isPlayerInside)
+        if (!isPlayerInside && targetObject != null)
         {
             targetObject.SetActive(false);
         }
