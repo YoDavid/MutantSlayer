@@ -1355,10 +1355,10 @@ MonoBehaviour:
   rb: {fileID: 6444275532621671161}
   player: {fileID: 0}
   _isAttacking: 0
-  showGizmos: 1
-  minScreamDelay: 5
-  maxScreamDelay: 10
-  screamDuration: 3
+  showGizmos: 0
+  minScreamDelay: 4
+  maxScreamDelay: 6
+  screamDuration: 4
   nextScreamTimer: 0
 --- !u!114 &2726740229659970565
 MonoBehaviour:
@@ -1423,5 +1423,5 @@ MonoBehaviour:
   blinkDuration: 0.1
   blinkCount: 1
   popupOffset: {x: 0, y: -1.5, z: 0}
-  bloodSplashPrefab: {fileID: 4501868321521990437, guid: 361828f1cec2e764e8d1417f686a9f47, type: 3}
+  bloodSplashPool: {fileID: 0}
   currentHealth: 0

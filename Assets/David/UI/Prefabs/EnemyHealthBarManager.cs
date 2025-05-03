@@ -29,5 +29,11 @@ public class EnemyHealthBarManager : MonoBehaviour
         {
             healthBarScript.Initialize(health, mainCamera);
         }
+
+        // NEW: Assign the health bar to the EnemyBehindWall script (if it exists)
+        if (enemy.TryGetComponent(out EnemyBehindWall behindWallScript))
+        {
+            behindWallScript.healthBar = healthBar; // Link the health bar
+        }
     }
 }

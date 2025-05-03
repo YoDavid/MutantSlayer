@@ -8,8 +8,8 @@ public class HealthSystem : MonoBehaviour
     [SerializeField] protected int _currentHealth;
 
     [Header("Death Effects")]
-    [SerializeField] private GameObject bloodSplashPrefab;  
-    [SerializeField] private BloodSplashParticlesPool bloodSplashPool;
+    [SerializeField] protected GameObject bloodSplashPrefab;  
+    [SerializeField] protected BloodSplashParticlesPool bloodSplashPool;
 
     public int MaxHealth
     {
@@ -57,7 +57,7 @@ public class HealthSystem : MonoBehaviour
 
     protected virtual void Die()
     {
-        if (CurrentHealth > 0) return; // Prevent multiple calls
+        if (CurrentHealth > 0) return; 
 
         Debug.Log("Die method called");
         if (bloodSplashPool != null)

@@ -517,22 +517,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainBossHolder
       objectReference: {fileID: 0}
-    - target: {fileID: 5005471992049819447, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
-      propertyPath: showGizmos
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5005471992049819447, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
-      propertyPath: maxScreamDelay
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5005471992049819447, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
-      propertyPath: minScreamDelay
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5005471992049819447, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
-      propertyPath: screamDuration
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 6091474984325665233, guid: 14d4de8e2bb7b2d4caaa5263da82c2c3, type: 3}
       propertyPath: playerHealth
       value: 
@@ -622,14 +606,10 @@ PrefabInstance:
       propertyPath: healingParticlePool
       value: 
       objectReference: {fileID: 6943169161548024556}
-    - target: {fileID: 237825488570196162, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
-      propertyPath: healingEffectYOffset
-      value: -2
-      objectReference: {fileID: 0}
-    - target: {fileID: 237825488570196162, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
-      propertyPath: healingEffectSpawnPoint
+    - target: {fileID: 2342704723376403555, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
+      propertyPath: bloodSplashPool
       value: 
-      objectReference: {fileID: 1675225084}
+      objectReference: {fileID: 2001051352}
     - target: {fileID: 2616876883140300564, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
       propertyPath: staminaBar
       value: 
@@ -888,11 +868,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a49970bdf9826c47831fc8a56243d1d, type: 3}
---- !u!4 &1675225084 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6021447871000286383, guid: 667d63836a919a645a716a8ebad12ad0, type: 3}
-  m_PrefabInstance: {fileID: 1247220054}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1917224550
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -996,7 +971,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8229323256694479062, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 8229323256694479062, guid: a5deaa41dacd6584e8652803acdf84ec, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1095,10 +1070,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5215043579890335822, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
-      propertyPath: categories.Array.data[6].sounds.Array.data[0].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 25579fe5dc0cffb4c94c4e4dfd492d26, type: 3}
     - target: {fileID: 5587642829418137772, guid: bfe6986ff86b4d04898da1c3efff690a, type: 3}
       propertyPath: m_Name
       value: AudioManager

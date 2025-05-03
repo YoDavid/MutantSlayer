@@ -15,8 +15,13 @@ public class BloodSplashParticlesPool : MonoBehaviour
     private Queue<GameObject> deathPool = new Queue<GameObject>();
     private Queue<GameObject> hitPool = new Queue<GameObject>();
 
+    private bool isPersistent = false;
+
     private void Awake()
     {
+        // Check if this object is persistent
+        isPersistent = gameObject.scene.name == "DontDestroyOnLoad";
+
         // Ensure this object is active
         gameObject.SetActive(true);
 
@@ -28,7 +33,7 @@ public class BloodSplashParticlesPool : MonoBehaviour
     {
         for (int i = 0; i < size; i++)
         {
-            var obj = Instantiate(prefab, transform);
+            GameObject obj = isPersistent ? Instantiate(prefab) : Instantiate(prefab, transform);
             obj.SetActive(false);
             pool.Enqueue(obj);
         }
@@ -39,7 +44,7 @@ public class BloodSplashParticlesPool : MonoBehaviour
         if (!gameObject.activeInHierarchy)
             gameObject.SetActive(true);
 
-        Debug.Log("Death splash"); // <-- Added debug
+        Debug.Log("Death splash");
         PlaySplash(deathPool, deathSplashPrefab, position);
     }
 
@@ -48,7 +53,7 @@ public class BloodSplashParticlesPool : MonoBehaviour
         if (!gameObject.activeInHierarchy)
             gameObject.SetActive(true);
 
-        Debug.Log("Hit splash"); // <-- Added debug
+        Debug.Log("Hit splash");
         PlaySplash(hitPool, hitSplashPrefab, position);
     }
 
@@ -56,10 +61,20 @@ public class BloodSplashParticlesPool : MonoBehaviour
     {
         if (pool == null || prefab == null) return;
 
-        // Instantiate without parenting if this object is persistent
-        bool isPersistent = gameObject.scene.name == "DontDestroyOnLoad";
-        GameObject obj = pool.Count > 0 ? pool.Dequeue() :
-            (isPersistent ? Instantiate(prefab) : Instantiate(prefab, transform));
+        GameObject obj = null;
+
+        // Try to get from pool first
+        while (pool.Count > 0 && obj == null)
+        {
+            obj = pool.Dequeue();
+            if (obj == null) continue; // Skip destroyed objects
+        }
+
+        // If no available object in pool, instantiate a new one
+        if (obj == null)
+        {
+            obj = isPersistent ? Instantiate(prefab) : Instantiate(prefab, transform);
+        }
 
         if (obj == null) return;
 

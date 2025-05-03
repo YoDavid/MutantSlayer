@@ -61,6 +61,7 @@ public class EnemyMovement : MonoBehaviour
         spawnPosition = transform.position;
         mainCollider = GetComponent<BoxCollider2D>();
         isFacingLeft = true;
+        patrolSettings.patrolSpeed = Random.Range(1.8f, 4f);
     }
 
 

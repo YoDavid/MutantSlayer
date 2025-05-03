@@ -271,7 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageConfig: {fileID: 11400000, guid: cde08a794acf3c64e8b3a4d85f8e6165, type: 2}
   hitCooldown: 0
-  hitParticlePrefab: {fileID: 7083328916205589662, guid: 5c10bf981bb4654419448c8c69696181, type: 3}
+  bloodSplashPool: {fileID: 0}
 --- !u!1 &5545429896931029101
 GameObject:
   m_ObjectHideFlags: 0
@@ -895,6 +895,9 @@ MonoBehaviour:
   holdThreshold: 0.25
   holdTimer: 0
   isHolding: 0
+  healingParticlePool: {fileID: 0}
+  healingEffectSpawnPoint: {fileID: 6021447871000286383}
+  healingEffectYOffset: -2
 --- !u!114 &2342704723376403555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -910,6 +913,7 @@ MonoBehaviour:
   _maxHealth: 100
   _currentHealth: 0
   bloodSplashPrefab: {fileID: 4501868321521990437, guid: 361828f1cec2e764e8d1417f686a9f47, type: 3}
+  bloodSplashPool: {fileID: 0}
   damageBlinkDuration: 0.1
   damageBlinkColor: {r: 1, g: 1, b: 1, a: 0}
   isDead: 0

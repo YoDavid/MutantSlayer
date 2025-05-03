@@ -1293,7 +1293,7 @@ MonoBehaviour:
     source: {fileID: 4620959459724679918}
     sounds:
     - name: sfx_player_heartbeat_lowhp
-      clip: {fileID: 8300000, guid: 80c512bc9163d7e439f283d3413a0e7e, type: 3}
+      clip: {fileID: 8300000, guid: 25579fe5dc0cffb4c94c4e4dfd492d26, type: 3}
       volume: 1
       pitch: 1
     originalVolume: 0

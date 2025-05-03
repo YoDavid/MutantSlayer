@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  cameraZPosition: -10
+  cameraZPosition: -100
   boundsSize: {x: 15, y: 10}
   idleCenterTime: 3
   initialCenterSpeed: 0.25

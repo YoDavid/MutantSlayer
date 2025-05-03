@@ -29,7 +29,7 @@ public class EnemyCombat : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
         attackCollider = GetComponentInChildren<EnemyAttackCollider>(true);
         movement = GetComponent<EnemyMovement>();
-        cameraShake = Camera.main.GetComponent<CameraShake>();
+        cameraShake = FindAnyObjectByType<CameraShake>();
 
         currentAttackCooldown = config.GetRandomAttackCooldown();
     }

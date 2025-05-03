@@ -7,7 +7,6 @@ public class EnemyHealth : HealthSystem, IDamageable
     public EnemyConfig config;
     [SerializeField] private bool overrideHealth = false;
     [SerializeField] private int customMaxHealth = 30;
-    private BloodSplashParticlesPool bloodSplashPool;
 
     // Components
     private AudioManager audioManager;

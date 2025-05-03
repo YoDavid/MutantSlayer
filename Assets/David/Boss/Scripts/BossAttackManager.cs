@@ -5,7 +5,7 @@ public class BossAttackManager : MonoBehaviour
 {
     // === CORE REFERENCES ===
     [Header("Camera Components")]
-    private CameraShake cameraShake;
+    [SerializeField] private CameraShake cameraShake;
 
     [Header("Boss Components")]
     private Animator animator;

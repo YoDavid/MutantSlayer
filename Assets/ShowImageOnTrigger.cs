@@ -1,15 +1,18 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ShowMultipleImagesOnTrigger : MonoBehaviour
+public class ShowImageOnTrigger : MonoBehaviour
 {
-    public string playerTag = "Player"; // תג האובייקט של השחקן
-    public GameObject[] imagesToShow; // מערך של אובייקטים של תמונות שיוצגו
+    public string playerTag = "Player";
+    public GameObject[] imagesToShow;
+    public float hideDelay = 3f;
+
+    private Coroutine disableImagesCoroutine;
+    private PlayerHealth playerHealth;
 
     void Start()
     {
-        // ודא שכל התמונות מוסתרות בהתחלה
+        // Hide all images at the start
         if (imagesToShow != null)
         {
             foreach (GameObject image in imagesToShow)
@@ -28,14 +31,27 @@ public class ShowMultipleImagesOnTrigger : MonoBehaviour
         {
             Debug.LogError("Images To Show array is not assigned on " + gameObject.name);
         }
+
+        // Find the player's health component
+        GameObject player = GameObject.FindGameObjectWithTag(playerTag);
+        if (player != null)
+        {
+            playerHealth = player.GetComponent<PlayerHealth>();
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // בדוק אם האובייקט שנכנס הוא השחקן
         if (other.CompareTag(playerTag) && imagesToShow != null)
         {
-            // הצג את כל התמונות במערך
+            // Cancel any pending disable coroutine
+            if (disableImagesCoroutine != null)
+            {
+                StopCoroutine(disableImagesCoroutine);
+                disableImagesCoroutine = null;
+            }
+
+            // Show all images
             foreach (GameObject image in imagesToShow)
             {
                 if (image != null)
@@ -48,17 +64,64 @@ public class ShowMultipleImagesOnTrigger : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        // אופציונלי: הסתר את כל התמונות כשהשחקן יוצא מהקוליידר
-        if (other.CompareTag(playerTag) && imagesToShow != null)
+        if (other.CompareTag(playerTag) && imagesToShow != null && (playerHealth == null || !playerHealth.isDead))
         {
-            // הסתר את כל התמונות במערך
-            foreach (GameObject image in imagesToShow)
+            // Check if this GameObject is active before running coroutine
+            if (!gameObject.activeInHierarchy)
             {
-                if (image != null)
-                {
-                    image.SetActive(false);
-                }
+                DisableImagesImmediately(); // If inactive, hide immediately
+                return;
             }
+
+            // If the other object is tagged "Tutorial," hide immediately
+            if (this.gameObject.CompareTag("Tutorial"))
+            {
+                DisableImagesImmediately();
+            }
+            else // Otherwise, hide with delay
+            {
+                DisableImagesWithDelay();
+            }
+        }
+    }
+
+    private void DisableImagesWithDelay()
+    {
+        if (!gameObject.activeInHierarchy) // Prevent coroutine if inactive
+        {
+            DisableImagesImmediately();
+            return;
+        }
+
+        if (disableImagesCoroutine != null)
+        {
+            StopCoroutine(disableImagesCoroutine);
+        }
+        disableImagesCoroutine = StartCoroutine(DisableImagesAfterDelay(hideDelay));
+    }
+
+    private IEnumerator DisableImagesAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        DisableImagesImmediately();
+    }
+
+    private void DisableImagesImmediately()
+    {
+        foreach (GameObject image in imagesToShow)
+        {
+            if (image != null)
+            {
+                image.SetActive(false);
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (playerHealth != null && playerHealth.isDead && imagesToShow != null && imagesToShow.Length > 0 && imagesToShow[0].activeSelf)
+        {
+            DisableImagesWithDelay();
         }
     }
 }

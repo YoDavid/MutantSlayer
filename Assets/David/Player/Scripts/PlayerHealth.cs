@@ -158,6 +158,7 @@ public class PlayerHealth : HealthSystem
 
     public void KillPlayer()
     {
+        CurrentHealth = 0;
         Die();
     }
 

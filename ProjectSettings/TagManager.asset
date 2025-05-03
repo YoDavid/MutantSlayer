@@ -11,6 +11,7 @@ TagManager:
   - PlayerHurtBox
   - Enemy
   - SmallEnemy
+  - Tutorial
   layers:
   - Default
   - TransparentFX
