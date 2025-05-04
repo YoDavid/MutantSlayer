@@ -5,28 +5,35 @@ public class BossHealth : MonoBehaviour, IDamageable
 {
     [Header("Settings")]
     [SerializeField] public int maxHealth = 500;
-    [SerializeField] private Color blinkColor = Color.white;
-    [SerializeField] private float blinkDuration = 0.1f;
-    [SerializeField] private int blinkCount = 3;
     [SerializeField] private Vector3 popupOffset = new Vector3(0, 2f, 0);
-    private Coroutine blinkRoutine;
 
     [SerializeField] private BloodSplashParticlesPool bloodSplashPool;
+    private DamageFlash damageFlash; // Reference to DamageFlash component
 
     public int currentHealth;
-    private SpriteRenderer spriteRenderer;
-    private Color originalColor;
 
     public event System.Action<int> OnHealthChanged;
     public event System.Action OnDeath;
     public int MaxHealth => maxHealth;
 
-
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        originalColor = spriteRenderer.color;
         currentHealth = maxHealth;
+        AssignReferences();
+    }
+
+    private void AssignReferences()
+    {
+        // Assign DamageFlash reference
+        damageFlash = GetComponent<DamageFlash>();
+        if (damageFlash == null)
+        {
+            damageFlash = GetComponentInChildren<DamageFlash>();
+            if (damageFlash == null)
+            {
+                Debug.LogError("DamageFlash component missing on boss or its children!");
+            }
+        }
     }
 
     public void TakeDamage(int damage, bool isCritical = false, bool isCombo = false, int comboCount = 0)
@@ -69,23 +76,14 @@ public class BossHealth : MonoBehaviour, IDamageable
             );
         }
 
-        if (blinkRoutine != null) StopCoroutine(blinkRoutine);
-        blinkRoutine = StartCoroutine(BlinkEffect());
+        if (damageFlash != null)
+        {
+            damageFlash.CallDamageFlash();
+        }
 
         if (currentHealth <= 0)
         {
             Die();
-        }
-    }
-
-    private IEnumerator BlinkEffect()
-    {
-        for (int i = 0; i < blinkCount; i++)
-        {
-            spriteRenderer.color = blinkColor;
-            yield return new WaitForSeconds(blinkDuration);
-            spriteRenderer.color = originalColor;
-            yield return new WaitForSeconds(blinkDuration);
         }
     }
 

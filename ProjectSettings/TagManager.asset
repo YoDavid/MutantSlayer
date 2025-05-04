@@ -12,6 +12,7 @@ TagManager:
   - Enemy
   - SmallEnemy
   - Tutorial
+  - Level-3
   layers:
   - Default
   - TransparentFX
@@ -87,4 +88,7 @@ TagManager:
     locked: 0
   - name: FordGroud
     uniqueID: 1890701361
+    locked: 0
+  - name: Area3
+    uniqueID: 4214315619
     locked: 0

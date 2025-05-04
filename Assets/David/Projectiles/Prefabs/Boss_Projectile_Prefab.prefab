@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -4982458580942124007}
   - component: {fileID: -6314828418482676717}
   - component: {fileID: 94041331923168704}
+  - component: {fileID: -5990264688860470358}
   m_Layer: 0
   m_Name: Boss_Projectile_Prefab
   m_TagString: Untagged
@@ -55,7 +56,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: f9a27b28d9ee9694893dd336a32e561f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -168,3 +169,22 @@ MonoBehaviour:
   growDuration: 0.3
   initialScale: {x: 0.2, y: 0.2, z: 0.2}
   maxScale: {x: 1, y: 1, z: 1}
+--- !u!114 &-5990264688860470358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4635511025921963439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09405ceb5987f6748a924694248c2c72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shineColor: {r: 0.22274303, g: 2, b: 0, a: 1}
+  minShineAmount: 0.6
+  maxShineAmount: 1
+  pulseSpeed: 2
+  intensity: 0.4
+  colorPropertyName: _FlashColor
+  amountPropertyName: _FlashAmount

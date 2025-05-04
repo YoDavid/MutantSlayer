@@ -61,14 +61,33 @@ public class BossAttackManager : MonoBehaviour
     private void AssignReferences()
     {
         bossAI = GetComponent<BossAI>();
+        if (bossAI == null) Debug.LogError("BossAI component missing!");
+
         animator = GetComponent<Animator>();
+        if (animator == null) Debug.LogError("Animator component missing!");
+
         bossSpriteRenderer = GetComponent<SpriteRenderer>();
+        if (bossSpriteRenderer == null) Debug.LogError("SpriteRenderer component missing!");
+
+        // Get camera shake - try both methods but prefer the one that works
         cameraShake = FindObjectOfType<CameraShake>();
+        if (cameraShake == null)
+        {
+            cameraShake = Camera.main?.GetComponent<CameraShake>();
+        }
+        if (cameraShake == null) Debug.LogError("CameraShake component missing!");
+
         comboAttackHitbox = transform.Find("BossComboAttackCollider")?.GetComponent<BossComboAttackHitbox>();
+        if (comboAttackHitbox == null) Debug.LogError("ComboAttackHitbox missing!");
+
         spitSpawnPoint = transform.Find("Spit_Position_Instantiaion");
+        if (spitSpawnPoint == null) Debug.LogError("Spit spawn point missing!");
+
         bossAOEAttack = GetComponentInChildren<BossAOEAttack>();
-        cameraShake = Camera.main?.GetComponent<CameraShake>();
+        if (bossAOEAttack == null) Debug.LogError("BossAOEAttack missing!");
+
         fallingSpikeSpawner = FindAnyObjectByType<FallingSpikeSpawner>();
+        if (fallingSpikeSpawner == null) Debug.LogError("FallingSpikeSpawner missing!");
     }
 
     public void ComboAttackBehavior()

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7027763459934341977}
   - component: {fileID: -6220768918096555683}
   - component: {fileID: -9220976090336000816}
+  - component: {fileID: 7407303479932635422}
   m_Layer: 0
   m_Name: Player_Projectile_Prefab
   m_TagString: Untagged
@@ -56,7 +57,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: f9a27b28d9ee9694893dd336a32e561f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -217,3 +218,22 @@ MonoBehaviour:
   isLargeEnough: 0
   destroyParticlePrefab: {fileID: 4501868321521990437, guid: 150c50bbfb6055145901d5631b71174e, type: 3}
   particleSpawnOffsetX: 5
+--- !u!114 &7407303479932635422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5326225131147632039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09405ceb5987f6748a924694248c2c72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shineColor: {r: 4, g: 0, b: 0, a: 1}
+  minShineAmount: 0.2
+  maxShineAmount: 0.5
+  pulseSpeed: 1
+  intensity: 1
+  colorPropertyName: _FlashColor
+  amountPropertyName: _FlashAmount

@@ -19,7 +19,7 @@ public class PlayerAttackController : MonoBehaviour
 
     #region Attack State Variables
     [SerializeField] private int attackCount;
-    [SerializeField] private float lastAttackTime;
+    [SerializeField] private float lastAttackTime = Mathf.NegativeInfinity;
     [SerializeField] private float lastAttackEndTime;
     private Vector2 originalOffset;
     private Vector2 originalSize;
@@ -92,6 +92,8 @@ public class PlayerAttackController : MonoBehaviour
     [SerializeField] private bool wasRangedInterrupted = false;
     [SerializeField] private bool requireNewRangedInput = false;
 
+    [SerializeField] private float attackBufferTime = 0.1f;
+
     #endregion
 
     #region Initialization
@@ -115,6 +117,12 @@ public class PlayerAttackController : MonoBehaviour
             projectileSpawnPoint = transform.Find("ProjectilePos");
     }
     #endregion
+
+    void Start()
+    {
+        lastAttackTime = Mathf.NegativeInfinity;
+    }
+
 
     #region Update Loop
     private void Update()
@@ -146,7 +154,10 @@ public class PlayerAttackController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && CanAttack())
         {
-            PerformNormalAttack();
+            if (Time.time - lastAttackTime >= attackBufferTime)
+            {
+                PerformNormalAttack();
+            }
         }
     }
 

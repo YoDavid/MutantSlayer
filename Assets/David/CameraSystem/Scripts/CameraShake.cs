@@ -10,7 +10,7 @@ public class CameraShake : MonoBehaviour
     [SerializeField] private float normalAttackShakeMagnitude;
     [SerializeField] private float normalAttackDampingSpeed;
 
-    [Header("Normal Attack Shake Effect")]
+    [Header("Critical Attack Shake Effect")]
     [SerializeField] private float criticalAttackShakeDuration;
     [SerializeField] private float criticalAttackMinshakeMagnitude;
     [SerializeField] private float criticalAttackMaxshakeMagnitude;
@@ -38,61 +38,39 @@ public class CameraShake : MonoBehaviour
     [SerializeField] private float jumpSmashShakeMagnitude;
     [SerializeField] private float jumpSmashDampingSpeed;
 
-    private Vector3 originalPosition;
+    private Vector3 shakeOffset = Vector3.zero;
     private bool isShaking = false;
-    private float fixedZ;
 
-    private Camera cameraComponent;
-
-    void Start()
-    {
-        cameraComponent = GetComponent<Camera>();
-        fixedZ = transform.position.z;
-    }
+    public Vector3 ShakeOffset => shakeOffset;
 
     public void NormalHitShakeCamera()
     {
         if (!isShaking)
-        {
-            originalPosition = transform.position;
             StartCoroutine(Shake(normalAttackShakeDuration, normalAttackMinshakeMagnitude, normalAttackMaxshakeMagnitude, normalAttackShakeMagnitude, normalAttackDampingSpeed));
-        }
     }
 
     public void CriticalHitShakeCamera()
     {
         if (!isShaking)
-        {
-            originalPosition = transform.position;
             StartCoroutine(Shake(criticalAttackShakeDuration, criticalAttackMinshakeMagnitude, criticalAttackMaxshakeMagnitude, criticalAttackShakeMagnitude, criticalAttackDampingSpeed));
-        }
     }
 
     public void ShakeCameraComboAttack()
     {
         if (!isShaking)
-        {
-            originalPosition = transform.position;
             StartCoroutine(Shake(comboShakeDuration, comboMinShakeMagnitude, comboMaxShakeMagnitude, comboShakeMagnitude, comboDampingSpeed));
-        }
     }
 
     public void ShakeCameraAOEAttack()
     {
         if (!isShaking)
-        {
-            originalPosition = transform.position;
             StartCoroutine(Shake(aoeShakeDuration, aoeMinShakeMagnitude, aoeMaxShakeMagnitude, aoeShakeMagnitude, aoeDampingSpeed));
-        }
     }
 
     public void ShakeCameraJumpSmashAttack()
     {
         if (!isShaking)
-        {
-            originalPosition = transform.position;
             StartCoroutine(Shake(jumpSmashShakeDuration, jumpSmashMinShakeMagnitude, jumpSmashMaxShakeMagnitude, jumpSmashShakeMagnitude, jumpSmashDampingSpeed));
-        }
     }
 
     private IEnumerator Shake(float duration, float minMagnitude, float maxMagnitude, float magnitude, float damping)
@@ -105,7 +83,7 @@ public class CameraShake : MonoBehaviour
             float x = Random.Range(minMagnitude, maxMagnitude) * magnitude;
             float y = Random.Range(minMagnitude, maxMagnitude) * magnitude;
 
-            transform.position = new Vector3(originalPosition.x + x, originalPosition.y + y, fixedZ);
+            shakeOffset = new Vector3(x, y, 0f);
 
             elapsedTime += Time.deltaTime;
             magnitude = Mathf.Lerp(magnitude, 0, damping * Time.deltaTime);
@@ -113,7 +91,7 @@ public class CameraShake : MonoBehaviour
             yield return null;
         }
 
-        transform.position = originalPosition;
+        shakeOffset = Vector3.zero;
         isShaking = false;
     }
 }
