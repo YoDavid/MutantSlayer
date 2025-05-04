@@ -191,6 +191,8 @@ MonoBehaviour:
   enableSideSpikes: 1
   sideSpikesInterval: 0.4
   sideSpikesActive: 0
+  rockParticlesPrefab: {fileID: 0}
+  fallingSpikeSpawner: {fileID: 0}
 --- !u!1 &4229897916880431008
 GameObject:
   m_ObjectHideFlags: 0
@@ -289,6 +291,7 @@ MonoBehaviour:
   playerHealth: {fileID: 0}
   playerHurtBoxCollider: {fileID: 0}
   isPlayerInRange: 0
+  rockParticlesPrefab: {fileID: 0}
 --- !u!114 &263528929095284032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -648,7 +651,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -812,6 +815,10 @@ MonoBehaviour:
   player: {fileID: 0}
   _isAttacking: 0
   showGizmos: 1
+  minScreamDelay: 1
+  maxScreamDelay: 5
+  screamDuration: 1.5
+  nextScreamTimer: 0
 --- !u!114 &3392998768475903724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -824,6 +831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5e77f61655b5364fb4fd6ad89a7d333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraShake: {fileID: 0}
   comboAttackHitbox: {fileID: 300742698439914869}
   bossJumpAttackHitbox: {fileID: 7228467649158165678}
   bossAOEAttack: {fileID: 8940063155773696792}
@@ -832,15 +840,14 @@ MonoBehaviour:
   spitSpawnPoint: {fileID: 2482301199792930737}
   spitDelay: 0.85
   jumpAnticipationTime: 0.7
-  jumpHeightMin: 10
-  jumpHeightMax: 15
-  jumpTargetPosition: {x: 0, y: 0}
+  timeOffscreenBeforeDrop: 2
+  maxTimeInAir: 3
+  jumpHeight: 0
+  dropSpeed: -30
   isJumping: 0
   isJumpingSmash: 0
-  jumpForce: 0
-  jumpHorizontalSpeed: 0
-  jumpHeight: 0
-  jumpAttackDuration: 0
+  jumpTargetPosition: {x: 0, y: 0}
+  fallingSpikeSpawner: {fileID: 0}
 --- !u!114 &7552348046064627159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -876,7 +883,7 @@ MonoBehaviour:
   blinkDuration: 0.1
   blinkCount: 3
   popupOffset: {x: 0, y: -1.5, z: 0}
-  bloodSplashPrefab: {fileID: 0}
+  bloodSplashPool: {fileID: 0}
   currentHealth: 0
 --- !u!1 &5254685009679633010
 GameObject:
@@ -978,6 +985,8 @@ MonoBehaviour:
   attackCollider: {fileID: 0}
   playerHealth: {fileID: 0}
   playerHurtBoxCollider: {fileID: 0}
+  rockParticlesPrefab: {fileID: 0}
+  fallingSpikeSpawner: {fileID: 0}
 --- !u!1 &5700111315027745923
 GameObject:
   m_ObjectHideFlags: 0

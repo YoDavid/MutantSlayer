@@ -121,14 +121,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89135943236fa894da791beec3bd87e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 10
+  damageConfig: {fileID: 0}
   attackDuration: 0.2
   attackTimings:
   - 0.6
   - 1.1
   - 1.9
-  playerHealth: {fileID: 0}
   colliderShift: 33
+  attackCollider: {fileID: 0}
+  playerHealth: {fileID: 0}
+  playerHurtBoxCollider: {fileID: 0}
+  rockParticlesPrefab: {fileID: 0}
+  fallingSpikeSpawner: {fileID: 0}
 --- !u!1 &5512506803662219850
 GameObject:
   m_ObjectHideFlags: 0
@@ -191,7 +195,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -329,16 +333,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  player: {fileID: 0}
   speed: 2
   desiredDistanceFromPlayer: 8
   isFacingLeft: 1
-  groundCheck: {fileID: 3456259372687484516}
-  groundCheckRadius: 0.6
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  isGrounded: 0
   attackRange: 8.68
   rangedAttackRange: 25
   aoeAttackRange: 18.8
@@ -350,13 +347,22 @@ MonoBehaviour:
   comboAttackDuration: 2.8
   rangedAttackDuration: 1
   aoeAttackDuration: 4.4
-  rb: {fileID: 6801926445257053491}
-  animator: {fileID: 1398573991708630370}
-  bossMovement: {fileID: 3513243742902532373}
-  _isAttacking: 0
-  showGizmos: 1
   jumpCooldownTimer: 0
   maxJumpCooldown: 15
+  groundCheckRadius: 0.6
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  groundCheck: {fileID: 3456259372687484516}
+  isGrounded: 0
+  rb: {fileID: 6801926445257053491}
+  player: {fileID: 0}
+  _isAttacking: 0
+  showGizmos: 1
+  minScreamDelay: 1
+  maxScreamDelay: 5
+  screamDuration: 1.5
+  nextScreamTimer: 0
 --- !u!114 &9057135614513273811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,22 +375,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5e77f61655b5364fb4fd6ad89a7d333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 1398573991708630370}
+  cameraShake: {fileID: 0}
   comboAttackHitbox: {fileID: 4378328218187293667}
+  bossJumpAttackHitbox: {fileID: 0}
+  bossAOEAttack: {fileID: 0}
   spitParticlePrefab: {fileID: 4635511025921963439, guid: 5616280496e7c5b40b2438d91e28831b, type: 3}
   projectileSpeed: 5
   spitSpawnPoint: {fileID: 5485990403015595304}
   spitDelay: 0.85
+  jumpAnticipationTime: 0.7
+  timeOffscreenBeforeDrop: 2
+  maxTimeInAir: 3
+  jumpHeight: 0
+  dropSpeed: -30
   isJumping: 0
   isJumpingSmash: 0
-  jumpAnticipationTime: 0.7
-  jumpForce: 0
-  jumpHorizontalSpeed: 0
-  jumpHeightMin: 10
-  jumpHeightMax: 15
-  jumpHeight: 0
   jumpTargetPosition: {x: 0, y: 0}
-  jumpAttackDuration: 0
+  fallingSpikeSpawner: {fileID: 0}
 --- !u!114 &3513243742902532373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,8 +405,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 6
-  player: {fileID: 0}
+  rb: {fileID: 0}
   animator: {fileID: 1398573991708630370}
+  bossAI: {fileID: 0}
+  player: {fileID: 0}
   showGroundCheckGizmo: 1
 --- !u!114 &1121652860993372087
 MonoBehaviour:
@@ -413,7 +422,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aae55d8bf34db7b45b5871023b20bdf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  maxHealth: 500
+  blinkColor: {r: 1, g: 1, b: 1, a: 1}
+  blinkDuration: 0.1
+  blinkCount: 3
+  popupOffset: {x: 0, y: 2, z: 0}
+  bloodSplashPool: {fileID: 0}
+  currentHealth: 0
 --- !u!1 &5676303788097376030
 GameObject:
   m_ObjectHideFlags: 0

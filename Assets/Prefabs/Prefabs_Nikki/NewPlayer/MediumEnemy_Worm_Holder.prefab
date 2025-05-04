@@ -93,7 +93,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -230,6 +230,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 259a898ead587e94a8d7e2780698a204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  screamDistanceThreshold: 6
+  screamCooldownDuration: 15
+  playerTransform: {fileID: 0}
 --- !u!114 &4979799241672836900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +260,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showGizmos: 1
   config: {fileID: 11400000, guid: e4e06320e66f69a4082b02d80ba8fee1, type: 2}
+  rockParticlesPrefab: {fileID: 0}
 --- !u!114 &5597741193712879363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,8 +273,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d44edbf095293946881f64c4927f32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHealth: 100
+  _currentHealth: 0
+  bloodSplashPrefab: {fileID: 0}
+  bloodSplashPool: {fileID: 0}
+  damageBlinkDuration: 0.1
+  damageBlinkColor: {r: 1, g: 0, b: 0, a: 1}
   config: {fileID: 11400000, guid: e4e06320e66f69a4082b02d80ba8fee1, type: 2}
-  currentHealth: 0
+  overrideHealth: 0
+  customMaxHealth: 30
+  enemyType: 0
 --- !u!114 &8042263615438976780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,6 +296,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   config: {fileID: 11400000, guid: e4e06320e66f69a4082b02d80ba8fee1, type: 2}
+  patrolSettings:
+    enablePatrol: 1
+    patrolLeftBound: -3
+    patrolRightBound: 3
+    patrolSpeed: 1.5
+    idleTimeAtEdges: 1
+  maxChaseRangeFromBounds: 2
+  minDistanceFromPlayer: 0.5
+  playerPositionCheckInterval: 0.2
+  isFacingLeft: 0
 --- !u!1 &3462569867953808942
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,5 +396,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8e35ff2d45d34143ba2337e2094ee7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: e4e06320e66f69a4082b02d80ba8fee1, type: 2}
+  enemyConfig: {fileID: 0}
+  damageConfig: {fileID: 0}
   isFirstAttackActive: 1

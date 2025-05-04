@@ -32,7 +32,7 @@ public class BossHealthTesting : HealthSystem
 
         // Handle blink effect
         if (blinkRoutine != null) StopCoroutine(blinkRoutine);
-        blinkRoutine = StartCoroutine(BlinkEffect());
+        //blinkRoutine = StartCoroutine(BlinkEffect());
 
         if (CurrentHealth <= 0) Die();
     }
@@ -44,15 +44,5 @@ public class BossHealthTesting : HealthSystem
         Destroy(gameObject);
     }
 
-    protected override IEnumerator BlinkEffect()
-    {
-        // Custom blink effect for the boss
-        for (int i = 0; i < blinkCount; i++)
-        {
-            spriteRenderer.color = damageBlinkColor; // Flash red
-            yield return new WaitForSeconds(damageBlinkDuration);
-            spriteRenderer.color = originalColor; // Revert
-            yield return new WaitForSeconds(damageBlinkDuration);
-        }
-    }
+   
 }

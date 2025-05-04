@@ -292,6 +292,6 @@ MonoBehaviour:
   fillImage: {fileID: 6762129097012754306}
   fullHealthColor: {r: 1, g: 0, b: 0, a: 1}
   zeroHealthColor: {r: 0, g: 0, b: 0, a: 1}
-  smallEnemyYOffset: 15
+  smallEnemyYOffset: 10
   mediumEnemyYOffset: 80
   enemyHealth: {fileID: 0}

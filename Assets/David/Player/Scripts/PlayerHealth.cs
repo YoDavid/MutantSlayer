@@ -17,6 +17,7 @@ public class PlayerHealth : HealthSystem
 
     [SerializeField] private float comboInvulnerabilityTime = 1.5f; // Combo-specific invulnerability time
     [SerializeField] private bool isComboInvulnerable = false;
+    private DamageFlash damageFlash;
 
 
     protected override void Awake()
@@ -25,6 +26,7 @@ public class PlayerHealth : HealthSystem
         playerMovement = GetComponent<PlayerMovementController>();
         playerHurtbox = GetComponentInChildren<PlayerHurtbox>();
         playerAnimation = GetComponent<PlayerAnimationController>();
+        damageFlash = GetComponent<DamageFlash>();
     }
 
     private void Update()
@@ -88,6 +90,7 @@ public class PlayerHealth : HealthSystem
         if (isDead || isInvulnerable || isComboInvulnerable || playerHurtbox == null || !playerHurtbox.enabled) return;
 
         base.TakeDamage(damage, isCritical);
+        damageFlash.CallDamageFlash();
 
         playerAnimation.TriggerTakenHit();
         PlayRandomTakeHitSound();

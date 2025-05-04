@@ -11,6 +11,7 @@ public class EnemyHealth : HealthSystem, IDamageable
     // Components
     private AudioManager audioManager;
     private Animator animator;
+    private DamageFlash damageFlash;
 
     // Audio triggers
     private bool screamedAt75 = false;
@@ -18,7 +19,7 @@ public class EnemyHealth : HealthSystem, IDamageable
     private bool screamedAt25 = false;
 
     public enum EnemyType { Small, Medium }
-    public EnemyType enemyType; 
+    public EnemyType enemyType;
 
     protected override void Awake()
     {
@@ -35,6 +36,8 @@ public class EnemyHealth : HealthSystem, IDamageable
 
         if (bloodSplashPool == null)
             bloodSplashPool = FindObjectOfType<BloodSplashParticlesPool>();
+
+        damageFlash = GetComponent<DamageFlash>();
     }
 
     public void TakeDamage(int damage, bool isCritical = false, bool isCombo = false, int comboCount = 0)
@@ -47,6 +50,7 @@ public class EnemyHealth : HealthSystem, IDamageable
 
         if (!isCombo && DamagePopUp.Instance != null)
         {
+            damageFlash.CallDamageFlash();
             DamagePopUp.Instance.CreateDamageText(
                 damage,
                 transform.position + Vector3.up * 1.5f,
@@ -112,19 +116,8 @@ public class EnemyHealth : HealthSystem, IDamageable
             bloodSplashPool.PlayDeathSplash(transform.position);
 
         GameObject toDestroy = transform.parent != null ? transform.parent.gameObject : gameObject;
-        Destroy(toDestroy, 1f);
+        Destroy(toDestroy, 0.1f);
 
         OnDeath?.Invoke();
-    }
-
-    protected override IEnumerator BlinkEffect()
-    {
-        for (int i = 0; i < config.enemyBlinkCount; i++)
-        {
-            spriteRenderer.color = config.enemyBlinkColor;
-            yield return new WaitForSeconds(config.enemyBlinkDuration);
-            spriteRenderer.color = originalColor;
-            yield return new WaitForSeconds(config.enemyBlinkDuration);
-        }
     }
 }

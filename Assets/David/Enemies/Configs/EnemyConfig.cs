@@ -24,11 +24,6 @@ public class EnemyConfig : ScriptableObject
     public int attackDamage = 10;
     public float hitCooldown = 0.5f;
 
-    [Header("Damage Effects")]
-    public float enemyBlinkDuration = 0.1f;
-    public int enemyBlinkCount = 2;
-    public Color enemyBlinkColor = new Color(1, 0, 0, 0.5f);
-
     [Header("Main Collider Offsets")]
     public Vector2 rightFacingColliderOffset = new Vector2(0.5f, 0);
     public Vector2 leftFacingColliderOffset = new Vector2(-0.5f, 0);

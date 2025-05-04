@@ -8,7 +8,7 @@ public class HealthSystem : MonoBehaviour
     [SerializeField] protected int _currentHealth;
 
     [Header("Death Effects")]
-    [SerializeField] protected GameObject bloodSplashPrefab;  
+    [SerializeField] protected GameObject bloodSplashPrefab;
     [SerializeField] protected BloodSplashParticlesPool bloodSplashPool;
 
     public int MaxHealth
@@ -30,12 +30,7 @@ public class HealthSystem : MonoBehaviour
         protected set => _currentHealth = Mathf.Clamp(value, 0, _maxHealth);
     }
 
-    [Header("Damage Effects")]
-    public float damageBlinkDuration = 0.1f;
-    public Color damageBlinkColor = Color.red;
-
     protected SpriteRenderer spriteRenderer;
-    protected Color originalColor;
 
     public System.Action OnDeath;
     public System.Action<int> OnHealthChanged;
@@ -43,7 +38,6 @@ public class HealthSystem : MonoBehaviour
     protected virtual void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null) originalColor = spriteRenderer.color;
         CurrentHealth = _maxHealth; // Initialize with serialized value
     }
 
@@ -51,13 +45,12 @@ public class HealthSystem : MonoBehaviour
     {
         CurrentHealth -= damage;
         OnHealthChanged?.Invoke(CurrentHealth);
-        StartCoroutine(BlinkEffect());
         if (CurrentHealth <= 0) Die();
     }
 
     protected virtual void Die()
     {
-        if (CurrentHealth > 0) return; 
+        if (CurrentHealth > 0) return;
 
         Debug.Log("Die method called");
         if (bloodSplashPool != null)
@@ -67,13 +60,5 @@ public class HealthSystem : MonoBehaviour
         }
         Destroy(gameObject);
         OnDeath?.Invoke();
-    }
-
-    protected virtual IEnumerator BlinkEffect()
-    {
-        if (spriteRenderer == null) yield break;
-        spriteRenderer.color = damageBlinkColor;
-        yield return new WaitForSeconds(damageBlinkDuration);
-        spriteRenderer.color = originalColor;
     }
 }

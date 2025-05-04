@@ -4991,7 +4991,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5255,7 +5255,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5453,8 +5453,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1340198112}
-  offset: {x: 0, y: -2, z: -10}
-  smoothSpeed: 0.125
+  cameraZPosition: -10
+  boundsSize: {x: 20, y: 10}
+  idleCenterTime: 2
+  initialCenterSpeed: 2
+  maxCenterSpeed: 5
+  speedIncreaseRate: 0.5
+  enemyCenterSpeed: 5
+  teleportDistanceThreshold: 5
+  teleportTimeThreshold: 0.5
+  cameraShake: {fileID: 0}
+  proximityZoom: {fileID: 0}
+  showGizmos: 0
 --- !u!1001 &4168661535610412131
 PrefabInstance:
   m_ObjectHideFlags: 0

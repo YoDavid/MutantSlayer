@@ -186,7 +186,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -323,6 +323,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36dcf8e930e23eb4d8f1ed75af6058eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  hitStunDuration: 0.3
+  rangedAttackScale: 0.7
+  RangedAttackNormalScale: 1
+  healingDuration: 1
 --- !u!114 &8921160737333725451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -335,11 +340,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2719a39845f576c4784b41e49344873d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackCollider: {fileID: 0}
+  staminaBar: {fileID: 0}
+  projectileSpawnPoint: {fileID: 0}
+  chargeProjectilePrefab: {fileID: 0}
+  showGizmos: 1
+  comboHitbox: {fileID: 0}
+  attackCount: 0
+  lastAttackTime: 0
+  lastAttackEndTime: 0
+  isAttackEnabled: 1
+  chargeStartTime: 0
+  leftMouseButtonHoldTime: 0
+  isComboAttackTriggered: 0
+  comboChargingSoundDelay: 0.25
+  comboSwordDrawDelay: 0.4
+  comboClimaxDelay: 1.15
+  comboStaminaDrainRate: 25
+  comboStaminaDepleted: 0
   attackResetTime: 0.8
   attackDurations:
   - 0.4
   - 0.35
   - 0.3
+  requireGrounded: 1
+  cancelAttackIfAirborne: 1
   colliderOffsets:
   - {x: 0.42, y: -9.74}
   - {x: 5.24, y: -6.08}
@@ -356,8 +381,18 @@ MonoBehaviour:
   - 0.15
   - 0.2
   - 0.3
-  attackCollider: {fileID: 0}
-  showGizmos: 1
+  chargeStartDelay: 0.25
+  staminaDrainRate: 25
+  chargeProjectileDelay: 0.3
+  chargingSoundDelay: 0.25
+  swordDrawDelay: 0.4
+  climaxDelay: 1.15
+  electricityLoopStartDelay: 0.2
+  electricityLoopInterval: 0.3
+  earlyExitAttack: {fileID: 0}
+  wasComboInterrupted: 0
+  wasRangedInterrupted: 0
+  requireNewRangedInput: 0
 --- !u!114 &4522055283833947079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,7 +412,7 @@ MonoBehaviour:
   dashSpeed: 25
   dashDuration: 0.2
   dashCooldown: 1
-  dashKey: 304
+  dashJumpCooldown: 0.2
   jumpForce: 12
   maxJumpTime: 0.35
   jumpCancelRate: 0.5
@@ -388,3 +423,5 @@ MonoBehaviour:
     m_Bits: 8
   gravityScale: 2.5
   drawGizmos: 0
+  lastDashTime: -999
+  stepInterval: 0.4
