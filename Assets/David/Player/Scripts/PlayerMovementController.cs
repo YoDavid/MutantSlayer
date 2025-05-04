@@ -49,7 +49,7 @@ public class PlayerMovementController : MonoBehaviour
 
 
     [Header("Step Sound Settings")]
-    [SerializeField] private float stepInterval = 0.4f; // How often steps play
+    [SerializeField] private float stepInterval = 0.4f; 
     private bool isPlayingSteps = false;
 
     private void Awake()
@@ -152,12 +152,6 @@ public class PlayerMovementController : MonoBehaviour
             }
             isPlayingSteps = false;
         }
-    }
-
-    ///    Take CARE!!!!!!!!!!
-    private bool CanJumpAfterDash()
-    {
-        return !isDashing && (lastDashEndTime < 0 || Time.time - lastDashEndTime >= dashJumpCooldown);
     }
 
     private void Move(float move)

@@ -46,6 +46,7 @@ public class BloodSplashParticlesPool : MonoBehaviour
 
         Debug.Log("Death splash");
         PlaySplash(deathPool, deathSplashPrefab, position);
+        AudioManager.Instance.PlayBloodParticlesDeathSound();
     }
 
     public void PlayHitSplash(Vector3 position)

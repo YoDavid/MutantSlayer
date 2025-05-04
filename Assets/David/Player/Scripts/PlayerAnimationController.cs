@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerAnimationController : MonoBehaviour
 {
     public Animator animator;
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     private PlayerMovementController movementController;
     private PlayerAttackController attackController;
 

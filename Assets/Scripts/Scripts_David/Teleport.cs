@@ -12,6 +12,7 @@ public class Teleport : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private PlayerMovementController movementController;
     [SerializeField] private PlayerAttackController attackController;
+    [SerializeField] private PlayerAnimationController playerAnimation;
     [SerializeField] private bool isPlayerInZone = false;
 
     private void Start()
@@ -22,6 +23,7 @@ public class Teleport : MonoBehaviour
         {
             movementController = player.GetComponent<PlayerMovementController>();
             attackController = player.GetComponent<PlayerAttackController>();
+            playerAnimation = player.GetComponent<PlayerAnimationController>();
         }
         else
         {
@@ -35,6 +37,9 @@ public class Teleport : MonoBehaviour
 
         if (isPlayerInZone && (Input.GetKeyDown(KeyCode.F) || isAutoTeleportLevel))
         {
+            movementController.StopStepSounds();
+            playerAnimation.rb.velocity = Vector2.zero;
+            playerAnimation.SetIdleState(true);
             Debug.Log("Teleport: Starting teleport..." + (isAutoTeleportLevel ? " (Auto-triggered)" : " (F pressed)"));
             StartCoroutine(TeleportWithFade());
         }
@@ -68,11 +73,11 @@ public class Teleport : MonoBehaviour
 
     private IEnumerator TeleportWithFade()
     {
-        // Prevent multiple triggers
         if (!isPlayerInZone) yield break;
 
         isPlayerInZone = false;
 
+        if (movementController != null) playerAnimation.SetSpeed(0);
         if (movementController != null) movementController.enabled = false;
         if (attackController != null) attackController.enabled = false;
 
