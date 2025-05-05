@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1086494973077991567}
   - component: {fileID: 1074782708849858664}
   - component: {fileID: 5515223087459916027}
-  - component: {fileID: 5503047388229596887}
+  - component: {fileID: 5283983192266773355}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 206193581427607833}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5.1056385, y: 5.1056385, z: 5.1056385}
+  m_LocalScale: {x: 20.719124, y: 12.278, z: 12.278}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5030791610735788333}
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!225 &5503047388229596887
+--- !u!225 &5283983192266773355
 CanvasGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,7 +84,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 206193581427607833}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -1067,7 +1067,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -722.3, y: 343.3}
+  m_AnchoredPosition: {x: -693.3, y: 343.3}
   m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8540182531677938898
@@ -1824,18 +1824,18 @@ MonoBehaviour:
   timeSlowDuration: 1.5
   fadeOutDuration: 1
   delayBeforeTextAnimation: 0.5
-  textFadeInDuration: 1
-  textScaleDuration: 1
+  textFadeInDuration: 1.5
+  textScaleDuration: 1.2
   minScale: 0.5
   maxScale: 1.2
-  delayAfterTextAnimation: 0.5
-  panelFadeDuration: 1
+  delayAfterTextAnimation: 1.5
+  panelFadeDuration: 0.8
   buttonFadeDuration: 1
   youDiedTextCanvasGroup: {fileID: 8718005387496665273}
   youDiedTextTransform: {fileID: 3009965751678881060}
   buttonsParent: {fileID: 356259107323380178}
   buttonsCanvasGroup: {fileID: 8186502503050222496}
-  fadeInPanel: {fileID: 5503047388229596887}
+  fadeInPanel: {fileID: 5283983192266773355}
 --- !u!1 &3274793186069623585
 GameObject:
   m_ObjectHideFlags: 0
@@ -2197,7 +2197,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -730, y: 327}
+  m_AnchoredPosition: {x: -693.3, y: 327}
   m_SizeDelta: {x: 370.304, y: 370.304}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7332257220756584122
@@ -3859,7 +3859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.6603774, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

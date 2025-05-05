@@ -10,6 +10,8 @@ public abstract class BaseMenuController : MonoBehaviour
     [SerializeField] protected KeyCode downKey = KeyCode.S;
     [SerializeField] protected KeyCode selectKey = KeyCode.Return;
     [SerializeField] protected MenuButton[] menuButtons;
+    protected bool canUseButtons = false;
+
 
     protected int currentIndex = 0;
     protected bool isTransitioning = false;  // Prevent fast repeated inputs
@@ -56,7 +58,7 @@ public abstract class BaseMenuController : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (isTransitioning) return;  // Ignore input during transitions
+        if (isTransitioning || !canUseButtons) return;
         HandleKeyboardNavigation();
     }
 

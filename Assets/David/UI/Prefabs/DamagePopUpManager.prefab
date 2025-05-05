@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 26014781934180929}
   - component: {fileID: 9191202150102445618}
   - component: {fileID: 7815044519960168648}
+  - component: {fileID: 3052924087375484104}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -61,7 +62,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 999
   m_TargetDisplay: 0
 --- !u!114 &9191202150102445618
 MonoBehaviour:
@@ -103,6 +104,58 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!212 &3052924087375484104
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5801061408474795738}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 1890701361
+  m_SortingLayer: 13
+  m_SortingOrder: 999
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 0
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &6243120582280276431
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,7 +232,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1890701361
-  m_SortingLayer: 12
+  m_SortingLayer: 13
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &8141151732480384338
@@ -202,7 +255,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: asd
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 298679ce5706d624c807c34d3e36f867, type: 2}
   m_sharedMaterial: {fileID: 7584624785969250397, guid: 298679ce5706d624c807c34d3e36f867, type: 2}
@@ -211,8 +264,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190217
-  m_fontColor: {r: 0.5377358, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -359,7 +412,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8315738483200726354}
   - component: {fileID: 3558853611761872471}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: DamagePopUpManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -395,12 +448,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popUpPrefab: {fileID: 6243120582280276431}
-  defaultColor: {r: 0.3018868, g: 0, b: 0, a: 1}
-  playerColor: {r: 0.3019608, g: 0, b: 0, a: 1}
-  bossColor: {r: 0.3019608, g: 0, b: 0, a: 1}
-  critColor: {r: 0.103773594, g: 0, b: 0.0053747064, a: 1}
-  normalTextSize: 10
-  critTextSize: 18
+  defaultColor: {r: 1, g: 0, b: 0, a: 1}
+  playerColor: {r: 1, g: 0, b: 0, a: 1}
+  bossColor: {r: 1, g: 0, b: 0, a: 1}
+  critColor: {r: 1, g: 0.13676724, b: 0.10196078, a: 1}
+  normalTextSize: 20
+  critTextSize: 25
   regularEnemiesHeight: 1
   playerSpawnHeight: -2
   bossSpawnHeight: 1

@@ -10,12 +10,16 @@ public class Teleport : MonoBehaviour
     public float pauseDuration = 2f;
     public string autoTeleportLevelName = "to level 3";
 
+    // Animation control settings
+    [Header("Animation Control")]
+    public bool playIdleAnimation = false;
+    public bool playFallingAnimation = false;
+
     // Special platform settings
     [Header("Platform Special Settings")]
     public float platformFadeDuration = 0.3f;
     public float platformPauseBeforeEnable = 1.5f;
     public float platformPreFallDelay = 1f;
-
 
     // Debug visibility
     [Header("Debug States (Read Only)")]
@@ -74,7 +78,6 @@ public class Teleport : MonoBehaviour
             }
         }
 
-
         UpdateDebugStates(); // Keep debug states updated
     }
 
@@ -100,7 +103,18 @@ public class Teleport : MonoBehaviour
     {
         movementController.StopStepSounds();
         playerAnimation.rb.velocity = Vector2.zero;
-        playerAnimation.SetIdleState(true);
+
+        // Set animation state based on inspector settings
+        if (playIdleAnimation)
+        {
+            playerAnimation.SetIdleState(true);
+        }
+        else if (playFallingAnimation)
+        {
+            playerAnimation.SetFallingState(true);
+            _isInFallingState = true;
+        }
+
         isPlatformCollision = false;
         StartCoroutine(TeleportWithFade(usePlatformTiming: isAuto));
     }
@@ -124,7 +138,6 @@ public class Teleport : MonoBehaviour
         }
     }
 
-
     private IEnumerator HandlePlatformCollision(GameObject playerObj)
     {
         if (movementController == null || playerAnimation == null)
@@ -140,6 +153,7 @@ public class Teleport : MonoBehaviour
         if (playerAnimation != null && playerAnimation.rb != null)
         {
             playerAnimation.rb.velocity = Vector2.zero;
+            // Force falling animation for platform collision
             playerAnimation.SetFallingState(true);
             _isInFallingState = true;
         }
@@ -162,6 +176,8 @@ public class Teleport : MonoBehaviour
 
         SetMovementEnabled(true);
         SetAttackEnabled(true);
+        playerAnimation.SetFallingState(false);
+        _isInFallingState = false;
 
         if (SceneLoader.Instance != null)
         {
@@ -193,6 +209,17 @@ public class Teleport : MonoBehaviour
         float waitDuration = usePlatformTiming ? platformPauseBeforeEnable : pauseDuration;
         yield return new WaitForSecondsRealtime(waitDuration);
 
+        // Reset animation states after teleport
+        if (playIdleAnimation)
+        {
+            playerAnimation.SetIdleState(false);
+        }
+        else if (playFallingAnimation)
+        {
+            playerAnimation.SetFallingState(false);
+            _isInFallingState = false;
+        }
+
         SetMovementEnabled(true);
         SetAttackEnabled(true);
 
@@ -202,5 +229,4 @@ public class Teleport : MonoBehaviour
                 SceneLoader.Instance.FadeWithOverlay(1, 0, fadeDuration));
         }
     }
-
 }

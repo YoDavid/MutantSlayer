@@ -167,10 +167,10 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator FadeMusic(Sound newTrack)
     {
-
         float startVolume = musicSource.volume;
         float elapsed = 0f;
 
+        // Fade out current track
         while (elapsed < musicFadeDuration)
         {
             musicSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / musicFadeDuration);
@@ -180,13 +180,14 @@ public class AudioManager : MonoBehaviour
 
         musicSource.volume = 0f;
 
+        // Switch to new track and apply pitch
         musicSource.clip = newTrack.clip;
+        musicSource.pitch = newTrack.pitch; // Apply pitch from Inspector
         musicSource.loop = true;
         musicSource.Play();
 
-
+        // Fade in new track
         elapsed = 0f;
-
         while (elapsed < musicFadeDuration)
         {
             musicSource.volume = Mathf.Lerp(0f, newTrack.volume, elapsed / musicFadeDuration);
@@ -272,6 +273,33 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        switch (scene.name)
+        {
+            case "Scene_MainMenu":
+                PlayMusic("music_main_menu");
+                break;
+            case "Scene_SlideShow":
+                PlayMusic("music_opening_slideshow");
+                break;
+            case "Scene_Game":
+                PlayMusic("music_game_bg");
+                break;
+                // Add more cases later (boss, ending, etc.)
+        }
+    }
+
 
 
     // ====================== UI Sounds ======================
@@ -285,6 +313,11 @@ public class AudioManager : MonoBehaviour
     #region UI - Buttons
     public void PlayButtonClick() => PlaySFX("UI", "sfx_ui_button_click");
     public void PlayButtonHover() => PlaySFX("UI", "sfx_ui_button_hover");
+    #endregion
+
+    #region UI - SlideShow
+    public void PlayKeyboardSound() => PlaySFX("UI", "sfx_ui_keyboard_sound");
+    public void PlayKeyboardSound(float volume) => PlaySFX("UI", "sfx_ui_keyboard_sound", volume);
     #endregion
 
 
@@ -317,6 +350,8 @@ public class AudioManager : MonoBehaviour
     #region Player - Combat: Combo Slashes
     public void PlayComboSlashLoop() => PlaySFX("PlayerOthers", "sfx_player_combo_slash_loop");
     public void PlayComboFinalHit() => PlaySFX("Player", "sfx_player_combo_final_hit");
+    public void PlayEarlyComboExit() => PlaySFX("Player", "sfx_player_attack_early_exit");
+
     #endregion
 
     #region Player - Combat: Attack Hits
@@ -401,8 +436,11 @@ public class AudioManager : MonoBehaviour
 
     // ====================== Music ======================
     #region Music - Themes
-    public void PlayMainMenuTheme() => PlayMusic("music_theme_main_menu");
-    public void PlaySlideshowTheme() => PlayMusic("music_theme_slideshow");
+    public void PlayMusicMainMenu() => PlayMusic("music_main_menu");
+    public void PlayMusicOpeningSlideshow() => PlayMusic("music_opening_slideshow");
+    public void PlayMusicGameBackground() => PlayMusic("music_game_bg");
+    public void PlayMusicBossBattle() => PlayMusic("music_boss_battle");
+    public void PlayMusicEndingSlideshow() => PlayMusic("music_ending_slideshow");
     #endregion
 
 }

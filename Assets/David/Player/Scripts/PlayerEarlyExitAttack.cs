@@ -103,8 +103,7 @@ public class PlayerEarlyExitAttack : MonoBehaviour
         }
 
         // Play sound effect
-        audioManager?.PlaySFX("Player", "sfx_player_attack_early_exit");
-
+        AudioManager.Instance.PlayEarlyComboExit();
         CleanUpAttack();
     }
 

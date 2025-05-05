@@ -97,6 +97,7 @@ public class GameOverMenuController : BaseMenuController
         }
 
         SetVisible(true);
+        canUseButtons = true;
     }
 
     private IEnumerator AnimateYouDiedText()
@@ -140,8 +141,6 @@ public class GameOverMenuController : BaseMenuController
 
     public void OnRestartAtCheckpointPressed()
     {
-        AudioManager.Instance.PlayButtonClick();
-
         if (CheckpointManager.Instance.HasCheckpoint())
         {
             SceneLoader.Instance.LoadSceneWithFade(SceneManager.GetActiveScene().name);
