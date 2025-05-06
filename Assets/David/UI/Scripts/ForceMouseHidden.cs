@@ -6,20 +6,27 @@ public class ForceMouseHidden : MonoBehaviour
 {
     private void Start()
     {
-        LockAndHideMouse();
+        //LockAndHideMouse();
     }
 
     private void Update()
     {
         if (Cursor.visible || Cursor.lockState != CursorLockMode.Locked)
         {
-            LockAndHideMouse();
+            // LockAndHideMouse();
+            // UnlockAndShowMouse();
         }
     }
 
-    private void LockAndHideMouse()
+    public void LockAndHideMouse()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void UnlockAndShowMouse()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 }

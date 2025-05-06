@@ -125,7 +125,6 @@ public class AudioManager : MonoBehaviour
 
         if (paused)
         {
-            // Stop all sounds EXCEPT UI
             foreach (var category in categories)
             {
                 if (category.name != "UI") // Skip UI sounds
@@ -133,12 +132,19 @@ public class AudioManager : MonoBehaviour
                     category.source.Stop();
                 }
             }
-            musicSource.Pause(); // Pause music (optional)
+            // Reduce music volume when paused
+            musicSource.volume = 0.115f;
         }
         else
         {
-            // Unpause music (if needed)
-            musicSource.UnPause();
+            // Restore music volume when unpaused
+            musicSource.volume = 0.175f;
+
+            // If music is not playing, unpause it
+            if (!musicSource.isPlaying)
+            {
+                musicSource.UnPause(); // Unpause music if it's paused
+            }
         }
     }
 
@@ -285,6 +291,10 @@ public class AudioManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Stop all SFX immediately
+        StopAllSFX();
+
+        // Handle music transitions based on the scene
         switch (scene.name)
         {
             case "Scene_MainMenu":
@@ -300,6 +310,14 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    private void StopAllSFX()
+    {
+        // Stop all SFX sources
+        foreach (var category in categories)
+        {
+            category.source.Stop();
+        }
+    }
 
 
     // ====================== UI Sounds ======================

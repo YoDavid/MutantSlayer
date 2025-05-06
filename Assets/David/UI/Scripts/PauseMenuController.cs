@@ -10,22 +10,30 @@ public class PauseMenuController : BaseMenuController
     protected override void Start()
     {
         base.Start();
+        canUseButtons = true;
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+
+        }
     }
 
     public void SetVisible(bool visible)
     {
+        Debug.Log("Step 1: Set menu visible");  // Log when visibility is being toggled.
         IsVisible = visible;
         gameObject.SetActive(visible);
 
         if (visible)
         {
-            TimeManager.Instance?.PauseGame();
+            Debug.Log("Step 2: Menu opened");  // Log when the menu opens.
             SelectButton(0);
             AudioManager.Instance.PlayMenuOpen();
+            TimeManager.Instance?.PauseGame();
             if (optionsMenu) optionsMenu.SetActive(false);
         }
         else
         {
+            Debug.Log("Step 3: Menu closed");  // Log when the menu closes.
             TimeManager.Instance?.ResumeGame();
             AudioManager.Instance.PlayMenuClose();
         }
@@ -33,7 +41,12 @@ public class PauseMenuController : BaseMenuController
 
     public void OnResumePressed() => SetVisible(false);
 
-    public void OnOptionsPressed() => optionsMenu.SetActive(true);
+    public void OnOptionsPressed()
+    {
+        if (!optionsMenu) return;
+        optionsMenu.SetActive(true);
+    }
+
 
     public void OnMainMenuPressed()
     {

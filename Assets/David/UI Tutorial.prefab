@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7265244471059650189}
   - component: {fileID: 1976009870688751083}
-  - component: {fileID: 8148824640235558279}
   m_Layer: 0
   m_Name: Tutirial_Jump
   m_TagString: Tutorial
@@ -78,22 +77,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 15.147888, y: 10.744167}
   m_EdgeRadius: 0
---- !u!114 &8148824640235558279
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 197255346036104657}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725d50cbd23a15448fe7f3f4476491c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  imagesToShow:
-  - {fileID: 1940658079328993241}
-  hideDelay: 2
 --- !u!1 &1059261451075539541
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,7 +215,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1239141660168622347}
   - component: {fileID: 6987056429697863855}
-  - component: {fileID: 5077769759781206077}
   m_Layer: 0
   m_Name: Tutirial_RangeAttack
   m_TagString: Tutorial
@@ -300,22 +282,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 16.526474, y: 13.604507}
   m_EdgeRadius: 0
---- !u!114 &5077769759781206077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1146152576252972272}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725d50cbd23a15448fe7f3f4476491c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  imagesToShow:
-  - {fileID: 3621226896611247514}
-  hideDelay: 2
 --- !u!1 &1940658079328993241
 GameObject:
   m_ObjectHideFlags: 0
@@ -582,7 +548,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1993352835369641935}
   - component: {fileID: 1128016026302495202}
-  - component: {fileID: 2393548665308138466}
   m_Layer: 0
   m_Name: Tutirial_Helling
   m_TagString: Tutorial
@@ -650,22 +615,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 18.251152, y: 11.960087}
   m_EdgeRadius: 0
---- !u!114 &2393548665308138466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2793142462615586138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725d50cbd23a15448fe7f3f4476491c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  imagesToShow:
-  - {fileID: 1059261451075539541}
-  hideDelay: 2
 --- !u!1 &3322956973634466791
 GameObject:
   m_ObjectHideFlags: 0
@@ -812,7 +761,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3237964084307235961
 RectTransform:
   m_ObjectHideFlags: 0
@@ -927,7 +876,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3536751127635713787}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.7327881, y: -0.9565582, z: 0.14960873}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1341,7 +1290,6 @@ GameObject:
   m_Component:
   - component: {fileID: 322763469406914141}
   - component: {fileID: 8900493326803150887}
-  - component: {fileID: 5476610004420701755}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -1409,27 +1357,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 946.79913, y: 217.06326}
   m_EdgeRadius: 0
---- !u!114 &5476610004420701755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4580750350005423285}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725d50cbd23a15448fe7f3f4476491c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  imagesToShow:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  hideDelay: 2
 --- !u!1 &4915814222517754033
 GameObject:
   m_ObjectHideFlags: 0
@@ -1440,7 +1367,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4853676258431436008}
   - component: {fileID: 5865361640631277467}
-  - component: {fileID: 1406262092575827888}
   m_Layer: 0
   m_Name: Tutirial_ traverse (2)
   m_TagString: Tutorial
@@ -1508,22 +1434,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 89.44119, y: 68.44028}
   m_EdgeRadius: 0
---- !u!114 &1406262092575827888
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4915814222517754033}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725d50cbd23a15448fe7f3f4476491c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  imagesToShow:
-  - {fileID: 4020396113931375507}
-  hideDelay: 2
 --- !u!1 &6311195125944885409
 GameObject:
   m_ObjectHideFlags: 0
@@ -1534,7 +1444,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6194592323579697164}
   - component: {fileID: 2795825555898495703}
-  - component: {fileID: 5814219339571259277}
   m_Layer: 0
   m_Name: Tutirial_ traverse (3)
   m_TagString: Tutorial
@@ -1602,22 +1511,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 18.195984, y: 10}
   m_EdgeRadius: 0
---- !u!114 &5814219339571259277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6311195125944885409}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725d50cbd23a15448fe7f3f4476491c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  imagesToShow:
-  - {fileID: 4020396113931375507}
-  hideDelay: 2
 --- !u!1 &6965066839369432770
 GameObject:
   m_ObjectHideFlags: 0
@@ -1628,7 +1521,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1528609970391405754}
   - component: {fileID: 7663039190642829228}
-  - component: {fileID: 4218405741847388995}
   m_Layer: 0
   m_Name: Tutirial_Walk
   m_TagString: Tutorial
@@ -1696,23 +1588,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 27.202759, y: 10.744167}
   m_EdgeRadius: 0
---- !u!114 &4218405741847388995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6965066839369432770}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725d50cbd23a15448fe7f3f4476491c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  imagesToShow:
-  - {fileID: 2248793761474631526}
-  - {fileID: 9123304874556862613}
-  hideDelay: 2
 --- !u!1 &7157576246831925374
 GameObject:
   m_ObjectHideFlags: 0
@@ -1723,7 +1598,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7398135069794909119}
   - component: {fileID: 7413021526470430807}
-  - component: {fileID: 5812835429795774319}
   m_Layer: 0
   m_Name: Tutirial_ traverse
   m_TagString: Tutorial
@@ -1791,22 +1665,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 18.029663, y: 15.114998}
   m_EdgeRadius: 0
---- !u!114 &5812835429795774319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7157576246831925374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725d50cbd23a15448fe7f3f4476491c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  imagesToShow:
-  - {fileID: 4020396113931375507}
-  hideDelay: 2
 --- !u!1 &7922384101428457086
 GameObject:
   m_ObjectHideFlags: 0
@@ -1817,7 +1675,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5311988698134354599}
   - component: {fileID: 5301108954982674000}
-  - component: {fileID: 7489335061022617078}
   m_Layer: 0
   m_Name: Tutirial_ traverse (4)
   m_TagString: Tutorial
@@ -1885,22 +1742,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 18.195984, y: 10}
   m_EdgeRadius: 0
---- !u!114 &7489335061022617078
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7922384101428457086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725d50cbd23a15448fe7f3f4476491c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  imagesToShow:
-  - {fileID: 4020396113931375507}
-  hideDelay: 2
 --- !u!1 &8069764156516651402
 GameObject:
   m_ObjectHideFlags: 0
@@ -2007,7 +1848,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5862736653084058095}
   - component: {fileID: 7371276656880295924}
-  - component: {fileID: 2840875985568202547}
   m_Layer: 0
   m_Name: Tutirial_ traverse (1)
   m_TagString: Tutorial
@@ -2075,22 +1915,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 16.992249, y: 13.02243}
   m_EdgeRadius: 0
---- !u!114 &2840875985568202547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8570997447068082405}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725d50cbd23a15448fe7f3f4476491c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  imagesToShow:
-  - {fileID: 4020396113931375507}
-  hideDelay: 2
 --- !u!1 &8697030743908395849
 GameObject:
   m_ObjectHideFlags: 0
@@ -2101,7 +1925,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4115696558237127295}
   - component: {fileID: 6135111853878523831}
-  - component: {fileID: 386682449383012637}
   m_Layer: 0
   m_Name: Tutirial_BaseAttack
   m_TagString: Tutorial
@@ -2169,22 +1992,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 15.894043, y: 12.979408}
   m_EdgeRadius: 0
---- !u!114 &386682449383012637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8697030743908395849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d725d50cbd23a15448fe7f3f4476491c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  imagesToShow:
-  - {fileID: 3322956973634466791}
-  hideDelay: 2
 --- !u!1 &9123304874556862613
 GameObject:
   m_ObjectHideFlags: 0

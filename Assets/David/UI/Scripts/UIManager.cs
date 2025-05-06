@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 [System.Serializable]
 public class TutorialContent
@@ -50,6 +53,7 @@ public class UIManager : MonoBehaviour
     private bool wasHUDVisibleBeforeTutorial = true; // Track HUD visibility state before tutorial
     private Transform playerTransform;
 
+
     private void Awake()
     {
         if (Instance == null)
@@ -91,7 +95,10 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)
+        if (pauseMenu == null) return;
+        bool shouldPause = !pauseMenu.IsVisible;
+
+        if ((Input.GetKeyDown(KeyCode.Escape))
             && (gameOverMenu == null || !gameOverMenu.IsVisible)
             && playerHealth != null
             && playerHealth.CurrentHealth > 0)
@@ -136,6 +143,7 @@ public class UIManager : MonoBehaviour
         pauseMenu.SetVisible(shouldPause);
         SetHUDVisible(!shouldPause);
 
+        // Handle pause game using TimeManager
         if (shouldPause)
             TimeManager.Instance?.PauseGame();
         else
@@ -167,6 +175,7 @@ public class UIManager : MonoBehaviour
             gameOverMenu.gameObject.SetActive(true);
             gameOverMenu.StartGameOverSequence();
         }
+
     }
 
     public void ShowTutorial(List<TutorialContent> pages)
@@ -189,6 +198,7 @@ public class UIManager : MonoBehaviour
 
         // Show tutorial content
         TutorialScript.ShowTutorial(pages);
+
     }
 
     public void HideTutorial()
@@ -201,16 +211,6 @@ public class UIManager : MonoBehaviour
         if (hud != null)
         {
             SetHUDVisible(wasHUDVisibleBeforeTutorial);
-        }
-        else
-        {
-            // Fallback in case hud reference was lost
-            Debug.LogWarning("HUD reference is null, attempting to find it again");
-            hud = transform.Find("Canvas/HUD")?.gameObject;
-            if (hud != null)
-            {
-                SetHUDVisible(wasHUDVisibleBeforeTutorial);
-            }
         }
 
         // Only resume if not in other paused states

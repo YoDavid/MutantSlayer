@@ -9,10 +9,10 @@ public abstract class BaseMenuController : MonoBehaviour
     [SerializeField] protected KeyCode upKey = KeyCode.W;
     [SerializeField] protected KeyCode downKey = KeyCode.S;
     [SerializeField] protected KeyCode selectKey = KeyCode.Return;
+    [SerializeField] protected KeyCode selectKey1 = KeyCode.Space;
     [SerializeField] protected MenuButton[] menuButtons;
+
     protected bool canUseButtons = false;
-
-
     protected int currentIndex = 0;
     protected bool isTransitioning = false;  // Prevent fast repeated inputs
     protected float lastInputTime;
@@ -68,6 +68,7 @@ public abstract class BaseMenuController : MonoBehaviour
 
         if (Input.GetKeyDown(upKey) || Input.GetKeyDown(downKey))
         {
+            Debug.Log("Step 6: Navigation key pressed");  // Log when navigating the menu.
             AudioManager.Instance.PlayButtonHover();
             lastInputTime = Time.unscaledTime;
 
@@ -76,10 +77,12 @@ public abstract class BaseMenuController : MonoBehaviour
         }
         else if (Input.GetKeyDown(selectKey))
         {
+            Debug.Log("Step 7: Select key pressed");  // Log when a selection is made.
             menuButtons[currentIndex].button.onClick.Invoke();
             lastInputTime = Time.unscaledTime;
         }
     }
+
 
     protected virtual IEnumerator TransitionToButton(int newIndex)
     {

@@ -79,6 +79,7 @@ public class OpenningSlideShow : MonoBehaviour
 
     private void Start()
     {
+        Cursor.visible = false;
         // Initialize fade panel
         blackFadePanel.gameObject.SetActive(true);
         blackFadePanel.color = Color.black;
