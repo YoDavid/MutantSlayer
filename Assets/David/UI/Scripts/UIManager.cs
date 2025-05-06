@@ -1,7 +1,35 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+[System.Serializable]
+public class TutorialContent
+{
+    public Sprite image;
+    [Header("TextMeshPro Fields")]
+    public string title;
+    [TextArea(3, 10)]
+    public string description;
+    public bool pauseGameDuringThisPage = true;
+
+    [Header("Image Position Settings")]
+    [Tooltip("Enable to set custom position for this page")]
+    public bool overridePosition = false;
+    [Tooltip("Custom position when override is enabled")]
+    public Vector2 customImagePosition = Vector2.zero;
+
+    [Header("Image Size Settings")]
+    [Tooltip("Enable to set custom size for this page")]
+    public bool overrideSize = false;
+    [Tooltip("Custom size when override is enabled")]
+    public Vector2 customImageSize = Vector2.one * 100f; // Default size
+
+}
+
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance { get; private set; }
+
     [Header("UI References")]
     [SerializeField] private GameObject hud;
     [SerializeField] private PauseMenuController pauseMenu;
@@ -15,10 +43,25 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Transform bossTransform;
     [SerializeField] private float bossBarShowDistance = 15f;
 
+    [Header("Tutorial")]
+    [SerializeField] private GameObject tutorialSystem;
+    [SerializeField] private TutorialSystemController TutorialScript;
+
+    private bool wasHUDVisibleBeforeTutorial = true; // Track HUD visibility state before tutorial
     private Transform playerTransform;
 
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         if (!hud) hud = transform.Find("Canvas/HUD")?.gameObject;
         if (!pauseMenu) pauseMenu = transform.Find("Canvas/PauseMenu")?.GetComponent<PauseMenuController>();
         if (!gameOverMenu) gameOverMenu = transform.Find("Canvas/GameOverMenu")?.GetComponent<GameOverMenuController>();
@@ -40,6 +83,10 @@ public class UIManager : MonoBehaviour
         if (bossHealthBarContainer != null)
             bossHealthBarContainer.SetActive(false);
 
+        if (tutorialSystem != null)
+        {
+            tutorialSystem.SetActive(false); // Start disabled
+        }
     }
 
     private void Update()
@@ -78,8 +125,14 @@ public class UIManager : MonoBehaviour
     {
         if (pauseMenu == null) return;
 
-        bool shouldPause = !pauseMenu.IsVisible;
+        // If tutorial is showing, hide it instead of pausing
+        if (TutorialScript != null && TutorialScript.IsShowing)
+        {
+            HideTutorial();
+            return;
+        }
 
+        bool shouldPause = !pauseMenu.IsVisible;
         pauseMenu.SetVisible(shouldPause);
         SetHUDVisible(!shouldPause);
 
@@ -88,11 +141,7 @@ public class UIManager : MonoBehaviour
         else
             TimeManager.Instance?.ResumeGame();
 
-        if (playerMovement != null)
-            playerMovement.SetMovementEnabled(!shouldPause);
-
-        if (playerAttackController != null)
-            playerAttackController.enabled = !shouldPause;
+        SetPlayerInputEnabled(!shouldPause);
     }
 
     private void HandleBossHealthBarVisibility()
@@ -118,5 +167,68 @@ public class UIManager : MonoBehaviour
             gameOverMenu.gameObject.SetActive(true);
             gameOverMenu.StartGameOverSequence();
         }
+    }
+
+    public void ShowTutorial(List<TutorialContent> pages)
+    {
+        if (TutorialScript == null || pages == null || pages.Count == 0) return;
+
+        // Save current HUD visibility state before showing tutorial
+        wasHUDVisibleBeforeTutorial = hud != null && hud.activeSelf;
+
+        // Hide HUD when showing tutorial
+        SetHUDVisible(false);
+
+        if (!TimeManager.Instance.IsPaused)
+        {
+            TimeManager.Instance.PauseGame();
+        }
+
+        // Disable player input
+        SetPlayerInputEnabled(false);
+
+        // Show tutorial content
+        TutorialScript.ShowTutorial(pages);
+    }
+
+    public void HideTutorial()
+    {
+        if (TutorialScript == null) return;
+
+        TutorialScript.HideTutorial();
+
+        // Restore HUD visibility to its previous state before tutorial was shown
+        if (hud != null)
+        {
+            SetHUDVisible(wasHUDVisibleBeforeTutorial);
+        }
+        else
+        {
+            // Fallback in case hud reference was lost
+            Debug.LogWarning("HUD reference is null, attempting to find it again");
+            hud = transform.Find("Canvas/HUD")?.gameObject;
+            if (hud != null)
+            {
+                SetHUDVisible(wasHUDVisibleBeforeTutorial);
+            }
+        }
+
+        // Only resume if not in other paused states
+        if (!pauseMenu.IsVisible)
+        {
+            TimeManager.Instance.ResumeGame();
+        }
+
+        // Restore player input if game isn't paused
+        if (!TimeManager.Instance.IsPaused)
+        {
+            SetPlayerInputEnabled(true);
+        }
+    }
+
+    private void SetPlayerInputEnabled(bool enabled)
+    {
+        if (playerMovement != null) playerMovement.SetMovementEnabled(enabled);
+        if (playerAttackController != null) playerAttackController.enabled = enabled;
     }
 }

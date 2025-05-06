@@ -1,77 +1,22 @@
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class BuildingTransitionController : MonoBehaviour
+public class BuildingTransitionZoneController : MonoBehaviour
 {
     [Header("Settings")]
-    public GameObject buildingOverlay; // The black overlay sprite
-    public string playerTag = "Player";
+    [Tooltip("List of all building overlays to enable/disable together.")]
+    public List<GameObject> buildingOverlays = new List<GameObject>();
+
     public float activationDelay = 0.1f;
 
-    [SerializeField] private bool isExteriorTrigger; // Set in Inspector!
+    private Coroutine transitionRoutine;
+    private bool shouldShowOverlay = true;
 
-    private static bool isInExteriorSpace;
-    private static bool isInTransitionArea;
-    private static bool hasFullyExited; // New flag to track if player left completely
-    private static Coroutine transitionRoutine;
-
-    private void OnTriggerEnter2D(Collider2D other)
+    public void SetOverlayState(bool show)
     {
-        if (!other.CompareTag(playerTag)) return;
+        shouldShowOverlay = show;
 
-        if (isExteriorTrigger)
-        {
-            HandleExteriorTriggerEnter();
-        }
-        else // Interior trigger
-        {
-            hasFullyExited = false; // Player is re-entering
-            HandleInteriorTriggerEnter();
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (!other.CompareTag(playerTag)) return;
-
-        if (isExteriorTrigger)
-        {
-            HandleExteriorTriggerExit();
-            // Only set fully exited if not touching interior
-            if (!isInTransitionArea) hasFullyExited = true;
-        }
-        else // Interior trigger
-        {
-            HandleInteriorTriggerExit();
-        }
-    }
-
-    private void HandleExteriorTriggerEnter()
-    {
-        isInExteriorSpace = true;
-        UpdateOverlayState();
-    }
-
-    private void HandleInteriorTriggerEnter()
-    {
-        isInTransitionArea = true;
-        UpdateOverlayState();
-    }
-
-    private void HandleExteriorTriggerExit()
-    {
-        isInExteriorSpace = false;
-        UpdateOverlayState();
-    }
-
-    private void HandleInteriorTriggerExit()
-    {
-        isInTransitionArea = false;
-        UpdateOverlayState();
-    }
-
-    private void UpdateOverlayState()
-    {
         if (transitionRoutine != null)
             StopCoroutine(transitionRoutine);
 
@@ -82,15 +27,10 @@ public class BuildingTransitionController : MonoBehaviour
     {
         yield return new WaitForSeconds(activationDelay);
 
-        if (buildingOverlay != null)
+        foreach (GameObject overlay in buildingOverlays)
         {
-            // Only show overlay if:
-            // 1. Not in exterior space AND
-            // 2. (Either in transition area OR hasn't fully exited)
-            bool shouldShowOverlay = !isInExteriorSpace &&
-                                   (isInTransitionArea || !hasFullyExited);
-
-            buildingOverlay.SetActive(shouldShowOverlay);
+            if (overlay != null)
+                overlay.SetActive(shouldShowOverlay);
         }
     }
 }

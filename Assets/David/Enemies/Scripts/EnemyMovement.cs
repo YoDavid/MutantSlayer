@@ -221,7 +221,7 @@ public class EnemyMovement : MonoBehaviour
         Vector3 currentPos = Application.isPlaying ? spawnPosition : transform.position;
 
         // Draw patrol area (green)
-        Gizmos.color = new Color(0, 1, 0, 0.15f);
+        Gizmos.color = new Color(0, 1, 0, 1f);
         Vector3 patrolCenter = new Vector3(
             (WorldPatrolLeft + WorldPatrolRight) / 2,
             currentPos.y,
@@ -231,7 +231,7 @@ public class EnemyMovement : MonoBehaviour
         Gizmos.DrawCube(patrolCenter, new Vector3(patrolWidth, 0.5f, 0));
 
         // Draw chase boundaries (red)
-        Gizmos.color = new Color(1, 0, 0, 0.1f);
+        Gizmos.color = new Color(1, 0, 0, 1f);
         Vector3 chaseCenter = new Vector3(
             (WorldChaseLeft + WorldChaseRight) / 2,
             currentPos.y,
@@ -251,11 +251,11 @@ public class EnemyMovement : MonoBehaviour
         }
 
         // Draw detection range (blue)
-        Gizmos.color = new Color(0, 0, 1, 0.1f);
+        Gizmos.color = new Color(0, 0, 1, 1f);
         Gizmos.DrawWireSphere(transform.position, config.walkingRange);
 
         // Draw minimum distance (magenta)
-        Gizmos.color = new Color(1, 0, 1, 0.2f);
+        Gizmos.color = new Color(1, 0, 1,1f);
         Gizmos.DrawWireSphere(transform.position, minDistanceFromPlayer);
     }
 
