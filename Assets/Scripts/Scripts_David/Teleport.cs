@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using System.Collections;
 
@@ -35,9 +36,14 @@ public class Teleport : MonoBehaviour
     [SerializeField] private bool isPlatformCollision = false;
     [SerializeField] private bool usePlatformTiming = false;
 
+    [Header("UI Prompt")]
+    public TMP_Text interactionPromptText;
+
     // Public properties for external access
     public bool IsMovementEnabled => _isMovementEnabled;
     public bool IsAttackEnabled => _isAttackEnabled;
+
+
 
     private void Start()
     {
@@ -126,6 +132,9 @@ public class Teleport : MonoBehaviour
         isPlayerInZone = true;
         Debug.Log("Teleport: Player entered teleport zone.");
 
+        if (!playFallingAnimation && interactionPromptText != null)
+            interactionPromptText.gameObject.SetActive(true);
+
         if (other.gameObject.name == "PlatformDisappearAndReappear (14)")
         {
             isPlatformCollision = true;
@@ -137,6 +146,18 @@ public class Teleport : MonoBehaviour
             StartStandardTeleportSequence(true);
         }
     }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (!other.CompareTag(targetTag)) return;
+
+        isPlayerInZone = false;
+
+        if (interactionPromptText != null)
+            interactionPromptText.gameObject.SetActive(false);
+    }
+
+
 
     private IEnumerator HandlePlatformCollision(GameObject playerObj)
     {
