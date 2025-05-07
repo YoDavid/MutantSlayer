@@ -51,10 +51,9 @@ GameObject:
   - component: {fileID: 6443694963126290252}
   - component: {fileID: 2470467694308827178}
   - component: {fileID: 3019953888367561466}
-  - component: {fileID: 3385927367459305600}
   - component: {fileID: 1675519543239857255}
   - component: {fileID: 3927490239563601796}
-  - component: {fileID: 9111758058180492904}
+  - component: {fileID: 7906112287801006626}
   m_Layer: 9
   m_Name: SmallEnemy
   m_TagString: Enemy
@@ -325,26 +324,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _flashColor: {r: 1.0592737, g: 1.0592737, b: 1.0592737, a: 1}
   _flashTime: 0.25
---- !u!114 &3385927367459305600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4354679935050727372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5f48183e6abe0e4eb25f36979bd94f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseHealth: 50
-  baseDamage: 5
-  healthScaling: 0.2
-  damageScaling: 0.15
-  enemyLevel: 1
-  baseExpReward: 100
-  expScalingFactor: 1.5
-  playerLevelSystem: {fileID: 0}
 --- !u!114 &1675519543239857255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,11 +364,11 @@ MonoBehaviour:
   - {x: 21.999939, y: -17.509766, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 1090210
+  m_InstanceId: 1093960
   m_LocalBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 21.999939, y: 17.509766, z: 0}
---- !u!114 &9111758058180492904
+--- !u!114 &7906112287801006626
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
