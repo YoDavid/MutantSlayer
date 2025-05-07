@@ -16,10 +16,24 @@ public class BossHealth : MonoBehaviour, IDamageable
     public event System.Action OnDeath;
     public int MaxHealth => maxHealth;
 
+    [Header("Level Scaling")]
+    [SerializeField] private BossLevelScaling levelScaling;
+
+    public void Initialize(int maxHP)
+    {
+        maxHealth = maxHP;
+        currentHealth = maxHealth;
+    }
+
     private void Awake()
     {
-        currentHealth = maxHealth;
         AssignReferences();
+        currentHealth = maxHealth;
+    }
+
+    public void ForceHealthUpdate()
+    {
+        OnHealthChanged?.Invoke(currentHealth);
     }
 
     private void AssignReferences()

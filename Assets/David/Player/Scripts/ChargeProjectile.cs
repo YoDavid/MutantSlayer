@@ -92,8 +92,9 @@ public class ChargeProjectile : MonoBehaviour
     [Header("Particle Effects")]
     public GameObject destroyParticlePrefab;
     public float particleSpawnOffsetX = 0f;
-
     #endregion
+
+    [SerializeField] private PlayerLevelSystem playerLevelSystem;
 
     #region Unity Lifecycle
     private void Awake()
@@ -102,6 +103,7 @@ public class ChargeProjectile : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider2D>();
         currentSpeed = baseSpeed;
         initialScale = transform.localScale;
+        playerLevelSystem = FindObjectOfType<PlayerLevelSystem>();
     }
 
     private void Start()
@@ -198,23 +200,38 @@ public class ChargeProjectile : MonoBehaviour
             return;
 
         lastHitTime = Time.time;
-        ShowDamagePopup(enemy);
+        UpdateDamage();  // Ensure damage is up-to-date when hit
+
+        EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
+        if (enemyHealth != null)
+        {
+            // Add debug log for damage
+            Debug.Log($"[ChargeProjectile] Dealing {damage} damage to {enemy.gameObject.name}");
+
+            // Show the scaled damage instead of the default damage value
+            //ShowDamagePopup(enemy);
+
+            enemyHealth.TakeDamage(damage);  // Apply scaled damage to the enemy
+        }
+
         PlayHitSound();
         ApplyHitSlowdown();
         ApplyHitTimeEffect();
         IncrementHitCount();
     }
 
+
     private void ShowDamagePopup(Collider2D enemy)
     {
         DamagePopUp.Instance?.CreateDamageText(
-            damage,
+            damage,  // This will now be the scaled damage
             enemy.transform.position,
             isPlayer: false,
             isBoss: enemy.CompareTag("BossEnemy"),
             isCritical: isCritical
         );
     }
+
 
     private void IncrementHitCount()
     {
@@ -354,4 +371,16 @@ public class ChargeProjectile : MonoBehaviour
     private bool IsGamePaused() => TimeManager.Instance?.IsPaused ?? false;
     private void RestoreNormalTime() => TimeManager.Instance?.ResetTimeScale();
     #endregion
+
+
+
+
+    private void UpdateDamage()
+    {
+        if (playerLevelSystem != null)
+        {
+            damage = playerLevelSystem.GetScaledDamage("projectile");  // Scale damage based on player's level
+        }
+    }
+
 }

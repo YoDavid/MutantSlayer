@@ -22,7 +22,7 @@ public class PlayerEarlyExitAttack : MonoBehaviour
 
     private float leftMouseButtonHoldTime = 0f;
     [SerializeField] private float minHoldTime = 0.25f; // Minimum time to trigger early exit
-
+    [SerializeField] private PlayerLevelSystem playerLevelSystem;
 
 
     private void Awake()
@@ -122,19 +122,38 @@ public class PlayerEarlyExitAttack : MonoBehaviour
         var damageable = other.GetComponent<IDamageable>();
         if (damageable != null)
         {
-            var (damage, isCritical) = damageDealer.CalculateDamage();
-            damageable.TakeDamage(damage, isCritical, false, 0); // Hit index is 0 for single hit
+            // Get scaled damage based on player level
+            int damage = playerLevelSystem.GetScaledDamage("normal");  // Use the appropriate attack type if needed
+
+            // Calculate if the hit is critical
+            bool isCritical = UnityEngine.Random.value <= playerLevelSystem.GetCritChance();
+            if (isCritical)
+            {
+                damage = Mathf.RoundToInt(damage * playerLevelSystem.GetCritMultiplier());
+            }
+
+            damageable.TakeDamage(damage, isCritical, false, 0); // Hit index is 0 for a single hit
 
             CreateHitEffects(other.transform.position, isCritical, isBoss);
             cameraShake?.NormalHitShakeCamera();
         }
     }
 
+
     private void CreateHitEffects(Vector3 position, bool isCritical, bool isBoss)
     {
+        // Get the final damage after potential crit multiplier
+        int finalDamage = playerLevelSystem.GetScaledDamage("normal"); // Use appropriate attack type
+
+        // Apply crit if applicable
+        if (isCritical)
+        {
+            finalDamage = Mathf.RoundToInt(finalDamage * playerLevelSystem.GetCritMultiplier());
+        }
+
         // Create damage popup
         DamagePopUp.Instance?.CreateDamageText(
-            damageDealer.CalculateDamage().damage,
+            finalDamage,
             position,
             true, isBoss, isCritical, false, 0); // Not a combo hit
 
@@ -146,6 +165,7 @@ public class PlayerEarlyExitAttack : MonoBehaviour
                 Quaternion.identity);
         }
     }
+
 
     private void CleanUpAttack()
     {

@@ -9,13 +9,16 @@ public class UIBossHealthBar : MonoBehaviour
     [SerializeField] private Color zeroHealthColor = Color.black;
 
     [SerializeField] private BossHealth bossHealth;
+    [SerializeField] private BossLevelScaling bossLevelScaling;
 
     private void Awake()
     {
         bossHealth = FindObjectOfType<BossHealth>();
-        if (bossHealth == null)
+        bossLevelScaling = FindObjectOfType<BossLevelScaling>();
+
+        if (bossHealth == null || bossLevelScaling == null)
         {
-            Debug.LogError("BossHealth not found in scene!");
+            Debug.LogError("Boss references not found!");
             return;
         }
 
@@ -29,6 +32,11 @@ public class UIBossHealthBar : MonoBehaviour
             bossHealth.OnHealthChanged += UpdateHealthBar;
             bossHealth.OnDeath += HandleBossDeath;
         }
+
+        if (bossLevelScaling != null)
+        {
+            bossLevelScaling.OnLevelUp += UpdateHealthBarMaxHealth;
+        }
     }
 
     private void OnDisable()
@@ -38,24 +46,41 @@ public class UIBossHealthBar : MonoBehaviour
             bossHealth.OnHealthChanged -= UpdateHealthBar;
             bossHealth.OnDeath -= HandleBossDeath;
         }
+
+        if (bossLevelScaling != null)
+        {
+            bossLevelScaling.OnLevelUp -= UpdateHealthBarMaxHealth;
+        }
     }
 
     private void InitializeHealthBar()
     {
         healthSlider.maxValue = bossHealth.maxHealth;
-        healthSlider.value = bossHealth.maxHealth;
+        healthSlider.value = bossHealth.currentHealth;
         fillImage.color = fullHealthColor;
     }
 
     private void UpdateHealthBar(int currentHealth)
     {
         healthSlider.value = currentHealth;
-        float t = (float)currentHealth / bossHealth.maxHealth;
+        healthSlider.maxValue = bossHealth.maxHealth; // Always update max in case of level up
+        UpdateHealthColor();
+    }
+
+    private void UpdateHealthBarMaxHealth()
+    {
+        healthSlider.maxValue = bossHealth.maxHealth;
+        UpdateHealthColor();
+    }
+
+    private void UpdateHealthColor()
+    {
+        float t = (float)bossHealth.currentHealth / bossHealth.maxHealth;
         fillImage.color = Color.Lerp(zeroHealthColor, fullHealthColor, t);
     }
 
     private void HandleBossDeath()
     {
-        gameObject.SetActive(false); 
+        gameObject.SetActive(false);
     }
 }

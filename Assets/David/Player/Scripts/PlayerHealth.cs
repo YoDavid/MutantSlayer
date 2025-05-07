@@ -19,6 +19,11 @@ public class PlayerHealth : HealthSystem
     [SerializeField] private bool isComboInvulnerable = false;
     private DamageFlash damageFlash;
 
+    [Header("Leveling")]
+    [SerializeField] private PlayerLevelSystem levelSystem;
+
+    public PlayerLevelSystem LevelSystem => levelSystem;
+
 
     protected override void Awake()
     {
@@ -114,8 +119,6 @@ public class PlayerHealth : HealthSystem
         CheckHeartbeat();
     }
 
-
-
     private void PlayRandomTakeHitSound()
     {
         int rand = Random.Range(1, 4);
@@ -146,7 +149,6 @@ public class PlayerHealth : HealthSystem
         if (playerHurtbox != null)
             playerHurtbox.SetInvincible(false); // Enable hurtbox collider
     }
-
 
     protected override void Die()
     {
@@ -214,6 +216,11 @@ public class PlayerHealth : HealthSystem
         CheckHeartbeat();
     }
 
+    public void ForceHealthUpdate()
+    {
+        OnHealthChanged?.Invoke(CurrentHealth);
+    }
+
     public void Revive()
     {
         isDead = false;
@@ -226,5 +233,12 @@ public class PlayerHealth : HealthSystem
         isComboInvulnerable = value;
         playerHurtbox?.SetInvincible(value);
     }
+
+    public void RestoreFullHealth()
+    {
+        CurrentHealth = MaxHealth;
+        OnHealthChanged?.Invoke(CurrentHealth);
+    }
+
 
 }

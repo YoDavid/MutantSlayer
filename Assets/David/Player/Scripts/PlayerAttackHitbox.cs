@@ -1,16 +1,16 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
 public class PlayerAttackHitbox : MonoBehaviour
 {
     [Header("Attack Settings")]
-    [SerializeField] private DamageConfig damageConfig;
+    [SerializeField] private DamageConfig damageConfig; // The configuration for damage
     [SerializeField] private float hitCooldown = 0.3f;
     [SerializeField] private BloodSplashParticlesPool bloodSplashPool;
 
     private float lastHitTime;
 
-    private DamageDealer damageDealer;
+    private PlayerLevelSystem playerLevelSystem; // Reference to PlayerLevelSystem
     private AudioManager audioManager;
     private CameraShake camerShake;
 
@@ -19,8 +19,12 @@ public class PlayerAttackHitbox : MonoBehaviour
 
     private void Awake()
     {
-        damageDealer = gameObject.AddComponent<DamageDealer>();
-        damageDealer.config = damageConfig;
+        playerLevelSystem = GetComponentInParent<PlayerLevelSystem>(); // Assuming it's on the parent GameObject
+
+        if (playerLevelSystem == null)
+        {
+            Debug.LogError("PlayerLevelSystem not found!");
+        }
 
         camerShake = GameObject.FindObjectOfType<CameraShake>();
 
@@ -40,19 +44,36 @@ public class PlayerAttackHitbox : MonoBehaviour
         bool isCritical = false;
         Vector3 hitPosition = transform.position; // Default fallback
 
+        // Get scaled damage from PlayerLevelSystem
+        int damage = playerLevelSystem.GetScaledDamage("normal");
+        float critChance = playerLevelSystem.GetCritChance();
+        float critMultiplier = playerLevelSystem.GetCritMultiplier();
+
+        // Check if we hit an enemy
         if (other.TryGetComponent<EnemyHealth>(out var enemyHealth))
         {
-            var (damage, critical) = damageDealer.CalculateDamage();
-            enemyHealth.TakeDamage(damage, critical);
-            isCritical = critical;
+            isCritical = UnityEngine.Random.value <= critChance; // Explicitly use UnityEngine.Random
+
+            if (isCritical)
+            {
+                damage = Mathf.RoundToInt(damage * critMultiplier);
+            }
+
+            enemyHealth.TakeDamage(damage, isCritical);
             hitSuccess = true;
             hitPosition = other.transform.position;
         }
+        // Check if we hit a boss
         else if (other.TryGetComponent<BossHealth>(out var bossHealth))
         {
-            var (damage, critical) = damageDealer.CalculateDamage();
-            bossHealth.TakeDamage(damage, critical);
-            isCritical = critical;
+            isCritical = UnityEngine.Random.value <= critChance; // Explicitly use UnityEngine.Random
+
+            if (isCritical)
+            {
+                damage = Mathf.RoundToInt(damage * critMultiplier);
+            }
+
+            bossHealth.TakeDamage(damage, isCritical);
             isBoss = true;
             hitSuccess = true;
             hitPosition = other.transform.position;
@@ -83,7 +104,7 @@ public class PlayerAttackHitbox : MonoBehaviour
     {
         if (audioManager == null) return;
 
-        int rand = UnityEngine.Random.Range(0, 4); // 1 to 4
+        int rand = UnityEngine.Random.Range(0, 4); // Explicitly use UnityEngine.Random
         string clipName = $"sfx_player_attack_hit_0{rand}";
         audioManager.PlaySFX("Player", clipName);
     }
@@ -95,8 +116,5 @@ public class PlayerAttackHitbox : MonoBehaviour
             position.y -= 2f;
             bloodSplashPool.PlayHitSplash(position);
         }
-
-
     }
-
 }

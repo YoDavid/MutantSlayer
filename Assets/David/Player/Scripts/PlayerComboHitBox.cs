@@ -24,6 +24,8 @@ public class PlayerComboHitbox : MonoBehaviour
     private PlayerAnimationController playerAnimation;
     private BloodSplashParticlesPool bloodSplashParticlesPool;
 
+    [SerializeField] private PlayerLevelSystem playerLevelSystem;
+
     // State
     private float comboStartTime;
     private float lastHitTime;
@@ -193,6 +195,7 @@ public class PlayerComboHitbox : MonoBehaviour
         }
     }
 
+
     private void ProcessAllHits()
     {
         int hitCount = 0;
@@ -200,7 +203,10 @@ public class PlayerComboHitbox : MonoBehaviour
 
         foreach (var hit in detectedHits)
         {
-            var (damage, isCritical) = damageDealer.CalculateDamage();
+            // Retrieve scaled damage from PlayerLevelSystem
+            int damage = playerLevelSystem.GetScaledDamage("normal");  // Use appropriate attack type (normal/charged/etc.)
+
+            var (calculatedDamage, isCritical) = damageDealer.CalculateDamage();
 
             hit.damageable.TakeDamage(damage, isCritical, true, hitCount);
 
@@ -220,6 +226,7 @@ public class PlayerComboHitbox : MonoBehaviour
             hitCount++;
         }
     }
+
 
     private void CreateComboDamagePopUp(int damage, Vector3 position, int hitIndex, bool isCritical, bool isBoss)
     {

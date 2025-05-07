@@ -39,7 +39,6 @@ public class CheckpointManager : MonoBehaviour
         _savedHealing = data.healing;
         _savedScene = SceneManager.GetActiveScene().name;
 
-        Debug.Log($"Checkpoint saved - Health: {_savedHealth}, Stamina: {_savedStamina}, Healing: {_savedHealing}");
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

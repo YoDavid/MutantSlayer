@@ -22,6 +22,8 @@ public class UIPlayerHealthBar : MonoBehaviour
     private Coroutine blinkRoutine;
     private bool wasDisabled = false;
 
+    [SerializeField] private PlayerLevelSystem playerLevelSystem;
+
     private void Start()
     {
         if (playerHealth == null)
@@ -33,6 +35,12 @@ public class UIPlayerHealthBar : MonoBehaviour
 
     private void OnEnable()
     {
+        if (playerHealth != null)
+        {
+            playerHealth.OnHealthChanged += UpdateHealthBar;
+            playerLevelSystem.OnLevelUp += UpdateHealthBarMaxHealth;
+        }
+
         // Force check blinking state when UI is re-enabled
         if (wasDisabled)
         {
@@ -44,6 +52,13 @@ public class UIPlayerHealthBar : MonoBehaviour
     private void OnDisable()
     {
         wasDisabled = true;
+
+        if (playerHealth != null)
+        {
+            playerHealth.OnHealthChanged -= UpdateHealthBar;
+            playerLevelSystem.OnLevelUp -= UpdateHealthBarMaxHealth;
+        }
+
         StopAllCoroutines();
         isBlinking = false;
     }
@@ -151,6 +166,19 @@ public class UIPlayerHealthBar : MonoBehaviour
     public void OnPlayerHealthChanged(int newHealth)
     {
         healthSlider.value = newHealth;
+        CheckBlinkingStateImmediately();
+    }
+
+    private void UpdateHealthBar(int currentHealth)
+    {
+        healthSlider.value = currentHealth;
+        healthSlider.maxValue = playerHealth.MaxHealth; // Always update max in case of level up
+        CheckBlinkingStateImmediately();
+    }
+
+    private void UpdateHealthBarMaxHealth()
+    {
+        healthSlider.maxValue = playerHealth.MaxHealth;
         CheckBlinkingStateImmediately();
     }
 }

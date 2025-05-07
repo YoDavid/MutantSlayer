@@ -1,57 +1,44 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Serialization;
 
 public class UIEnemyHealthBar : MonoBehaviour
 {
     [Header("Health Bar Settings")]
     [SerializeField] private Slider healthSlider;
     [SerializeField] private Image fillImage;
+    [SerializeField] private Image backgroundImage; // Reference to background image
     [SerializeField] private Color fullHealthColor = Color.red;
     [SerializeField] private Color zeroHealthColor = Color.black;
     [SerializeField] private float visibilityDistance = 10f;
-    [SerializeField] private float fadeDuration = 0.3f;
+    [SerializeField] private float fadeSpeed = 3f;
 
     [Header("Enemy Type Offsets")]
     [SerializeField] private float smallEnemyYOffset = 50f;
     [SerializeField] private float mediumEnemyYOffset = 70f;
 
+    // Private references
     private RectTransform rectTransform;
-    private CanvasGroup canvasGroup;
-    public EnemyHealth enemyHealth;
     private Camera mainCamera;
-    private float currentYOffset;
     private Transform playerTransform;
-    private float currentFadeTime;
-    private bool isFading;
+    private float currentYOffset;
+    private float currentAlpha = 0f;
+    private bool needsFade = false;
 
-    // Public access to visibility state
+    // Public references
+    public EnemyHealth enemyHealth { get; set; }
+    public EnemyLevelScaling enemyLevelScaling { get; private set; }
+
     public bool IsInRangeToShowHealth { get; private set; }
 
     public void Initialize(EnemyHealth health, Camera cam)
     {
+        // Set core references
         enemyHealth = health;
         mainCamera = cam;
         rectTransform = GetComponent<RectTransform>();
-        canvasGroup = GetComponent<CanvasGroup>();
 
-        if (canvasGroup == null)
-        {
-            canvasGroup = gameObject.AddComponent<CanvasGroup>();
-        }
-
-        CameraParallax parallaxCam = FindObjectOfType<CameraParallax>();
-        if (parallaxCam != null)
-        {
-            mainCamera = parallaxCam.GetComponent<Camera>();
-        }
-
-        // Find player
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            playerTransform = player.transform;
-        }
+        // Get the scaling component from the SAME enemy
+        enemyLevelScaling = enemyHealth.GetComponent<EnemyLevelScaling>();
 
         // Set Y-offset based on enemy type
         currentYOffset = enemyHealth.enemyType switch
@@ -61,43 +48,45 @@ public class UIEnemyHealthBar : MonoBehaviour
             _ => smallEnemyYOffset
         };
 
-        healthSlider.maxValue = enemyHealth.config.maxHealth;
-        healthSlider.value = enemyHealth.config.maxHealth;
-        fillImage.color = fullHealthColor;
+        // Initialize health values
+        RefreshHealthValues();
 
+        // Subscribe to events
         enemyHealth.OnHealthChanged += UpdateHealthBar;
         enemyHealth.OnDeath += HandleEnemyDeath;
 
-        // Start fully transparent
-        canvasGroup.alpha = 0f;
+        if (enemyLevelScaling != null)
+        {
+            enemyLevelScaling.OnLevelUp += UpdateHealthBarAfterLevelUp;
+        }
+
+        // Initial visibility state
+        SetAlpha(0f);
         IsInRangeToShowHealth = false;
+    }
+
+    private void RefreshHealthValues()
+    {
+        healthSlider.maxValue = enemyHealth.MaxHealth;
+        healthSlider.value = enemyHealth.CurrentHealth;
+        fillImage.color = Color.Lerp(zeroHealthColor, fullHealthColor,
+                                   (float)enemyHealth.CurrentHealth / enemyHealth.MaxHealth);
+    }
+
+    private void UpdateHealthBarAfterLevelUp()
+    {
+        RefreshHealthValues();
     }
 
     private void UpdateHealthBar(int currentHealth)
     {
         healthSlider.value = currentHealth;
         fillImage.color = Color.Lerp(zeroHealthColor, fullHealthColor,
-                                   (float)currentHealth / enemyHealth.config.maxHealth);
+                                   (float)currentHealth / enemyHealth.MaxHealth);
     }
 
     private void HandleEnemyDeath()
     {
-        // Fade out and then destroy
-        StartCoroutine(FadeOutAndDestroy());
-    }
-
-    private System.Collections.IEnumerator FadeOutAndDestroy()
-    {
-        float startAlpha = canvasGroup.alpha;
-        float timer = 0f;
-
-        while (timer < fadeDuration)
-        {
-            timer += Time.deltaTime;
-            canvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, timer / fadeDuration);
-            yield return null;
-        }
-
         Destroy(gameObject);
     }
 
@@ -105,50 +94,74 @@ public class UIEnemyHealthBar : MonoBehaviour
     {
         if (enemyHealth == null || mainCamera == null) return;
 
-        // Always update position regardless of visibility
+        UpdatePosition();
+        UpdateVisibility();
+    }
+
+    private void UpdatePosition()
+    {
         Vector3 screenPosition = mainCamera.WorldToScreenPoint(enemyHealth.transform.position);
         rectTransform.position = new Vector3(screenPosition.x, screenPosition.y + currentYOffset, screenPosition.z);
+    }
 
-        // Check distance if we have a player reference
-        if (playerTransform != null)
+    private void UpdateVisibility()
+    {
+        if (playerTransform == null)
         {
-            float distanceToPlayer = Vector3.Distance(playerTransform.position, enemyHealth.transform.position);
-            bool shouldBeVisible = distanceToPlayer <= visibilityDistance;
+            TryFindPlayer();
+            return;
+        }
 
-            // Only handle fade if visibility state changed
-            if (shouldBeVisible != IsInRangeToShowHealth)
+        float distance = Vector3.Distance(playerTransform.position, enemyHealth.transform.position);
+        bool shouldBeVisible = distance <= visibilityDistance;
+
+        if (shouldBeVisible != IsInRangeToShowHealth)
+        {
+            IsInRangeToShowHealth = shouldBeVisible;
+            needsFade = true;
+        }
+
+        if (needsFade)
+        {
+            float targetAlpha = IsInRangeToShowHealth ? 1f : 0f;
+            currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, fadeSpeed * Time.deltaTime);
+            SetAlpha(currentAlpha);
+
+            if (Mathf.Approximately(currentAlpha, targetAlpha))
             {
-                IsInRangeToShowHealth = shouldBeVisible;
-                isFading = true;
-                currentFadeTime = 0f;
-            }
-
-            // Handle fade in/out
-            if (isFading)
-            {
-                currentFadeTime += Time.deltaTime;
-                float progress = Mathf.Clamp01(currentFadeTime / fadeDuration);
-                canvasGroup.alpha = IsInRangeToShowHealth ? progress : 1 - progress;
-
-                if (currentFadeTime >= fadeDuration)
-                {
-                    isFading = false;
-                }
+                needsFade = false;
             }
         }
-        else
+    }
+
+    private void SetAlpha(float alpha)
+    {
+        // Apply alpha to all relevant images
+        Color fillColor = fillImage.color;
+        fillColor.a = alpha;
+        fillImage.color = fillColor;
+
+        if (backgroundImage != null)
         {
-            // Try to find player again if missing
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-            {
-                playerTransform = player.transform;
-            }
-            else if (canvasGroup.alpha > 0)
-            {
-                canvasGroup.alpha = 0;
-                IsInRangeToShowHealth = false;
-            }
+            Color bgColor = backgroundImage.color;
+            bgColor.a = alpha;
+            backgroundImage.color = bgColor;
+        }
+
+        // If you have other UI elements to fade, add them here
+    }
+
+    private void TryFindPlayer()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            playerTransform = player.transform;
+        }
+        else if (currentAlpha > 0)
+        {
+            SetAlpha(0f);
+            IsInRangeToShowHealth = false;
         }
     }
 
@@ -158,6 +171,11 @@ public class UIEnemyHealthBar : MonoBehaviour
         {
             enemyHealth.OnHealthChanged -= UpdateHealthBar;
             enemyHealth.OnDeath -= HandleEnemyDeath;
+        }
+
+        if (enemyLevelScaling != null)
+        {
+            enemyLevelScaling.OnLevelUp -= UpdateHealthBarAfterLevelUp;
         }
     }
 }

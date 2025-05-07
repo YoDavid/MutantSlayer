@@ -21,7 +21,6 @@ public class TimeManager : MonoBehaviour
         else Destroy(gameObject);
 
         SetTimeScale(normalTimeScale);
-        Debug.Log("[TimeManager] Initialized with normal time scale: " + normalTimeScale);
     }
 
     public void SetTimeScale(float scale)
