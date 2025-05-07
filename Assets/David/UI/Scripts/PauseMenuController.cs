@@ -4,6 +4,7 @@ public class PauseMenuController : BaseMenuController
 {
     [Header("Pause Settings")]
     [SerializeField] private GameObject optionsMenu;
+    [SerializeField] private UIManager uiManager;
 
     public bool IsVisible { get; private set; }
 
@@ -11,21 +12,15 @@ public class PauseMenuController : BaseMenuController
     {
         base.Start();
         canUseButtons = true;
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-
-        }
     }
 
     public void SetVisible(bool visible)
     {
-        Debug.Log("Step 1: Set menu visible");  // Log when visibility is being toggled.
         IsVisible = visible;
         gameObject.SetActive(visible);
 
         if (visible)
         {
-            Debug.Log("Step 2: Menu opened");  // Log when the menu opens.
             SelectButton(0);
             AudioManager.Instance.PlayMenuOpen();
             TimeManager.Instance?.PauseGame();
@@ -33,13 +28,21 @@ public class PauseMenuController : BaseMenuController
         }
         else
         {
-            Debug.Log("Step 3: Menu closed");  // Log when the menu closes.
             TimeManager.Instance?.ResumeGame();
             AudioManager.Instance.PlayMenuClose();
+            uiManager.SetHUDVisible(true);
         }
     }
 
-    public void OnResumePressed() => SetVisible(false);
+    public void OnResumePressed()
+    {
+        SetVisible(false);
+        TimeManager.Instance?.ResumeGame();
+        AudioManager.Instance.PlayMenuClose();
+        uiManager.SetHUDVisible(true);
+        uiManager.SetPlayerInputEnabled(enabled);
+        canUseButtons = false;
+    }
 
     public void OnOptionsPressed()
     {

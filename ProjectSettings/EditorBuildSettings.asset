@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/David/Scenes/Scene_Game.unity
     guid: 420c23eb31c1a4a40bea265a1b6fa622
+  - enabled: 1
+    path: Assets/David/Scenes/Scene_SlideShowEnding.unity
+    guid: b34037e9fe79be446a07541baf462fdf
   m_configObjects: {}

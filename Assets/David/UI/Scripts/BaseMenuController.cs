@@ -9,7 +9,6 @@ public abstract class BaseMenuController : MonoBehaviour
     [SerializeField] protected KeyCode upKey = KeyCode.W;
     [SerializeField] protected KeyCode downKey = KeyCode.S;
     [SerializeField] protected KeyCode selectKey = KeyCode.Return;
-    [SerializeField] protected KeyCode selectKey1 = KeyCode.Space;
     [SerializeField] protected MenuButton[] menuButtons;
 
     protected bool canUseButtons = false;

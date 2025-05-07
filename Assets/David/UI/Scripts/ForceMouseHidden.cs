@@ -6,7 +6,7 @@ public class ForceMouseHidden : MonoBehaviour
 {
     private void Start()
     {
-        //LockAndHideMouse();
+        LockAndHideMouse();
     }
 
     private void Update()

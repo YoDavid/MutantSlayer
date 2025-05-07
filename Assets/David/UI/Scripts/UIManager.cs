@@ -96,7 +96,7 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         if (pauseMenu == null) return;
-        bool shouldPause = !pauseMenu.IsVisible;
+        bool shouldPause = pauseMenu.IsVisible;
 
         if ((Input.GetKeyDown(KeyCode.Escape))
             && (gameOverMenu == null || !gameOverMenu.IsVisible)
@@ -140,16 +140,23 @@ public class UIManager : MonoBehaviour
         }
 
         bool shouldPause = !pauseMenu.IsVisible;
-        pauseMenu.SetVisible(shouldPause);
-        SetHUDVisible(!shouldPause);
 
-        // Handle pause game using TimeManager
         if (shouldPause)
+        {
+            // Pausing: Menu first, then freeze
+            pauseMenu.SetVisible(true);
+            SetHUDVisible(false);
             TimeManager.Instance?.PauseGame();
+            SetPlayerInputEnabled(false);
+        }
         else
+        {
+            // Unpausing: Unfreeze first, then UI
             TimeManager.Instance?.ResumeGame();
-
-        SetPlayerInputEnabled(!shouldPause);
+            SetHUDVisible(true);
+            SetPlayerInputEnabled(true);
+            pauseMenu.SetVisible(false);
+        }
     }
 
     private void HandleBossHealthBarVisibility()
@@ -226,7 +233,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void SetPlayerInputEnabled(bool enabled)
+    public void SetPlayerInputEnabled(bool enabled)
     {
         if (playerMovement != null) playerMovement.SetMovementEnabled(enabled);
         if (playerAttackController != null) playerAttackController.enabled = enabled;

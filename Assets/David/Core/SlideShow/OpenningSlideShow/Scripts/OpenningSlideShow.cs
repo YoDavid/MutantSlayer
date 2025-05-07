@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
@@ -58,7 +58,6 @@ public class OpenningSlideShow : MonoBehaviour
     public float fadeInDuration = 3f; // Configurable fade time
     private bool isFadingIn = true;
 
-    
     [Header("Debug Settings")]
     [SerializeField] private bool overrideAllSlideDurations = false;
     [SerializeField] private float debugSlideDuration = 2f; // Default fast duration for testing
@@ -77,6 +76,7 @@ public class OpenningSlideShow : MonoBehaviour
     private float textFinishTime;
     private bool isTrackingGroupTime = false;
 
+    #region Initialization
     private void Start()
     {
         Cursor.visible = false;
@@ -135,16 +135,6 @@ public class OpenningSlideShow : MonoBehaviour
         CoverPanelForImages.color = finalColor;
     }
 
-    private bool ShouldShowTextPanel()
-    {
-        if (currentGroupIndex >= slideGroups.Length) return false;
-
-        string groupName = slideGroups[currentGroupIndex].name;
-        return !(groupName.Contains("Part 3") &&
-               !groupName.Contains("Slashes") &&
-               !slideGroups[currentGroupIndex].isSlashSequence);
-    }
-
     private IEnumerator FadeFromBlack()
     {
         float elapsed = 0f;
@@ -164,15 +154,9 @@ public class OpenningSlideShow : MonoBehaviour
 
         blackFadePanel.gameObject.SetActive(false);
     }
+    #endregion
 
-    private void OnDestroy()
-    {
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.StopMusic();
-        }
-    }
-
+    #region Update and Input Handling
     private void Update()
     {
         if (isFadingIn || isFading || isPlayingSlashSequence) return;
@@ -198,55 +182,9 @@ public class OpenningSlideShow : MonoBehaviour
             SkipSlideshow();
         }
     }
+    #endregion
 
-    private void ShowAllTextInstantly()
-    {
-        // Stop any running text animation
-        if (textAnimationCoroutine != null)
-        {
-            StopCoroutine(textAnimationCoroutine);
-            textAnimationCoroutine = null;
-        }
-
-        // Show complete text immediately
-        var currentGroup = slideGroups[currentGroupIndex];
-        storyTextComponent.text = currentGroup.text;
-        storyTextComponent.color = new Color(storyTextComponent.color.r, storyTextComponent.color.g, storyTextComponent.color.b, 1f);
-
-        // Immediately set cover panel to transparent
-        if (coverPanelFadeCoroutine != null)
-        {
-            StopCoroutine(coverPanelFadeCoroutine);
-        }
-        Color transparentColor = CoverPanelForImages.color;
-        transparentColor.a = 0f;
-        CoverPanelForImages.color = transparentColor;
-    }
-
-    private void ApplyTextStyle(SlideGroup group)
-    {
-        if (!group.overrideTextStyle) return;
-
-        if (group.fontSize > 0)
-        {
-            storyTextComponent.fontSize = group.fontSize;
-        }
-
-        RectTransform textRT = storyTextComponent.GetComponent<RectTransform>();
-
-        textRT.anchoredPosition = group.textPosition;
-
-        textRT.sizeDelta = group.textSize;
-
-        storyTextComponent.alignment = group.alignment;
-    }
-
-    private float GetAdjustedSlideDuration(SlideGroup group)
-    {
-        // Use debug duration if override is enabled, otherwise use group's duration
-        return overrideAllSlideDurations ? debugSlideDuration : group.slideDuration;
-    }
-
+    #region Slide Management
     private void ShowCurrentSlide()
     {
         var currentGroup = slideGroups[currentGroupIndex];
@@ -265,8 +203,7 @@ public class OpenningSlideShow : MonoBehaviour
             groupStartTime = Time.time;
             isTrackingGroupTime = true;
             float totalDuration = currentGroup.images.Length * currentSlideDuration;
-            Debug.Log($"Starting group {currentGroupIndex} ('{currentGroup.name}') at {groupStartTime:F2}s. " +
-                     $"{currentGroup.images.Length} images ª {currentSlideDuration}s = {totalDuration}s total");
+
         }
 
         isShowingAllText = false;
@@ -282,8 +219,6 @@ public class OpenningSlideShow : MonoBehaviour
 
             float totalGroupDuration = currentGroup.images.Length * currentSlideDuration;
             float textDuration = Mathf.Max(0.1f, totalGroupDuration - 3f); // Always finish 3s before group ends
-
-            Debug.Log($"Starting text animation (duration: {textDuration:F2}s)");
             textAnimationCoroutine = StartCoroutine(AnimateText(currentGroup.text, textDuration));
             ApplyTextStyle(currentGroup);
         }
@@ -316,8 +251,6 @@ public class OpenningSlideShow : MonoBehaviour
             float actualDuration = groupEndTime - groupStartTime;
             float expectedDuration = currentGroup.images.Length * currentGroup.slideDuration;
 
-            Debug.Log($"Group {currentGroupIndex} completed at {groupEndTime:F2}s\n" +
-                     $"Actual duration: {actualDuration:F2}s | Expected: {expectedDuration:F2}s");
             isTrackingGroupTime = false;
         }
 
@@ -364,7 +297,6 @@ public class OpenningSlideShow : MonoBehaviour
             }
         }
     }
-
 
     private void StartSlashSequence()
     {
@@ -418,13 +350,6 @@ public class OpenningSlideShow : MonoBehaviour
         }
     }
 
-    private IEnumerator WhiteFlashEffect(float duration)
-    {
-        whiteFlashPanel.gameObject.SetActive(true);
-        yield return new WaitForSeconds(duration);
-        whiteFlashPanel.gameObject.SetActive(false);
-    }
-
     private IEnumerator FadeAndChangeSlide()
     {
         isFading = true;
@@ -444,23 +369,111 @@ public class OpenningSlideShow : MonoBehaviour
 
         if (!isFading && !isPlayingSlashSequence)
         {
-            Debug.Log($"Advancing after {Time.time - startTime:F2}s (expected: {adjustedDelay:F2}s)");
             AdvanceSlide();
         }
     }
+    #endregion
 
-    private IEnumerator BlinkSpacePrompt()
+    #region Text Management
+    private void ShowAllTextInstantly()
     {
-        while (true)
+        // Stop any running text animation
+        if (textAnimationCoroutine != null)
         {
-            if (spacePromptText != null)
-            {
-                spacePromptText.enabled = !spacePromptText.enabled;
-            }
-            yield return new WaitForSeconds(spacePromptBlinkRate);
+            StopCoroutine(textAnimationCoroutine);
+            textAnimationCoroutine = null;
         }
+
+        // Show complete text immediately
+        var currentGroup = slideGroups[currentGroupIndex];
+        storyTextComponent.text = currentGroup.text;
+        storyTextComponent.color = new Color(storyTextComponent.color.r, storyTextComponent.color.g, storyTextComponent.color.b, 1f);
+
+        // Immediately set cover panel to transparent
+        if (coverPanelFadeCoroutine != null)
+        {
+            StopCoroutine(coverPanelFadeCoroutine);
+        }
+        Color transparentColor = CoverPanelForImages.color;
+        transparentColor.a = 0f;
+        CoverPanelForImages.color = transparentColor;
     }
 
+    private void ApplyTextStyle(SlideGroup group)
+    {
+        if (!group.overrideTextStyle) return;
+
+        if (group.fontSize > 0)
+        {
+            storyTextComponent.fontSize = group.fontSize;
+        }
+
+        RectTransform textRT = storyTextComponent.GetComponent<RectTransform>();
+
+        textRT.anchoredPosition = group.textPosition;
+
+        textRT.sizeDelta = group.textSize;
+
+        storyTextComponent.alignment = group.alignment;
+    }
+
+    private bool ShouldShowTextPanel()
+    {
+        if (currentGroupIndex >= slideGroups.Length) return false;
+
+        string groupName = slideGroups[currentGroupIndex].name;
+
+        // Prevent showing text for Final 1 and Final 2
+        if (groupName == "Final 1" || groupName == "Final 2")
+        {
+            return false;
+        }
+
+        return !(groupName.Contains("Part 3") &&
+                !groupName.Contains("Slashes") &&
+                !slideGroups[currentGroupIndex].isSlashSequence);
+    }
+
+    private IEnumerator AnimateText(string fullText, float duration)
+    {
+        storyTextComponent.text = "";
+        int totalLetters = fullText.Length;
+        float delayPerChar = totalLetters > 0 ? duration / totalLetters : 0f;
+
+        typingSoundVolume = 1f;
+        timeSinceTypingStarted = 0f;
+        StartCoroutine(FadeOutTypingSound());
+
+        for (int i = 0; i <= totalLetters; i++)
+        {
+            storyTextComponent.text = fullText.Substring(0, i);
+
+            if (i > 0 && fullText[i - 1] != ' ')
+            {
+                timeSinceTypingStarted += delayPerChar;
+                AudioManager.Instance.PlayKeyboardSound(typingSoundVolume);
+            }
+
+            if (delayPerChar > 0) yield return new WaitForSeconds(delayPerChar);
+        }
+
+        textFinishTime = Time.time;
+
+        storyTextComponent.color = new Color(storyTextComponent.color.r,
+                                           storyTextComponent.color.g,
+                                           storyTextComponent.color.b, 1f);
+    }
+
+    private void OnValidate()
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying) return;
+        UpdateTextLive();
+#endif
+    }
+    #endregion
+
+    #region Utilities and Scene Management
     private void SkipSlideshow()
     {
         if (slashSequenceCoroutine != null)
@@ -481,6 +494,31 @@ public class OpenningSlideShow : MonoBehaviour
         if (!string.IsNullOrEmpty(nextSceneName))
         {
             SceneLoader.Instance.LoadSceneWithFade(nextSceneName);
+        }
+    }
+
+    private float GetAdjustedSlideDuration(SlideGroup group)
+    {
+        // Use debug duration if override is enabled, otherwise use group's duration
+        return overrideAllSlideDurations ? debugSlideDuration : group.slideDuration;
+    }
+
+    private IEnumerator WhiteFlashEffect(float duration)
+    {
+        whiteFlashPanel.gameObject.SetActive(true);
+        yield return new WaitForSeconds(duration);
+        whiteFlashPanel.gameObject.SetActive(false);
+    }
+
+    private IEnumerator BlinkSpacePrompt()
+    {
+        while (true)
+        {
+            if (spacePromptText != null)
+            {
+                spacePromptText.enabled = !spacePromptText.enabled;
+            }
+            yield return new WaitForSeconds(spacePromptBlinkRate);
         }
     }
 
@@ -519,39 +557,6 @@ public class OpenningSlideShow : MonoBehaviour
             storyTextComponent.color = textColor;
     }
 
-    private IEnumerator AnimateText(string fullText, float duration)
-    {
-        storyTextComponent.text = "";
-        int totalLetters = fullText.Length;
-        float delayPerChar = totalLetters > 0 ? duration / totalLetters : 0f;
-
-        typingSoundVolume = 1f;
-        timeSinceTypingStarted = 0f;
-        StartCoroutine(FadeOutTypingSound());
-
-        for (int i = 0; i <= totalLetters; i++)
-        {
-            storyTextComponent.text = fullText.Substring(0, i);
-
-            if (i > 0 && fullText[i - 1] != ' ')
-            {
-                timeSinceTypingStarted += delayPerChar;
-                AudioManager.Instance.PlayKeyboardSound(typingSoundVolume);
-            }
-
-            if (delayPerChar > 0) yield return new WaitForSeconds(delayPerChar);
-        }
-
-        textFinishTime = Time.time;
-        Debug.Log($"Text completed at {textFinishTime:F2}s " +
-                 $"(took {textFinishTime - groupStartTime:F2}s of expected {duration:F2}s)");
-
-        storyTextComponent.color = new Color(storyTextComponent.color.r,
-                                           storyTextComponent.color.g,
-                                           storyTextComponent.color.b, 1f);
-    }
-
-    
     private IEnumerator FadeOutTypingSound()
     {
         float elapsed = 0f;
@@ -562,14 +567,6 @@ public class OpenningSlideShow : MonoBehaviour
             yield return null;
         }
         typingSoundVolume = 0f;
-    }
-
-    private void OnValidate()
-    {
-#if UNITY_EDITOR
-        if (!Application.isPlaying) return;
-        UpdateTextLive();
-#endif
     }
 
     private void UpdateTextLive()
@@ -602,4 +599,14 @@ public class OpenningSlideShow : MonoBehaviour
         EditorApplication.QueuePlayerLoopUpdate();
 #endif
     }
+
+    private void OnDestroy()
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.StopMusic();
+        }
+    }
+    #endregion
+
 }

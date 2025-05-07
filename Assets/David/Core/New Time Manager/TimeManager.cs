@@ -5,10 +5,12 @@ public class TimeManager : MonoBehaviour
 {
     public static TimeManager Instance;
 
-
     [Header("Time Scales")]
     public float normalTimeScale = 1f;
     public float pauseTimeScale = 0f;
+
+    [Header("Player Reference")]
+    public Rigidbody2D playerRigidbody; // Assign in Inspector
 
     private float currentTimeScale = 1f;
     private bool isPaused = false;
@@ -19,6 +21,7 @@ public class TimeManager : MonoBehaviour
         else Destroy(gameObject);
 
         SetTimeScale(normalTimeScale);
+        Debug.Log("[TimeManager] Initialized with normal time scale: " + normalTimeScale);
     }
 
     public void SetTimeScale(float scale)
@@ -29,20 +32,32 @@ public class TimeManager : MonoBehaviour
 
     public void PauseGame()
     {
-        Debug.Log("Step 4: Game paused");  // Log when game pauses.
         isPaused = true;
+        Physics2D.SyncTransforms(); // Force physics update
+        ResetPlayerVelocity();      // Now reset velocity
         SetTimeScale(pauseTimeScale);
         AudioManager.Instance?.SetPauseState(true);
     }
 
+    private void ResetPlayerVelocity()
+    {
+        if (playerRigidbody != null)
+        {
+            playerRigidbody.velocity = Vector2.zero;
+            playerRigidbody.isKinematic = true; // Disable physics forces
+        }
+    }
+
     public void ResumeGame()
     {
-        Debug.Log("Step 5: Game resumed");  // Log when game resumes.
         isPaused = false;
+        if (playerRigidbody != null)
+        {
+            playerRigidbody.isKinematic = false; // Re-enable physics
+        }
         SetTimeScale(normalTimeScale);
         AudioManager.Instance?.SetPauseState(false);
     }
-
 
     public void TemporarilySlowTime(float newTimeScale, float duration)
     {
@@ -55,15 +70,18 @@ public class TimeManager : MonoBehaviour
         SetTimeScale(newTimeScale);
         yield return new WaitForSecondsRealtime(duration);
         if (!isPaused)
+        {
             SetTimeScale(normalTimeScale);
+        }
     }
 
     public void ResetTimeScale()
     {
         if (!isPaused)
+        {
             SetTimeScale(normalTimeScale);
+        }
     }
-
 
     public bool IsPaused => isPaused;
 }

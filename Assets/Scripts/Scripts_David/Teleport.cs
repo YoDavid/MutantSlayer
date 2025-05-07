@@ -60,10 +60,6 @@ public class Teleport : MonoBehaviour
             attackController = player.GetComponent<PlayerAttackController>();
             playerAnimation = player.GetComponent<PlayerAnimationController>();
         }
-        else
-        {
-            Debug.LogWarning("Teleport: Player not found at Start!");
-        }
     }
 
     private void UpdateDebugStates()
@@ -130,7 +126,6 @@ public class Teleport : MonoBehaviour
         if (!other.CompareTag(targetTag)) return;
 
         isPlayerInZone = true;
-        Debug.Log("Teleport: Player entered teleport zone.");
 
         if (!playFallingAnimation && interactionPromptText != null)
             interactionPromptText.gameObject.SetActive(true);
@@ -142,7 +137,6 @@ public class Teleport : MonoBehaviour
         }
         else if (transform.name == autoTeleportLevelName || gameObject.scene.name == autoTeleportLevelName)
         {
-            Debug.Log("Teleport: Auto-teleport level detected. Triggering teleport.");
             StartStandardTeleportSequence(true);
         }
     }

@@ -50,7 +50,6 @@ public class AudioManager : MonoBehaviour
     private string currentMusic;
     private float musicOriginalVolume; // Store original music volume
 
-
     private void Awake()
     {
         if (Instance == null)
@@ -64,7 +63,6 @@ public class AudioManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
 
     private void InitializeAudioSystem()
     {
@@ -294,7 +292,6 @@ public class AudioManager : MonoBehaviour
         // Stop all SFX immediately
         StopAllSFX();
 
-        // Handle music transitions based on the scene
         switch (scene.name)
         {
             case "Scene_MainMenu":
@@ -304,9 +301,39 @@ public class AudioManager : MonoBehaviour
                 PlayMusic("music_opening_slideshow");
                 break;
             case "Scene_Game":
-                PlayMusic("music_game_bg");
+                StartCoroutine(PlayGameMusicSequence());
                 break;
-                // Add more cases later (boss, ending, etc.)
+            case "Scene_SlideShowEnding":
+                PlayMusic("music_ending_slideshow");
+                break;
+        }
+    }
+
+    private IEnumerator PlayGameMusicSequence()
+    {
+        while (true) // Infinite loop to alternate between bg and bgv2
+        {
+            // Play bg (non-looping)
+            if (musicDict.TryGetValue("music_game_bg", out Sound track1))
+            {
+                currentMusic = "music_game_bg";
+                musicSource.loop = false; // Disable looping (we control it manually)
+                yield return StartCoroutine(FadeMusic(track1));
+
+                while (musicSource.isPlaying)
+                    yield return null;
+            }
+
+            if (musicDict.TryGetValue("music_game_bgv2", out Sound track2))
+            {
+                currentMusic = "music_game_bgv2";
+                musicSource.loop = false; // Disable looping (we control it manually)
+                yield return StartCoroutine(FadeMusic(track2));
+
+                // Wait for bgv2 to finish
+                while (musicSource.isPlaying)
+                    yield return null;
+            }
         }
     }
 
@@ -457,6 +484,7 @@ public class AudioManager : MonoBehaviour
     public void PlayMusicMainMenu() => PlayMusic("music_main_menu");
     public void PlayMusicOpeningSlideshow() => PlayMusic("music_opening_slideshow");
     public void PlayMusicGameBackground() => PlayMusic("music_game_bg");
+    public void PlayMusicGameBackgroundV2() => PlayMusic("music_game_bgv2");
     public void PlayMusicBossBattle() => PlayMusic("music_boss_battle");
     public void PlayMusicEndingSlideshow() => PlayMusic("music_ending_slideshow");
     #endregion
