@@ -51,8 +51,10 @@ GameObject:
   - component: {fileID: 6443694963126290252}
   - component: {fileID: 2470467694308827178}
   - component: {fileID: 3019953888367561466}
-  - component: {fileID: 8019181582243872274}
   - component: {fileID: 3385927367459305600}
+  - component: {fileID: 1675519543239857255}
+  - component: {fileID: 3927490239563601796}
+  - component: {fileID: 9111758058180492904}
   m_Layer: 9
   m_Name: SmallEnemy
   m_TagString: Enemy
@@ -69,7 +71,7 @@ Transform:
   m_GameObject: {fileID: 4354679935050727372}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.53, y: -1.9, z: 0}
+  m_LocalPosition: {x: 0.53, y: -0.87, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -301,11 +303,11 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 381bf157cb8e54749af0658368dc3e25, type: 2}
   patrolSettings:
     enablePatrol: 1
-    patrolLeftBound: -3
-    patrolRightBound: 3
+    patrolLeftBound: -22.4
+    patrolRightBound: 11
     patrolSpeed: 2
     idleTimeAtEdges: 1
-  maxChaseRangeFromBounds: 3
+  maxChaseRangeFromBounds: 5.68
   minDistanceFromPlayer: 4
   playerPositionCheckInterval: 0.2
   isFacingLeft: 1
@@ -323,7 +325,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _flashColor: {r: 1.0592737, g: 1.0592737, b: 1.0592737, a: 1}
   _flashTime: 0.25
---- !u!114 &8019181582243872274
+--- !u!114 &3385927367459305600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4354679935050727372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5f48183e6abe0e4eb25f36979bd94f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHealth: 50
+  baseDamage: 5
+  healthScaling: 0.2
+  damageScaling: 0.15
+  enemyLevel: 1
+  baseExpReward: 100
+  expScalingFactor: 1.5
+  playerLevelSystem: {fileID: 0}
+--- !u!114 &1675519543239857255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4354679935050727372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2cb7847c98e9b247ab033abadab8828, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallGameObject: {fileID: 0}
+  healthBar: {fileID: 0}
+--- !u!114 &3927490239563601796
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -343,17 +379,17 @@ MonoBehaviour:
   m_SelfShadows: 1
   m_ApplyToSortingLayers: 05ba91ff
   m_ShapePath:
-  - {x: -22, y: -17.509766, z: 0}
-  - {x: -22, y: 17.509766, z: 0}
-  - {x: 22.000244, y: 17.509766, z: 0}
-  - {x: 22.000244, y: -17.509766, z: 0}
+  - {x: -21.999939, y: -17.509766, z: 0}
+  - {x: -21.999939, y: 17.509766, z: 0}
+  - {x: 21.999939, y: 17.509766, z: 0}
+  - {x: 21.999939, y: -17.509766, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 632880
+  m_InstanceId: 1090210
   m_LocalBounds:
-    m_Center: {x: 0.00012207031, y: 0, z: 0}
-    m_Extent: {x: 22.000122, y: 17.509766, z: 0}
---- !u!114 &3385927367459305600
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 21.999939, y: 17.509766, z: 0}
+--- !u!114 &9111758058180492904
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
