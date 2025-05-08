@@ -28,7 +28,6 @@ public class EnemyAttackCollider : MonoBehaviour
         if (damageDealer == null)
         {
             damageDealer = gameObject.AddComponent<EnemyDamageDealer>();
-            Debug.Log("Added missing EnemyDamageDealer component.");
         }
 
         damageDealer.config = damageConfig; // Ensure the DamageConfig is assigned correctly
@@ -46,28 +45,23 @@ public class EnemyAttackCollider : MonoBehaviour
     {
         UpdateColliderPosition();
         attackCollider.enabled = true;
-        Debug.Log("Attack Collider Enabled");
     }
 
     public void DisableAttackCollider()
     {
         attackCollider.enabled = false;
-        Debug.Log("Attack Collider Disabled");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.name != "PlayerHurtbox")
         {
-            Debug.Log("Trigger Entered: Not PlayerHurtbox");
             return;
         }
 
-        Debug.Log("Trigger Entered: PlayerHurtbox");
 
         if (playerHealth == null || Time.time < lastHitTime + enemyConfig.hitCooldown)
         {
-            Debug.Log("PlayerHealth is null or hitCooldown not passed.");
             return;
         }
 
@@ -79,7 +73,6 @@ public class EnemyAttackCollider : MonoBehaviour
         lastHitTime = Time.time;
         if (playerHealth == null || playerHealth.IsPlayerInvulnerable())
         {
-            Debug.Log("PlayerHealth is null or player is invulnerable.");
             return;
         }
 
@@ -97,19 +90,14 @@ public class EnemyAttackCollider : MonoBehaviour
             float randomVariation = Random.Range(-0.2f, 0.2f);
             int finalDamage = Mathf.RoundToInt(baseDamage * (1f + randomVariation));
 
-            Debug.Log($"Calculated damage: {finalDamage} (Base: {baseDamage}, Variation: {randomVariation:P0}, Critical: {isCritical})");
 
             // Play attack sound
             PlayAttackSound();
 
             // Apply damage to player health
             playerHealth.TakeDamage(finalDamage, isCritical);
-            Debug.Log($"Damage Applied to Player: {finalDamage} (Critical: {isCritical})");
         }
-        else
-        {
-            Debug.LogError("DamageDealer component missing!");
-        }
+
 
         // Worm-specific knockback (unchanged)
         if (enemyConfig.hasDualAttack && !isFirstAttackActive && playerRb != null)
@@ -120,14 +108,12 @@ public class EnemyAttackCollider : MonoBehaviour
                 enemyConfig.knockbackDirection.y
             );
             playerRb.AddForce(force * enemyConfig.knockbackForce, ForceMode2D.Impulse);
-            Debug.Log("Knockback applied with force: " + force);
         }
     }
 
     private void PlayAttackSound()
     {
             AudioManager.Instance.PlaySmallEnemyAttack(); // Preserving original call for small enemy attacks
-            Debug.Log("Playing enemy attack sound.");
   
     }
 

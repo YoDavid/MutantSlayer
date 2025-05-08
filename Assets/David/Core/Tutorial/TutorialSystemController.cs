@@ -30,7 +30,6 @@ public class TutorialSystemController : MonoBehaviour
             if (imageRect != null)
             {
                 imageRect.anchoredPosition = new Vector2(-650f, 100f);
-                Debug.Log($"Start(): Set image to {imageRect.anchoredPosition}");
             }
         }
     }
@@ -110,7 +109,6 @@ public class TutorialSystemController : MonoBehaviour
                 if (currentContent.overridePosition)
                 {
                     imageRect.anchoredPosition = currentContent.customImagePosition;
-                    Debug.Log($"Position overridden to {imageRect.anchoredPosition}");
                 }
                 else
                 {
@@ -121,7 +119,6 @@ public class TutorialSystemController : MonoBehaviour
                 if (currentContent.overrideSize)
                 {
                     imageRect.sizeDelta = currentContent.customImageSize;
-                    Debug.Log($"Size overridden to {imageRect.sizeDelta}");
                 }
                 else
                 {

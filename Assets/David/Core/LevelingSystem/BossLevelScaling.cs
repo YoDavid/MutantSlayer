@@ -3,28 +3,28 @@ using UnityEngine;
 public class BossLevelScaling : MonoBehaviour
 {
     [Header("Base Stats")]
-    public int baseHealth = 300; // Reduced from 500
-    public int baseDamage = 15; // Reduced from 25
+    public int baseHealth = 300; 
+    public int baseDamage = 15; 
 
     [Header("Scaling Settings")]
-    public float healthScaling = 0.15f; // Reduced from 0.25
-    public float damageScaling = 0.1f; // Reduced from 0.2
+    public float healthScaling = 0.15f; 
+    public float damageScaling = 0.1f; 
     public int levelOffset = 2;
 
     [Header("Experience Reward")]
-    public int baseExpReward = 100; // Reduced from 300
-    public float expScalingFactor = 1.1f; // Reduced from 1.75
+    public int baseExpReward = 100; 
+    public float expScalingFactor = 1.1f; 
 
     [Header("Phase Settings")]
     [Range(0,1)] public float phase2Threshold = 0.6f;
     [Range(0,1)] public float phase3Threshold = 0.3f;
-    public float[] phaseDamageMultipliers = { 1f, 1.25f, 1.5f }; // Damage multipliers per phase
+    public float[] phaseDamageMultipliers = { 1f, 1.25f, 1.5f }; 
 
     [Header("Critical Hit Settings")]
     public float baseCritChance = 0.15f;
     public float baseCritMultiplier = 2.0f;
-    public float critChancePerPhase = 0.05f; // +5% crit chance per phase
-    public float critMultiplierPerPhase = 0.25f; // +0.25x crit damage per phase
+    public float critChancePerPhase = 0.05f;
+    public float critMultiplierPerPhase = 0.25f; 
 
     // Components
     private BossHealth bossHealth;
@@ -79,12 +79,10 @@ public class BossLevelScaling : MonoBehaviour
         // Force update the health bar visuals immediately
         bossHealth.ForceHealthUpdate();
 
-        Debug.Log($"Boss after leveled up - Level: {effectiveLevel}, Health: {bossHealth.currentHealth}/{bossHealth.maxHealth}");
     }
 
     private void OnPhaseChanged(int phase)
     {
-        Debug.Log($"Boss entered Phase {phase}");
     }
 
     private void CheckPhaseTransition(int currentHealth)

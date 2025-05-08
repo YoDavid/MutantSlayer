@@ -5,20 +5,20 @@ public class EnemyLevelScaling : MonoBehaviour
     [Header("Scaling Settings")]
     public int baseHealth = 50;
     public int baseDamage = 5;
-    public float healthScaling = 0.08f; // Reduced from 0.2 (8% per level)
-    public float damageScaling = 0.05f; // Reduced from 0.15 (5% per level)
+    public float healthScaling = 0.08f;
+    public float damageScaling = 0.2f; 
 
     [Header("Experience Reward Settings")]
-    public int baseExpReward = 20; // Reduced from 100
-    public float expScalingFactor = 1.05f; // Reduced from 1.5 (5% per level)
+    public int baseExpReward = 7; 
+    public float expScalingFactor = 0.9f;
 
     [Header("Level Information")]
-    [SerializeField] private int enemyLevel = 1; // Exposed in the inspector
+    [SerializeField] private int enemyLevel = 1;
 
     private HealthSystem healthSystem;
     [SerializeField] private PlayerLevelSystem playerLevelSystem;
 
-    // Event to notify when the enemy levels up
+
     public event System.Action OnLevelUp;
 
     private void Awake()
@@ -26,7 +26,6 @@ public class EnemyLevelScaling : MonoBehaviour
         healthSystem = GetComponent<HealthSystem>();
         playerLevelSystem = FindObjectOfType<PlayerLevelSystem>();
 
-        // Apply scaling on startup for pre-placed enemies
         ApplyInitialScaling();
     }
 
