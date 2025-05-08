@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerAttackController : MonoBehaviour
 {
-   
+
     #region Components and References
     private PlayerAnimationController animationController;
     private PlayerMovementController movementController;
@@ -387,6 +387,14 @@ public class PlayerAttackController : MonoBehaviour
         bool isRightMouseReleased = Input.GetMouseButtonUp(1);
         bool isRightMousePressed = Input.GetMouseButtonDown(1);
 
+        // If right mouse is not held and we're in the loop state, exit it
+        if (!isRightMouseHeld && animationController.animator.GetBool("RangedAttackLoop"))
+        {
+            Debug.Log("Right mouse not held - exiting RangedAttackLoop");
+            animationController.SetRangedAttackLoop(false);
+            StopElectricityLoop();
+        }
+
         // Reset charge start time if we're airborne and trying to charge
         if (!IsGrounded() && isRightMousePressed)
         {
@@ -436,7 +444,7 @@ public class PlayerAttackController : MonoBehaviour
             }
 
             // Only deplete stamina if the RangedAttackStart animation is playing
-            if (animationController.animator.GetBool("RangedAttackStart"))
+            if (animationController.animator.GetBool("RangedAttackStart") || animationController.animator.GetBool("RangedAttackLoop"))
             {
                 // STAMINA DEPLETION - RESTORED FROM PREVIOUS VERSION
                 if (isCharging && !staminaBar.IsEmpty)
@@ -475,6 +483,14 @@ public class PlayerAttackController : MonoBehaviour
             else if (hasFiredChargeAttack)
             {
                 CleanUpRangedAttack();
+            }
+
+            // Ensure loop state is turned off when button is released
+            if (animationController.animator.GetBool("RangedAttackLoop"))
+            {
+                Debug.Log("Right mouse released - exiting RangedAttackLoop");
+                animationController.SetRangedAttackLoop(false);
+                StopElectricityLoop();
             }
         }
     }

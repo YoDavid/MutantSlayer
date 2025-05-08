@@ -1496,7 +1496,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: IsGrounded
+    m_ConditionEvent: RangedAttackLoop
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 0}
@@ -2038,7 +2038,7 @@ AnimatorStateMachine:
     m_Position: {x: 870, y: 410, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5719491871874744372}
-    m_Position: {x: 560, y: 50, z: 0}
+    m_Position: {x: 590, y: -10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -9117161078454218455}
     m_Position: {x: 460, y: 550, z: 0}

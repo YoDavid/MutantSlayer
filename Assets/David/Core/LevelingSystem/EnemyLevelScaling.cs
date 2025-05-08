@@ -24,9 +24,19 @@ public class EnemyLevelScaling : MonoBehaviour
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
-        playerLevelSystem = FindObjectOfType<PlayerLevelSystem>();
-
         ApplyInitialScaling();
+    }
+
+    private void Start()
+    {
+        if (playerLevelSystem == null)
+        {
+            playerLevelSystem = FindObjectOfType<PlayerLevelSystem>();
+            if (playerLevelSystem == null)
+                Debug.LogError("PlayerLevelSystem not found!");
+            else
+                ApplyInitialScaling();
+        }
     }
 
     private void OnEnable()

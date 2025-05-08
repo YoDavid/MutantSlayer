@@ -253,12 +253,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetRangedAttackLoop(bool value)
     {
-        // Block loop if start hasn't played
-        if (value && !animator.GetBool("RangedAttackStart"))
-        {
-            value = false;
-        }
-
+        Debug.Log($"Setting RangedAttackLoop to {value}");
         animator.SetBool("RangedAttackLoop", value);
     }
 

@@ -55,10 +55,15 @@ public class EnemyHealth : HealthSystem, IDamageable
         if (audioObj != null)
             audioManager = audioObj.GetComponent<AudioManager>();
 
-        if (bloodSplashPool == null)
-            bloodSplashPool = FindObjectOfType<BloodSplashParticlesPool>();
 
         damageFlash = GetComponent<DamageFlash>();
+    }
+
+    private void Start()
+    {
+
+        if (bloodSplashPool == null)
+            bloodSplashPool = FindObjectOfType<BloodSplashParticlesPool>();
     }
 
     public void TakeDamage(int damage, bool isCritical = false, bool isCombo = false, int comboCount = 0)
@@ -85,8 +90,7 @@ public class EnemyHealth : HealthSystem, IDamageable
             );
         }
 
-        // Update health bar after taking damage
-        OnHealthChanged?.Invoke(CurrentHealth);  // Make sure this is called here
+        OnHealthChanged?.Invoke(CurrentHealth); 
 
         if (CurrentHealth <= 0)
             Die();
@@ -144,7 +148,6 @@ public class EnemyHealth : HealthSystem, IDamageable
         if (bloodSplashPool != null)
             bloodSplashPool.PlayDeathSplash(transform.position);
 
-        // Add experience to player when enemy dies
         if (enemyLevelScaling != null)
         {
             int expReward = enemyLevelScaling.GetExpReward(); // Get experience from EnemyLevelScaling

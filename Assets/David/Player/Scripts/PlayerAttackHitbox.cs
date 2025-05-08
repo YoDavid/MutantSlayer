@@ -63,8 +63,11 @@ public class PlayerAttackHitbox : MonoBehaviour
             }
 
             enemyHealth.TakeDamage(damage, isCritical);
+           // CreateComboDamagePopUp(damage, other.transform.position, 0, isCritical, false);
+
             hitSuccess = true;
             hitPosition = other.transform.position;
+
         }
         else if (other.TryGetComponent<BossHealth>(out var bossHealth))
         {
@@ -75,6 +78,8 @@ public class PlayerAttackHitbox : MonoBehaviour
             }
 
             bossHealth.TakeDamage(damage, isCritical);
+            //CreateComboDamagePopUp(damage, other.transform.position, 0, isCritical, true);
+
             isBoss = true;
             hitSuccess = true;
             hitPosition = other.transform.position;
@@ -101,6 +106,24 @@ public class PlayerAttackHitbox : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void CreateComboDamagePopUp(int damage, Vector3 position, int hitIndex, bool isCritical, bool isBoss)
+    {
+        if (DamagePopUp.Instance == null) return;
+
+        float xOffset = hitIndex * 0.5f;
+        float yOffset = hitIndex * 0.3f;
+        Vector3 popUpPosition = position + new Vector3(xOffset, yOffset, 0);
+
+        DamagePopUp.Instance.CreateDamageText(
+            damage,
+            popUpPosition,
+            isPlayer: true,
+            isBoss: isBoss,
+            isCritical,
+            isCombo: true,
+            comboIndex: hitIndex);
     }
 
     private void PlayRandomHitSound()
