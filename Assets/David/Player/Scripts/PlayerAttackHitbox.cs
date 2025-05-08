@@ -42,18 +42,21 @@ public class PlayerAttackHitbox : MonoBehaviour
         bool isBoss = false;
         bool hitSuccess = false;
         bool isCritical = false;
-        Vector3 hitPosition = transform.position; // Default fallback
+        Vector3 hitPosition = transform.position;
 
-        // Get scaled damage from PlayerLevelSystem
+        // Get base scaled damage
         int damage = playerLevelSystem.GetScaledDamage("normal");
+
+        // Apply random variation (±20%)
+        float randomVariation = UnityEngine.Random.Range(-0.2f, 0.2f);
+        damage = Mathf.RoundToInt(damage * (1f + randomVariation));
+
         float critChance = playerLevelSystem.GetCritChance();
         float critMultiplier = playerLevelSystem.GetCritMultiplier();
 
-        // Check if we hit an enemy
         if (other.TryGetComponent<EnemyHealth>(out var enemyHealth))
         {
-            isCritical = UnityEngine.Random.value <= critChance; // Explicitly use UnityEngine.Random
-
+            isCritical = UnityEngine.Random.value <= critChance;
             if (isCritical)
             {
                 damage = Mathf.RoundToInt(damage * critMultiplier);
@@ -63,11 +66,9 @@ public class PlayerAttackHitbox : MonoBehaviour
             hitSuccess = true;
             hitPosition = other.transform.position;
         }
-        // Check if we hit a boss
         else if (other.TryGetComponent<BossHealth>(out var bossHealth))
         {
-            isCritical = UnityEngine.Random.value <= critChance; // Explicitly use UnityEngine.Random
-
+            isCritical = UnityEngine.Random.value <= critChance;
             if (isCritical)
             {
                 damage = Mathf.RoundToInt(damage * critMultiplier);
@@ -86,15 +87,17 @@ public class PlayerAttackHitbox : MonoBehaviour
             SpawnHitParticles(hitPosition);
             OnHit?.Invoke(isCritical, isBoss);
 
+          
+
             if (camerShake != null)
             {
                 if (isCritical)
                 {
-                    camerShake.CriticalHitShakeCamera(); // Stronger shake for crits
+                    camerShake.CriticalHitShakeCamera();
                 }
                 else
                 {
-                    camerShake.NormalHitShakeCamera(); // Normal shake for regular hits
+                    camerShake.NormalHitShakeCamera();
                 }
             }
         }

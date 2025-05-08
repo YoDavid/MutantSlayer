@@ -171,6 +171,11 @@ public class BossComboAttackHitbox : MonoBehaviour
         {
             // Damage is now automatically scaled through the DamageDealer
             var (damage, isCritical) = damageDealer.CalculateDamage();
+
+            // Apply random variation to the damage
+            float randomVariation = Random.Range(-0.2f, 0.2f);
+            damage = Mathf.RoundToInt(damage * (1 + randomVariation));
+
             playerHealth.TakeDamage(damage, isCritical);
 
             // Apply critical effects if needed
@@ -184,6 +189,7 @@ public class BossComboAttackHitbox : MonoBehaviour
             }
         }
     }
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {

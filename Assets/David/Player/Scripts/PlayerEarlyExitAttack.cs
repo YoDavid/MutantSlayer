@@ -122,40 +122,33 @@ public class PlayerEarlyExitAttack : MonoBehaviour
         var damageable = other.GetComponent<IDamageable>();
         if (damageable != null)
         {
-            // Get scaled damage based on player level
-            int damage = playerLevelSystem.GetScaledDamage("normal");  // Use the appropriate attack type if needed
+            // Get base scaled damage
+            int damage = playerLevelSystem.GetScaledDamage("early_exit"); // Changed to "early_exit" type
 
-            // Calculate if the hit is critical
+            // Apply random variation (±20%)
+            float randomVariation = Random.Range(-0.2f, 0.7f);
+            damage = Mathf.RoundToInt(damage * (1f + randomVariation));
+
+            // Calculate critical hit
             bool isCritical = UnityEngine.Random.value <= playerLevelSystem.GetCritChance();
             if (isCritical)
             {
                 damage = Mathf.RoundToInt(damage * playerLevelSystem.GetCritMultiplier());
             }
 
-            damageable.TakeDamage(damage, isCritical, false, 0); // Hit index is 0 for a single hit
-
-            CreateHitEffects(other.transform.position, isCritical, isBoss);
+            damageable.TakeDamage(damage, isCritical, false, 0);
+           
             cameraShake?.NormalHitShakeCamera();
         }
     }
 
-
-    private void CreateHitEffects(Vector3 position, bool isCritical, bool isBoss)
+    private void CreateHitEffects(Vector3 position, bool isCritical, bool isBoss, int finalDamage)
     {
-        // Get the final damage after potential crit multiplier
-        int finalDamage = playerLevelSystem.GetScaledDamage("normal"); // Use appropriate attack type
-
-        // Apply crit if applicable
-        if (isCritical)
-        {
-            finalDamage = Mathf.RoundToInt(finalDamage * playerLevelSystem.GetCritMultiplier());
-        }
-
-        // Create damage popup
+        // Create damage popup with the exact damage dealt
         DamagePopUp.Instance?.CreateDamageText(
-            finalDamage,
+            finalDamage, // Use the calculated damage including random variation
             position,
-            true, isBoss, isCritical, false, 0); // Not a combo hit
+            true, isBoss, isCritical, false, 0);
 
         // Spawn hit particles
         if (hitParticlePrefab != null)

@@ -403,11 +403,23 @@ public class ChargeProjectile : MonoBehaviour
             float maxSize = 0.3f; // whatever your largest charge scale is
 
             float normalizedSize = Mathf.InverseLerp(minSize, maxSize, calculatedSize);
-            float sizeMultiplier = Mathf.Lerp(1f, 1.3f, normalizedSize); // scales from 1x to 1.2x
+            float sizeMultiplier = Mathf.Lerp(1f, 1.3f, normalizedSize); // scales from 1x to 1.3x
 
-            damage = Mathf.RoundToInt(baseDamage * sizeMultiplier);
+            // Apply random variation (±20%)
+            float randomVariation = Random.Range(-0.2f, 0.2f);
+            float finalMultiplier = sizeMultiplier * (1f + randomVariation);
+
+            // Check if this is the final hit (maxHits-1 because hitCount starts at 0)
+            bool isFinalHit = (hitCount >= maxHits - 1);
+
+            if (isFinalHit)
+            {
+                // Final hit gets 1.2x multiplier (on top of other calculations)
+                finalMultiplier *= 1.2f;
+            }
+
+            damage = Mathf.RoundToInt(baseDamage * finalMultiplier);
         }
     }
-
 
 }

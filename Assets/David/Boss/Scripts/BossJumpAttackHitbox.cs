@@ -157,7 +157,14 @@ public class BossJumpAttackHitbox : MonoBehaviour
     {
         if (isPlayerInRange && !playerHealth.IsPlayerInvulnerable())
         {
+            // Calculate the base damage using the DamageDealer
             var (damage, isCritical) = damageDealer.CalculateDamage();
+
+            // Apply random variation to the damage between -0.1 and +0.7
+            float randomVariation = Random.Range(-0.1f, 0.7f);
+            damage = Mathf.RoundToInt(damage * (1 + randomVariation));
+
+            // Apply the damage to the player
             playerHealth.TakeDamage(damage, isCritical);
 
             // NEW: Critical hit differentiation

@@ -96,11 +96,18 @@ public class Spike : MonoBehaviour
     {
         if (playerHealth != null && !playerHealth.IsPlayerInvulnerable())
         {
+            // Calculate the base damage using the DamageDealer
             var (damage, isCritical) = damageDealer.CalculateDamage();
-            playerHealth.TakeDamage(damage, isCritical);
 
+            // Apply random variation to the damage
+            float randomVariation = Random.Range(-0.2f, 0.2f);
+            damage = Mathf.RoundToInt(damage * (1 + randomVariation));
+
+            // Apply the damage to the player
+            playerHealth.TakeDamage(damage, isCritical);
         }
     }
+
 
     public void SetColliderEnabled(bool enabled)
     {

@@ -84,22 +84,27 @@ public class EnemyAttackCollider : MonoBehaviour
         }
 
         // Use the EnemyDamageDealer to calculate the damage
-        var damageDealer = GetComponent<EnemyDamageDealer>();  // Ensure the enemy has an EnemyDamageDealer component
+        var damageDealer = GetComponent<EnemyDamageDealer>();
         if (damageDealer != null)
         {
             // Pass the player's level to the damage dealer
             damageDealer.SetLevel(playerLevelSystem.progression.level);
 
-            // Calculate damage (and check for critical hit)
-            var (damage, isCritical) = damageDealer.CalculateDamage();
-            Debug.Log("Calculated damage: " + damage + " (Critical: " + isCritical + ")");
+            // Calculate base damage (and check for critical hit)
+            var (baseDamage, isCritical) = damageDealer.CalculateDamage();
+
+            // Apply random variation (±20%)
+            float randomVariation = Random.Range(-0.2f, 0.2f);
+            int finalDamage = Mathf.RoundToInt(baseDamage * (1f + randomVariation));
+
+            Debug.Log($"Calculated damage: {finalDamage} (Base: {baseDamage}, Variation: {randomVariation:P0}, Critical: {isCritical})");
 
             // Play attack sound
-           // PlayAttackSound();
+            PlayAttackSound();
 
             // Apply damage to player health
-            playerHealth.TakeDamage(damage, isCritical);
-            Debug.Log("Damage Applied to Player: " + damage + " (Critical: " + isCritical + ")");
+            playerHealth.TakeDamage(finalDamage, isCritical);
+            Debug.Log($"Damage Applied to Player: {finalDamage} (Critical: {isCritical})");
         }
         else
         {
@@ -121,16 +126,9 @@ public class EnemyAttackCollider : MonoBehaviour
 
     private void PlayAttackSound()
     {
-        if (attackAudioSource != null)
-        {
-            // Play attack sound - you can modify this to select the correct sound based on attack phase or other criteria
             AudioManager.Instance.PlaySmallEnemyAttack(); // Preserving original call for small enemy attacks
             Debug.Log("Playing enemy attack sound.");
-        }
-        else
-        {
-            Debug.LogError("AudioSource missing! Cannot play attack sound.");
-        }
+  
     }
 
     public void SetColliderOffset(bool isFirstAttack)
