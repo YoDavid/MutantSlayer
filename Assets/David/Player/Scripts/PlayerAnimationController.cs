@@ -22,6 +22,8 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField] private float healingDuration = 1f; // 1 second
     private bool isLevelingUp = false;
 
+    private bool hasRangedAttackStarted = false;
+
 
     private void Awake()
     {
@@ -34,6 +36,16 @@ public class PlayerAnimationController : MonoBehaviour
     private void Update()
     {
         ResetAirborneActions();
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("RangedAttackStart") &&
+          animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
+        {
+            hasRangedAttackStarted = true;
+        }
+        else
+        {
+            hasRangedAttackStarted = false;
+        }
 
         if (isHealing)
         {
@@ -48,7 +60,11 @@ public class PlayerAnimationController : MonoBehaviour
                 attackController.SetAttackEnabled(true);
             }
         }
+    }
 
+    public bool HasRangedAttackStarted()
+    {
+        return hasRangedAttackStarted;
     }
 
     public void SetSpeed(float speed)
@@ -140,33 +156,46 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void UpdateAnimationStates(float move, bool isGrounded, bool isDashing)
     {
+        // Always set grounded state first (highest priority)
         SetGroundedState(isGrounded);
 
-        bool isFalling = rb.velocity.y < 0 && !isGrounded;
-        bool isJumping = rb.velocity.y > 0 && !isGrounded;
-
-        if (isJumping)
-        {
-            SetJumpState(true);
-            SetFallingState(false);
-        }
-        else if (isFalling)
-        {
-            SetJumpState(false);
-            SetFallingState(true);
-        }
-        else if (isGrounded)
+        // Reset airborne states if grounded
+        if (isGrounded)
         {
             SetJumpState(false);
             SetFallingState(false);
             SetIdleState(move == 0);
         }
+        else // Airborne logic
+        {
+            // Only set falling or jumping when not grounded
+            bool isFalling = rb.velocity.y < 0;
+            bool isJumping = rb.velocity.y > 0;
 
+            // Explicitly ensure only one airborne state is active
+            if (isFalling)
+            {
+                SetJumpState(false);
+                SetFallingState(true);
+            }
+            else if (isJumping)
+            {
+                SetJumpState(true);
+                SetFallingState(false);
+            }
+            else
+            {
+                // When y velocity is exactly 0 (rare case)
+                SetJumpState(false);
+                SetFallingState(false);
+            }
+        }
+
+        // Update speed and dash states
         SetSpeed(move);
         SetDashingState(isDashing);
-
-      
     }
+
 
     public void ResetAirborneActions()
     {
@@ -176,8 +205,8 @@ public class PlayerAnimationController : MonoBehaviour
         {
             animator.SetBool("IsDashing", false);
             animator.SetBool("IsHealing", false);
-            animator.SetBool("RangedAttackStart", false);
-            animator.SetBool("RangedAttackLoop", false);
+            //animator.SetBool("RangedAttackStart", false);
+            //animator.SetBool("RangedAttackLoop", false);
             animator.SetBool("ComboAttackStart", false);
             animator.SetBool("IsComboAttacking", false);
             animator.SetBool("EarlyComboExit", false);
@@ -216,6 +245,7 @@ public class PlayerAnimationController : MonoBehaviour
 
         if (value)
         {
+            Debug.Log("Disabled Controls");
             movementController.SetMovementEnabled(false);
             attackController.SetAttackEnabled(false);
         }
@@ -223,18 +253,13 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetRangedAttackLoop(bool value)
     {
-
-        if (value && !animator.GetBool("IsGrounded"))
+        // Block loop if start hasn't played
+        if (value && !animator.GetBool("RangedAttackStart"))
         {
             value = false;
         }
-        animator.SetBool("RangedAttackLoop", value);
 
-        if (value)
-        {
-            movementController.SetMovementEnabled(false);
-            attackController.SetAttackEnabled(false);
-        }
+        animator.SetBool("RangedAttackLoop", value);
     }
 
     public void SetRangedAttack()
@@ -258,6 +283,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void EnableControls()
     {
+        Debug.Log("Enabled Controls"); 
         if (movementController != null) movementController.SetMovementEnabled(true);
         if (attackController != null) attackController.SetAttackEnabled(true);
     }
@@ -269,6 +295,7 @@ public class PlayerAnimationController : MonoBehaviour
 
         if (value)
         {
+            Debug.Log("Disabled Controls");
             movementController.SetMovementEnabled(false);
             attackController.SetAttackEnabled(false);
         }
@@ -281,6 +308,7 @@ public class PlayerAnimationController : MonoBehaviour
 
         if (value)
         {
+            Debug.Log("Disabled Controls");
             movementController.SetMovementEnabled(false);
             attackController.SetAttackEnabled(false);
         }
@@ -288,7 +316,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void StopComboAttack()
     {
-
+        Debug.Log("Enabled Controls");
         animator.SetBool("ComboAttackStart", false);
         animator.SetBool("IsComboAttacking", false);
         movementController.SetMovementEnabled(true);
@@ -302,6 +330,7 @@ public class PlayerAnimationController : MonoBehaviour
 
         if (value)
         {
+            Debug.Log("Disabled Controls");
             movementController.SetMovementEnabled(false);
             attackController.SetAttackEnabled(false);
         }

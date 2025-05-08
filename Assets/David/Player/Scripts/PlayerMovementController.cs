@@ -7,6 +7,7 @@ public class PlayerMovementController : MonoBehaviour
     private PlayerAnimationController playerAnimationController;
     private PlayerAttackController playerAttackController;
     private PlayerHurtbox playerHurtbox;
+    private GroundCheckController groundCheckController;
 
     [Header("Debugging")]
     public bool isGrounded = false;
@@ -29,11 +30,6 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private float jumpForce = 8f;
     [SerializeField] private float maxJumpTime = 0.35f;
     [SerializeField] private float jumpCancelRate = 0.5f;
-
-    [Header("Ground Check")]
-    [SerializeField] private Transform groundCheckPoint;
-    [SerializeField] private float groundCheckDistance = 0.2f;
-    [SerializeField] private LayerMask groundLayer;
 
     [Header("Gravity Settings")]
     [SerializeField] private float gravityScale = 2.5f;
@@ -58,14 +54,15 @@ public class PlayerMovementController : MonoBehaviour
         rb.gravityScale = gravityScale;
         playerAnimationController = GetComponent<PlayerAnimationController>();
         playerAttackController = GetComponent<PlayerAttackController>();
+        groundCheckController = GetComponent<GroundCheckController>();
         playerHurtbox = GetComponentInChildren<PlayerHurtbox>();
     }
 
     private void Update()
     {
         HandleInput();
-        CheckIfGrounded();
         HandleJump();
+        isGrounded = groundCheckController.IsGrounded;
     }
 
     private void HandleInput()
@@ -238,22 +235,6 @@ public class PlayerMovementController : MonoBehaviour
             rb.velocity = new Vector2(0, rb.velocity.y);
             playerAnimationController.SetSpeed(0);
             StopStepSounds(); // Add this line
-        }
-    }
-
-    private void CheckIfGrounded()
-    {
-        isGrounded = Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckDistance, groundLayer);
-        playerAnimationController.SetGroundedState(isGrounded);
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (drawGizmos && groundCheckPoint != null)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawSphere(groundCheckPoint.position, 0.1f);
-            Gizmos.DrawLine(groundCheckPoint.position, groundCheckPoint.position + Vector3.down * groundCheckDistance);
         }
     }
 

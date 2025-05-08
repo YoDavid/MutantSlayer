@@ -116,9 +116,12 @@ public class ChargeProjectile : MonoBehaviour
         calculatedSize = Mathf.Abs(startScale.x);
         isLargeEnough = calculatedSize >= sizeThreshold;
 
+        Debug.Log("Step 1: Projectile Initialized");
+
         PlayProjectileSound();
         ApplySpawnTimeEffect();
     }
+
 
     private void Update()
     {
@@ -200,43 +203,42 @@ public class ChargeProjectile : MonoBehaviour
     #region Hit Handling
     private void HandleEnemyHit(Collider2D enemy)
     {
+        Debug.Log("Step 2: Enemy Hit Detected");
+
         if (Time.time - lastHitTime < minTimeBetweenHits)
             return;
 
         lastHitTime = Time.time;
+
         UpdateDamage();  // Ensure damage is up-to-date when hit
 
-   
+        Debug.Log("Step 3: Damage Calculated");
 
-        if (enemyHealth != null)
+        // Try to get the enemy's health component
+        EnemyHealth specificEnemyHealth = enemy.GetComponent<EnemyHealth>();
+        BossHealth specificBossHealth = enemy.GetComponent<BossHealth>();
+
+        if (specificEnemyHealth != null)
         {
-            // Check if the enemy is normal or a boss and handle accordingly
-            bool isEnemy = enemy.CompareTag("Enemy");
-            bool isBossEnemy = enemy.CompareTag("BossEnemy");
+            // Handle normal enemy hit
+            specificEnemyHealth.TakeDamage(damage, isCritical: isCritical);
 
-            // Show the damage popup only if the enemy is not a normal "Enemy"
-            if (!isEnemy)
-            {
-               // ShowDamagePopup(enemy);
-            }
+        }
+        else if (specificBossHealth != null)
+        {
+            // Handle boss enemy hit
+            specificBossHealth.TakeDamage(damage, isCritical: isCritical);
 
-            // Apply scaled damage to both normal enemies and BossEnemies
-            if (isEnemy)
-            {
-                enemyHealth.TakeDamage(damage, isCritical: isCritical);
-            }
-
-            if (isBossEnemy && bossHealth != null)  // Apply damage to BossHealth if it's a boss
-            {
-                bossHealth.TakeDamage(damage, isCritical: isCritical);
-            }
         }
 
         PlayHitSound();
         ApplyHitSlowdown();
         ApplyHitTimeEffect();
         IncrementHitCount();
+
+        Debug.Log("Step 4: Hit Applied and Effects Triggered");
     }
+
 
 
 
@@ -255,13 +257,15 @@ public class ChargeProjectile : MonoBehaviour
     private void IncrementHitCount()
     {
         hitCount++;
-        // Calculate spawn position with offset
         Vector3 spawnPosition = transform.position + new Vector3(particleSpawnOffsetX * (isMovingRight ? 1 : -1), 0, 0);
         GameObject particles = Instantiate(destroyParticlePrefab, spawnPosition, Quaternion.identity);
+
         if (hitCount >= maxHits || !isLargeEnough)
         {
             DestroyProjectile();
         }
+
+        Debug.Log("Step 5: Hit Count Incremented, Destroy or Continue");
     }
 
     private void ApplyHitSlowdown()

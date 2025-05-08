@@ -94,6 +94,10 @@ public class PlayerAttackController : MonoBehaviour
 
     [SerializeField] private float attackBufferTime = 0.1f;
 
+    private PlayerAnimationController playerAnimationController;
+    private bool isAttacking = false;
+
+
     #endregion
 
     #region Initialization
@@ -431,27 +435,31 @@ public class PlayerAttackController : MonoBehaviour
                 }
             }
 
-            // STAMINA DEPLETION - RESTORED FROM PREVIOUS VERSION
-            if (isCharging && !staminaBar.IsEmpty)
+            // Only deplete stamina if the RangedAttackStart animation is playing
+            if (animationController.animator.GetBool("RangedAttackStart"))
             {
-                float staminaUsed = staminaDrainRate * Time.deltaTime;
-                staminaDepleted += staminaUsed;
-                staminaBar.DepleteStamina(staminaUsed);
-
-                if (staminaBar.IsEmpty && !hasFiredChargeAttack)
+                // STAMINA DEPLETION - RESTORED FROM PREVIOUS VERSION
+                if (isCharging && !staminaBar.IsEmpty)
                 {
-                    TriggerRangedAttackSequence();
+                    float staminaUsed = staminaDrainRate * Time.deltaTime;
+                    staminaDepleted += staminaUsed;
+                    staminaBar.DepleteStamina(staminaUsed);
+
+                    if (staminaBar.IsEmpty && !hasFiredChargeAttack)
+                    {
+                        TriggerRangedAttackSequence();
+                    }
                 }
-            }
 
-            if (isCharging && Time.time - chargeStartTime >= 2.3f)
-            {
-                animationController.SetRangedAttackLoop(true);
-                animationController.SetRangedAttackStart(false);
-
-                if (!shouldPlayElectricityLoop)
+                if (isCharging && Time.time - chargeStartTime >= 2.3f)
                 {
-                    StartElectricityLoop();
+                    animationController.SetRangedAttackLoop(true);
+                    animationController.SetRangedAttackStart(false);
+
+                    if (!shouldPlayElectricityLoop)
+                    {
+                        StartElectricityLoop();
+                    }
                 }
             }
         }
@@ -459,7 +467,8 @@ public class PlayerAttackController : MonoBehaviour
         // Handle button release
         if (isRightMouseReleased)
         {
-            if (isCharging && !hasFiredChargeAttack)
+            // Only trigger ranged attack sequence if RangedAttackStart bool is true
+            if (isCharging && !hasFiredChargeAttack && animationController.animator.GetBool("RangedAttackStart"))
             {
                 TriggerRangedAttackSequence();
             }
@@ -469,6 +478,8 @@ public class PlayerAttackController : MonoBehaviour
             }
         }
     }
+
+
 
     private IEnumerator HandleRangedAttackSounds()
     {

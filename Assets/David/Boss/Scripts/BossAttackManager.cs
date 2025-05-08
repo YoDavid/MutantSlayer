@@ -130,26 +130,40 @@ public class BossAttackManager : MonoBehaviour
 
     private IEnumerator InstantiateSpitAfterDelay()
     {
+        // Check if spitParticlePrefab and spitSpawnPoint are assigned
+        if (spitParticlePrefab == null)
+        {
+            Debug.LogError("spitParticlePrefab is not assigned!");
+            yield break;  // Exit the coroutine if there's an error
+        }
+
+        if (spitSpawnPoint == null)
+        {
+            Debug.LogError("spitSpawnPoint is not assigned!");
+            yield break;  // Exit the coroutine if there's an error
+        }
+
         yield return new WaitForSeconds(spitDelay);
 
         // 1. Instantiate the projectile first
         GameObject spit = Instantiate(spitParticlePrefab, spitSpawnPoint.position, Quaternion.identity);
+
+        // 2. Get the SpitProjectile component and check for null
         SpitProjectile spitProjectile = spit.GetComponent<SpitProjectile>();
-
-        // 2. Calculate direction and set it
-        bool isFacingLeft = transform.position.x > bossAI.player.position.x;
-        if (spitProjectile != null)
-        {
-            spitProjectile.SetDirection(isFacingLeft);
-
-            // 3. Start moving the projectile
-            StartCoroutine(MoveProjectile(spit, isFacingLeft ? Vector2.left : Vector2.right));
-        }
-        else
+        if (spitProjectile == null)
         {
             Debug.LogError("SpitProjectile component missing on spit prefab!");
+            yield break;  // Exit the coroutine if there's an error
         }
+
+        // 3. Calculate direction and set it
+        bool isFacingLeft = transform.position.x > bossAI.player.position.x;
+        spitProjectile.SetDirection(isFacingLeft);
+
+        // 4. Start moving the projectile
+        StartCoroutine(MoveProjectile(spit, isFacingLeft ? Vector2.left : Vector2.right));
     }
+
 
     public void UpdateSpitPosition(bool isFacingLeft)
     {

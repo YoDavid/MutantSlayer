@@ -11,9 +11,12 @@ public class TimeManager : MonoBehaviour
 
     [Header("Player Reference")]
     public Rigidbody2D playerRigidbody; // Assign in Inspector
+    public PlayerMovementController playerController; // Assign your player controller script here
 
     private float currentTimeScale = 1f;
     private bool isPaused = false;
+    private Vector2 storedVelocity; // To store velocity before pause
+    private float storedAngularVelocity; // For rotational velocity if needed
 
     private void Awake()
     {
@@ -27,33 +30,53 @@ public class TimeManager : MonoBehaviour
     {
         currentTimeScale = scale;
         Time.timeScale = scale;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale; // Maintain physics consistency
     }
 
     public void PauseGame()
     {
+        if (isPaused) return;
+
         isPaused = true;
-        Physics2D.SyncTransforms(); // Force physics update
-        ResetPlayerVelocity();      // Now reset velocity
+
+        // Store current velocity before pausing
+        if (playerRigidbody != null)
+        {
+            storedVelocity = playerRigidbody.velocity;
+            storedAngularVelocity = playerRigidbody.angularVelocity;
+            playerRigidbody.isKinematic = true;
+        }
+
+        // Disable player controller input
+        if (playerController != null)
+        {
+            playerController.enabled = false;
+        }
+
         SetTimeScale(pauseTimeScale);
         AudioManager.Instance?.SetPauseState(true);
     }
 
-    private void ResetPlayerVelocity()
-    {
-        if (playerRigidbody != null)
-        {
-            playerRigidbody.velocity = Vector2.zero;
-            playerRigidbody.isKinematic = true; // Disable physics forces
-        }
-    }
-
     public void ResumeGame()
     {
+        if (!isPaused) return;
+
         isPaused = false;
+
+        // Re-enable physics and restore velocity
         if (playerRigidbody != null)
         {
-            playerRigidbody.isKinematic = false; // Re-enable physics
+            playerRigidbody.isKinematic = false;
+            playerRigidbody.velocity = storedVelocity;
+            playerRigidbody.angularVelocity = storedAngularVelocity;
         }
+
+        // Re-enable player controller
+        if (playerController != null)
+        {
+            playerController.enabled = true;
+        }
+
         SetTimeScale(normalTimeScale);
         AudioManager.Instance?.SetPauseState(false);
     }

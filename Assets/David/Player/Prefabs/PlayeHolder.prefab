@@ -730,6 +730,7 @@ GameObject:
   - component: {fileID: 8749138228244531333}
   - component: {fileID: 7199950658680232537}
   - component: {fileID: 199360276139945888}
+  - component: {fileID: 4769827357813521482}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -746,7 +747,7 @@ Transform:
   m_GameObject: {fileID: 8882437758783256304}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1891.8, y: 77, z: 0}
+  m_LocalPosition: {x: -7179.1, y: 1572.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -1002,11 +1003,6 @@ MonoBehaviour:
   jumpForce: 17
   maxJumpTime: 0.35
   jumpCancelRate: 0.5
-  groundCheckPoint: {fileID: 7718894815750935042}
-  groundCheckDistance: 0.59
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
   gravityScale: 4
   drawGizmos: 1
   lastDashTime: -999
@@ -1107,7 +1103,7 @@ MonoBehaviour:
   - {x: 21.119995, y: -17.509766, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 200852
+  m_InstanceId: -640970
   m_LocalBounds:
     m_Center: {x: -0.8800049, y: 0, z: 0}
     m_Extent: {x: 22, y: 17.509766, z: 0}
@@ -1124,20 +1120,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progression:
-    level: 10
+    level: 1
     currentExp: 0
-    expToNextLevel: 100
-    baseHealth: 50
+    expToNextLevel: 50
+    baseHealth: 100
     baseNormalDamage: 10
-    baseProjectileDamage: 30
+    baseProjectileDamage: 8
     baseCritChance: 0.1
     baseCritMultiplier: 1.5
     healthPerLevel: 10
-    normalDamagePerLevel: 2
-    projectileDamagePerLevel: 1.5
-    critChancePer5Levels: 0.05
-    critMultiplierPer3Levels: 0.1
-    expGrowthFactor: 1.15
+    normalDamagePerLevel: 1
+    projectileDamagePerLevel: 0.8
+    critChancePer5Levels: 0.02
+    critMultiplierPer3Levels: 0.05
+    expGrowthFactor: 1.03
+--- !u!114 &4769827357813521482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8882437758783256304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 286a1140f41092044bfa45220c9f61c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundCheckPoint: {fileID: 7718894815750935042}
+  groundCheckDistance: 1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &9043775258710831573
 GameObject:
   m_ObjectHideFlags: 0
