@@ -43,7 +43,7 @@ public class EnemyLevelScaling : MonoBehaviour
     {
         if (playerLevelSystem != null)
         {
-            playerLevelSystem.OnLevelUp += ScaleStats; // Subscribe to level up event
+            playerLevelSystem.OnLevelUp += ScaleStats;
         }
     }
 
@@ -51,7 +51,7 @@ public class EnemyLevelScaling : MonoBehaviour
     {
         if (playerLevelSystem != null)
         {
-            playerLevelSystem.OnLevelUp -= ScaleStats; // Unsubscribe from level up event
+            playerLevelSystem.OnLevelUp -= ScaleStats;
         }
     }
 
@@ -67,7 +67,7 @@ public class EnemyLevelScaling : MonoBehaviour
         healthSystem.MaxHealth = newMaxHealth;
         healthSystem.SetHealth(Mathf.RoundToInt(newMaxHealth * healthPercent));
 
-        OnLevelUp?.Invoke(); // UI updates via UIEnemyHealthBar
+        OnLevelUp?.Invoke(); 
     }
 
     public void ApplyInitialScaling()
@@ -77,7 +77,6 @@ public class EnemyLevelScaling : MonoBehaviour
         enemyLevel = playerLevelSystem.progression.level;
         int newMaxHealth = Mathf.RoundToInt(baseHealth * (1 + (enemyLevel * healthScaling)));
 
-        // Directly set health without triggering events (prevent duplicate UI updates)
         healthSystem.MaxHealth = newMaxHealth;
         healthSystem.SetHealth(newMaxHealth);
     }
@@ -90,10 +89,7 @@ public class EnemyLevelScaling : MonoBehaviour
 
     public int GetExpReward()
     {
-        // Linear scaling
-        //return baseExpReward * enemyLevel; // Scales with level but more slowly
-
-        // Or slower exponential scaling
+     
         return Mathf.RoundToInt(baseExpReward * Mathf.Pow(expScalingFactor, enemyLevel * 0.2f)); // Lower scaling factor
     }
 

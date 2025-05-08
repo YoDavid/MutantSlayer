@@ -4,18 +4,17 @@ using UnityEngine;
 public class PlayerAttackHitbox : MonoBehaviour
 {
     [Header("Attack Settings")]
-    [SerializeField] private DamageConfig damageConfig; // The configuration for damage
+    [SerializeField] private DamageConfig damageConfig; 
     [SerializeField] private float hitCooldown = 0.3f;
     [SerializeField] private BloodSplashParticlesPool bloodSplashPool;
 
     private float lastHitTime;
 
-    private PlayerLevelSystem playerLevelSystem; // Reference to PlayerLevelSystem
+    private PlayerLevelSystem playerLevelSystem; 
     private AudioManager audioManager;
     private CameraShake camerShake;
 
-    // Events for time control
-    public event Action<bool, bool> OnHit; // bool isCritical, bool isBoss
+    public event Action<bool, bool> OnHit; 
 
     private void Awake()
     {
@@ -44,10 +43,8 @@ public class PlayerAttackHitbox : MonoBehaviour
         bool isCritical = false;
         Vector3 hitPosition = transform.position;
 
-        // Get base scaled damage
         int damage = playerLevelSystem.GetScaledDamage("normal");
 
-        // Apply random variation (±20%)
         float randomVariation = UnityEngine.Random.Range(-0.2f, 0.2f);
         damage = Mathf.RoundToInt(damage * (1f + randomVariation));
 

@@ -5,11 +5,11 @@ using System.Collections.Generic;
 public class PlayerComboHitbox : MonoBehaviour
 {
     [Header("Combo Timing")]
-    [SerializeField] public float windupDuration = 2.3f; // Combo windup animation length
-    [SerializeField] private float hitInterval = 0.18f;   // Time between hits (0.9s/5 hits)
+    [SerializeField] public float windupDuration = 2.3f; 
+    [SerializeField] private float hitInterval = 0.18f; 
 
     [Header("Time Stop Effect")]
-    [SerializeField] private float timeStopDuration = 0.3f; // Duration for time stop after combo ends
+    [SerializeField] private float timeStopDuration = 0.3f; 
 
     [Header("Combat Settings")]
     [SerializeField] private DamageConfig damageConfig;

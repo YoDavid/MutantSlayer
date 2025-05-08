@@ -24,33 +24,27 @@ public class EnemyHealth : HealthSystem, IDamageable
 
     [SerializeField] private PlayerLevelSystem playerLevelSystem;
 
-    private EnemyLevelScaling enemyLevelScaling; // Reference to the EnemyLevelScaling component
+    private EnemyLevelScaling enemyLevelScaling; 
 
     protected override void Awake()
     {
-        // Get the scaling component FIRST
         enemyLevelScaling = GetComponent<EnemyLevelScaling>();
 
-        // Apply scaling BEFORE base.Awake() if scaling exists
         if (enemyLevelScaling != null)
         {
             enemyLevelScaling.ApplyInitialScaling();
         }
         else
         {
-            // Fallback to config values if no scaling
             MaxHealth = overrideHealth ? customMaxHealth : config.maxHealth;
         }
 
-        // Now run base HealthSystem initialization
         base.Awake();
 
-        // Initialize components
         animator = GetComponent<Animator>();
-        CurrentHealth = MaxHealth; // Ensure health is set to (potentially scaled) max value
+        CurrentHealth = MaxHealth;
         OnHealthChanged?.Invoke(CurrentHealth);
 
-        // Initialize other components
         GameObject audioObj = GameObject.Find("AudioManager");
         if (audioObj != null)
             audioManager = audioObj.GetComponent<AudioManager>();
