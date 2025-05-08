@@ -58,7 +58,6 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetAttackState(int attackCount)
     {
-        if (isLevelingUp) return;
 
         if (attackCount > 0)
         {
@@ -208,7 +207,6 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetRangedAttackStart(bool value)
     {
-        if (isLevelingUp) return;
 
         if (value && !animator.GetBool("IsGrounded"))
         {
@@ -225,7 +223,6 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetRangedAttackLoop(bool value)
     {
-        if (isLevelingUp) return;
 
         if (value && !animator.GetBool("IsGrounded"))
         {
@@ -242,7 +239,6 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetRangedAttack()
     {
-        if (isLevelingUp) return;
 
         animator.SetBool("RangedAttackStart", false);
         animator.SetBool("RangedAttackLoop", false);
@@ -268,7 +264,6 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetComboAttackStart(bool value)
     {
-        if (isLevelingUp) return;
 
         animator.SetBool("ComboAttackStart", value);
 
@@ -281,7 +276,6 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetIsComboAttacking(bool value)
     {
-        if (isLevelingUp) return;
 
         animator.SetBool("IsComboAttacking", value);
 
@@ -294,7 +288,6 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void StopComboAttack()
     {
-        if (isLevelingUp) return;
 
         animator.SetBool("ComboAttackStart", false);
         animator.SetBool("IsComboAttacking", false);
@@ -304,7 +297,6 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetEarlyComboExit(bool value)
     {
-        if (isLevelingUp) return;
 
         animator.SetBool("EarlyComboExit", value);
 
