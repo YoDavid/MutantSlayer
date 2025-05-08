@@ -442,7 +442,7 @@ MonoBehaviour:
   - {x: 30.737549, y: -17.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 37910
+  m_InstanceId: 309010
   m_LocalBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 30.737549, y: 17.5, z: 0}
@@ -459,10 +459,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseHealth: 80
-  baseDamage: 8
+  baseDamage: 30
   healthScaling: 0.12
-  damageScaling: 0.075
-  baseExpReward: 50
+  damageScaling: 0.1
+  baseExpReward: 20
   expScalingFactor: 1.07
   enemyLevel: 1
   playerLevelSystem: {fileID: 0}
