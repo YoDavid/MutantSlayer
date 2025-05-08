@@ -5,7 +5,7 @@ public class LevelProgression
 {
     public int level = 1;
     public int currentExp = 0;
-    public int expToNextLevel = 100;
+    public int expToNextLevel = 30; // Reduced base EXP requirement
 
     [Header("Base Stats")]
     public int baseHealth = 100;
@@ -15,12 +15,12 @@ public class LevelProgression
     public float baseCritMultiplier = 1.5f;
 
     [Header("Scaling Factors")]
-    public float healthPerLevel = 20f;
-    public float normalDamagePerLevel = 2f;
-    public float projectileDamagePerLevel = 1.5f;
-    public float critChancePer5Levels = 0.05f;
-    public float critMultiplierPer3Levels = 0.1f;
-    public float expGrowthFactor = 1.15f;
+    public float healthPerLevel = 10f; // Reduced from 20
+    public float normalDamagePerLevel = 1f; // Reduced from 2
+    public float projectileDamagePerLevel = 0.8f; // Reduced from 1.5
+    public float critChancePer5Levels = 0.02f; // Reduced from 0.05
+    public float critMultiplierPer3Levels = 0.05f; // Reduced from 0.1
+    public float expGrowthFactor = 1.03f; // Minimal growth (3%)
 }
 
 public class PlayerLevelSystem : MonoBehaviour
@@ -37,7 +37,7 @@ public class PlayerLevelSystem : MonoBehaviour
         InitializeStats();
     }
 
-    private void InitializeStats()
+    public void InitializeStats()
     {
         playerHealth.MaxHealth = progression.baseHealth + Mathf.RoundToInt((progression.level - 1) * progression.healthPerLevel);
         playerHealth.RestoreFullHealth();

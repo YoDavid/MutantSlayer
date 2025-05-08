@@ -3,13 +3,17 @@ using UnityEngine;
 public class BossLevelScaling : MonoBehaviour
 {
     [Header("Base Stats")]
-    public int baseHealth = 500;
-    public int baseDamage = 25;
+    public int baseHealth = 300; // Reduced from 500
+    public int baseDamage = 15; // Reduced from 25
 
     [Header("Scaling Settings")]
-    public float healthScaling = 0.25f; // 25% per player level
-    public float damageScaling = 0.2f;  // 20% per player level
-    public int levelOffset = 2;         // Boss is always X levels above player
+    public float healthScaling = 0.15f; // Reduced from 0.25
+    public float damageScaling = 0.1f; // Reduced from 0.2
+    public int levelOffset = 2;
+
+    [Header("Experience Reward")]
+    public int baseExpReward = 100; // Reduced from 300
+    public float expScalingFactor = 1.1f; // Reduced from 1.75
 
     [Header("Phase Settings")]
     [Range(0,1)] public float phase2Threshold = 0.6f;
@@ -21,10 +25,6 @@ public class BossLevelScaling : MonoBehaviour
     public float baseCritMultiplier = 2.0f;
     public float critChancePerPhase = 0.05f; // +5% crit chance per phase
     public float critMultiplierPerPhase = 0.25f; // +0.25x crit damage per phase
-
-    [Header("Experience Reward")]
-    public int baseExpReward = 300;
-    public float expScalingFactor = 1.75f;
 
     // Components
     private BossHealth bossHealth;

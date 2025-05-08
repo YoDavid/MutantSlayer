@@ -392,14 +392,22 @@ public class ChargeProjectile : MonoBehaviour
     #endregion
 
 
-
-
     private void UpdateDamage()
     {
         if (playerLevelSystem != null)
         {
-            damage = playerLevelSystem.GetScaledDamage("projectile");  // Scale damage based on player's level
+            int baseDamage = playerLevelSystem.GetScaledDamage("projectile");
+
+            // Clamp calculatedSize between your min and max known scale values
+            float minSize = 0.1f; // whatever your smallest charge scale is
+            float maxSize = 0.3f; // whatever your largest charge scale is
+
+            float normalizedSize = Mathf.InverseLerp(minSize, maxSize, calculatedSize);
+            float sizeMultiplier = Mathf.Lerp(1f, 1.3f, normalizedSize); // scales from 1x to 1.2x
+
+            damage = Mathf.RoundToInt(baseDamage * sizeMultiplier);
         }
     }
+
 
 }

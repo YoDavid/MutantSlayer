@@ -107,7 +107,31 @@ public class BossHealth : MonoBehaviour, IDamageable
         {
             bloodSplashPool.PlayDeathSplash(transform.position);
         }
+
         OnDeath?.Invoke();
-        Destroy(gameObject);
+
+        if (TimeManager.Instance != null)
+        {
+            TimeManager.Instance.TemporarilySlowTime(0.1f, 2f);
+        }
+
+        StartCoroutine(HandleBossDeathSequence());
     }
+
+    private IEnumerator HandleBossDeathSequence()
+    {
+        // Wait briefly to let the slow motion settle
+        yield return new WaitForSecondsRealtime(1f); // you can tweak this timing
+
+        // Fade to black
+        if (SceneLoader.Instance != null)
+        {
+            yield return SceneLoader.Instance.FadeWithOverlay(0f, 1f, 1f); // fade out over 1 second
+        }
+
+        // Load ending scene
+        SceneLoader.Instance?.LoadSceneWithFade("Scene_SlideShowEnding");
+    }
+
+
 }

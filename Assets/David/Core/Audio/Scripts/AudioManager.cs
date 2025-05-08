@@ -27,7 +27,7 @@ public class AudioManager : MonoBehaviour
         [HideInInspector] public float originalVolume; // Store original volume for pause/unpause
     }
 
-    [SerializeField] private float musicFadeDuration = 0.5f;
+    [SerializeField] private float musicFadeDuration = 2f;
     [SerializeField] private bool isPaused = false;
 
     [Header("Audio Sources")]
@@ -165,9 +165,11 @@ public class AudioManager : MonoBehaviour
             if (!forceRestart && currentMusic == trackName) return;
 
             currentMusic = trackName;
+
             StartCoroutine(FadeMusic(track));
         }
     }
+
 
     private IEnumerator FadeMusic(Sound newTrack)
     {
@@ -182,11 +184,11 @@ public class AudioManager : MonoBehaviour
             yield return null;
         }
 
-        musicSource.volume = 0f;
+        musicSource.volume = 0f; // Ensure it's fully faded out
 
-        // Switch to new track and apply pitch
+        // Switch to the new track
         musicSource.clip = newTrack.clip;
-        musicSource.pitch = newTrack.pitch; // Apply pitch from Inspector
+        musicSource.pitch = newTrack.pitch;
         musicSource.loop = true;
         musicSource.Play();
 
@@ -199,8 +201,9 @@ public class AudioManager : MonoBehaviour
             yield return null;
         }
 
-        musicSource.volume = newTrack.volume;
+        musicSource.volume = newTrack.volume;  // Ensure the new track is fully at the set volume
     }
+
 
     public void UpdateMusicByPosition(float xPosition)
     {

@@ -50,20 +50,22 @@ public class BossMusicTrigger : MonoBehaviour
             }
 
             // Play boss battle music
-            audioManager.PlayMusicBossBattle();
+            audioManager.PlayMusic("music_boss_battle");
         }
     }
 
-    // For cases where you want to manually trigger the boss music
     public void TriggerBossMusic()
     {
         if (audioManager != null)
         {
             if (stopAlternatingMusic)
             {
-                audioManager.StopAllCoroutines();
+                audioManager.StopAllCoroutines();  // Stops any current music-changing coroutines
             }
-            audioManager.PlayMusicBossBattle();
+
+            // Ensure the music fades out before playing the boss music
+            audioManager.PlayMusic("music_boss_battle");  // This will trigger the fade effect from the previous track
         }
     }
+
 }

@@ -5,15 +5,15 @@ public class EnemyLevelScaling : MonoBehaviour
     [Header("Scaling Settings")]
     public int baseHealth = 50;
     public int baseDamage = 5;
-    public float healthScaling = 0.2f; // 20% per player level
-    public float damageScaling = 0.15f; // 15% per player level
+    public float healthScaling = 0.08f; // Reduced from 0.2 (8% per level)
+    public float damageScaling = 0.05f; // Reduced from 0.15 (5% per level)
+
+    [Header("Experience Reward Settings")]
+    public int baseExpReward = 20; // Reduced from 100
+    public float expScalingFactor = 1.05f; // Reduced from 1.5 (5% per level)
 
     [Header("Level Information")]
     [SerializeField] private int enemyLevel = 1; // Exposed in the inspector
-
-    [Header("Experience Reward Settings")]
-    public int baseExpReward = 100; // Base exp reward for an enemy
-    public float expScalingFactor = 1.5f; // How much the reward scales per enemy level
 
     private HealthSystem healthSystem;
     [SerializeField] private PlayerLevelSystem playerLevelSystem;
