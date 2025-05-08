@@ -64,7 +64,7 @@ public class UIEnemyHealthBar : MonoBehaviour
 
         // Initial visibility state
         SetAlpha(0f);
-        IsInRangeToShowHealth = false;
+        IsInRangeToShowHealth = true;
     }
 
     private void RefreshHealthValues()

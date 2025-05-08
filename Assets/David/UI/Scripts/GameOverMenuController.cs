@@ -136,8 +136,18 @@ public class GameOverMenuController : BaseMenuController
     public void SetVisible(bool visible)
     {
         IsVisible = visible;
-        if (visible) SelectButton(0);
+
+        if (visible)
+        {
+            SelectButton(0);
+            FindObjectOfType<ForceMouseHidden>()?.UnlockAndShowMouse();
+        }
+        else
+        {
+            FindObjectOfType<ForceMouseHidden>()?.LockAndHideMouse();
+        }
     }
+
 
     public void OnRestartAtCheckpointPressed()
     {
@@ -156,4 +166,6 @@ public class GameOverMenuController : BaseMenuController
         AudioManager.Instance.PlayButtonClick();
         SceneLoader.Instance.LoadSceneWithFade("Scene_MainMenu");
     }
+
+
 }

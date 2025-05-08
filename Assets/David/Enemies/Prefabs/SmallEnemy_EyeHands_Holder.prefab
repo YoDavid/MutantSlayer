@@ -51,7 +51,6 @@ GameObject:
   - component: {fileID: 6443694963126290252}
   - component: {fileID: 2470467694308827178}
   - component: {fileID: 3019953888367561466}
-  - component: {fileID: 1675519543239857255}
   - component: {fileID: 3927490239563601796}
   - component: {fileID: 7906112287801006626}
   m_Layer: 9
@@ -324,20 +323,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _flashColor: {r: 1.0592737, g: 1.0592737, b: 1.0592737, a: 1}
   _flashTime: 0.25
---- !u!114 &1675519543239857255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4354679935050727372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2cb7847c98e9b247ab033abadab8828, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wallGameObject: {fileID: 0}
-  healthBar: {fileID: 0}
 --- !u!114 &3927490239563601796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,7 +349,7 @@ MonoBehaviour:
   - {x: 21.999939, y: -17.509766, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 187222
+  m_InstanceId: 405250
   m_LocalBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 21.999939, y: 17.509766, z: 0}

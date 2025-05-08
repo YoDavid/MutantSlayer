@@ -35,8 +35,8 @@ public class UIManager : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private GameObject hud;
-    [SerializeField] private PauseMenuController pauseMenu;
-    [SerializeField] private GameOverMenuController gameOverMenu;
+    [SerializeField] public PauseMenuController pauseMenu;
+    [SerializeField] public GameOverMenuController gameOverMenu;
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private PlayerMovementController playerMovement;
     [SerializeField] private PlayerAttackController playerAttackController;

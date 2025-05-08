@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using DG.Tweening; // Add this namespace
+using DG.Tweening;
 
 public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -22,9 +22,26 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPoin
     private bool _isSelected = false;
     private Tweener _scaleTweener;
     private Tweener _colorTweener;
+    private bool _mouseIsOver = false;
 
-    public void OnPointerEnter(PointerEventData eventData) => Select();
-    public void OnPointerExit(PointerEventData eventData) => Deselect();
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (!_mouseIsOver)
+        {
+            _mouseIsOver = true;
+            AudioManager.Instance.PlayButtonHover(); 
+        }
+
+        Debug.Log("Pointer Entered");
+
+        Select();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        _mouseIsOver = false;
+        Deselect();
+    }
 
     private void Awake()
     {
@@ -45,18 +62,15 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPoin
 
         _isSelected = true;
 
-        // Kill any ongoing tweens to prevent conflicts
         _scaleTweener?.Kill();
         _colorTweener?.Kill();
 
-        // Color change with DOTween
         _colorTweener = targetImage.DOColor(highlightedColor, fadeDuration)
-            .SetUpdate(true); // This makes it ignore Time.timeScale
+            .SetUpdate(true);
 
-        // Scale animation with DOTween
         _scaleTweener = transform.DOScale(Vector3.one * selectedScale, scaleDuration)
             .SetEase(Ease.OutBack)
-            .SetUpdate(true); // Ignore Time.timeScale
+            .SetUpdate(true);
 
         if (!fromEventSystem)
         {
@@ -68,15 +82,12 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPoin
     {
         _isSelected = false;
 
-        // Kill any ongoing tweens
         _scaleTweener?.Kill();
         _colorTweener?.Kill();
 
-        // Color change with DOTween
         _colorTweener = targetImage.DOColor(normalColor, fadeDuration)
             .SetUpdate(true);
 
-        // Scale animation with DOTween
         _scaleTweener = transform.DOScale(Vector3.one * normalScale, scaleDuration)
             .SetEase(Ease.InBack)
             .SetUpdate(true);
@@ -86,7 +97,6 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPoin
     {
         if (targetImage != null)
         {
-            // Use DOTween for alpha changes too
             _colorTweener?.Kill();
             _colorTweener = targetImage.DOFade(alpha, fadeDuration)
                 .SetUpdate(true);
@@ -105,7 +115,6 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPoin
 
     private void OnDestroy()
     {
-        // Clean up tweens when the object is destroyed
         _scaleTweener?.Kill();
         _colorTweener?.Kill();
     }

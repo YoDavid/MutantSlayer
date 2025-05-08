@@ -24,6 +24,7 @@ public class PauseMenuController : BaseMenuController
             SelectButton(0);
             AudioManager.Instance.PlayMenuOpen();
             TimeManager.Instance?.PauseGame();
+            FindObjectOfType<ForceMouseHidden>()?.UnlockAndShowMouse(); 
             if (optionsMenu) optionsMenu.SetActive(false);
         }
         else
@@ -31,7 +32,9 @@ public class PauseMenuController : BaseMenuController
             TimeManager.Instance?.ResumeGame();
             AudioManager.Instance.PlayMenuClose();
             uiManager.SetHUDVisible(true);
+            FindObjectOfType<ForceMouseHidden>()?.LockAndHideMouse();
         }
+
     }
 
     public void OnResumePressed()
@@ -60,4 +63,5 @@ public class PauseMenuController : BaseMenuController
         SetVisible(false);
         SceneLoader.Instance.LoadSceneWithFade("Scene_MainMenu");
     }
+
 }

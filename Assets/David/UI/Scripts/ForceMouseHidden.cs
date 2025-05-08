@@ -1,20 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ForceMouseHidden : MonoBehaviour
 {
+    [SerializeField] private UIManager uiManager;
+
     private void Start()
     {
-        LockAndHideMouse();
+        if (uiManager == null)
+        {
+            uiManager = UIManager.Instance;
+        }
     }
 
     private void Update()
     {
-        if (Cursor.visible || Cursor.lockState != CursorLockMode.Locked)
+        if (uiManager == null)
+            return;
+
+        bool isPauseMenuVisible = uiManager.pauseMenu != null && uiManager.pauseMenu.IsVisible;
+        bool isGameOverMenuVisible = uiManager.gameOverMenu != null && uiManager.gameOverMenu.IsVisible;
+
+        if (isPauseMenuVisible || isGameOverMenuVisible)
         {
-            // LockAndHideMouse();
-            // UnlockAndShowMouse();
+            UnlockAndShowMouse();
+        }
+        else
+        {
+            LockAndHideMouse();
         }
     }
 

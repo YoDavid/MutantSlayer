@@ -1070,7 +1070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4171d3cc86cf1fe4f88c61bf7e7ff790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicFadeDuration: 0.5
+  musicFadeDuration: 2
   isPaused: 0
   categories:
   - name: UI
@@ -1100,6 +1100,10 @@ MonoBehaviour:
       clip: {fileID: 8300000, guid: 72df4c81dd3e76c439e392534b98c9ea, type: 3}
       volume: 1
       pitch: 1
+    - name: sfx_ui_keyboard_sound
+      clip: {fileID: 8300000, guid: 472ba0668fd68fe4e9129c34bbb83277, type: 3}
+      volume: 0.3
+      pitch: 2
     originalVolume: 0
   - name: Environment
     source: {fileID: 7705638424714490615}
@@ -1313,15 +1317,19 @@ MonoBehaviour:
     pitch: 1
   - name: music_opening_slideshow
     clip: {fileID: 8300000, guid: 49e3f97db4c5bd34ba0387f4eac3aaa4, type: 3}
-    volume: 0.25
+    volume: 0.17
     pitch: 1
   - name: music_game_bg
     clip: {fileID: 8300000, guid: 422fdde44b5eaa844a97175a1fcf9be0, type: 3}
     volume: 0.175
     pitch: 1
+  - name: music_game_bgv2
+    clip: {fileID: 8300000, guid: fb75fceb9257d5642bfbef8ba45e2cbd, type: 3}
+    volume: 0.175
+    pitch: 1
   - name: music_boss_battle
     clip: {fileID: 8300000, guid: e937b2a435d034341843024e881eb32a, type: 3}
-    volume: 1
+    volume: 0.21
     pitch: 1
 --- !u!1 &6168855116091384192
 GameObject:
