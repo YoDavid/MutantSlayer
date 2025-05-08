@@ -162,13 +162,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b352b29cec90cc48a811af1e04fa107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageConfig: {fileID: 11400000, guid: 3735da783bc33c846b228722332daf2c, type: 2}
+  damageConfig: {fileID: 11400000, guid: ad1ab627c5e765049b27b467d0d09e9d, type: 2}
   speed: 50
-  playerHealth: {fileID: 0}
-  playerHurtBoxCollider: {fileID: 0}
   growDuration: 0.3
   initialScale: {x: 0.2, y: 0.2, z: 0.2}
   maxScale: {x: 1, y: 1, z: 1}
+  playerHealth: {fileID: 0}
+  playerHurtBoxCollider: {fileID: 0}
+  bossLevelScaling: {fileID: 0}
 --- !u!114 &-5990264688860470358
 MonoBehaviour:
   m_ObjectHideFlags: 0

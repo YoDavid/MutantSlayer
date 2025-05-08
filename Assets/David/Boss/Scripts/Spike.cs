@@ -2,50 +2,90 @@ using UnityEngine;
 
 public class Spike : MonoBehaviour
 {
-    public DamageConfig damageConfig; // NEW: Replaces attackDamage
-    private DamageDealer damageDealer; // NEW
-    [SerializeField] private Collider2D spikeCollider; // Collider for this spike
-    [SerializeField] private Collider2D playerHurtBoxCollider; // Reference to the player's hurtbox collider
-    [SerializeField] private PlayerHealth playerHealth; // Reference to the player's health
+    [Header("Damage Settings")]
+    public DamageConfig damageConfig; // Public for Inspector assignment
+    private BossDamageDealer damageDealer; // Changed to BossDamageDealer for consistency
+
+    [Header("Collider References")]
+    [SerializeField] private Collider2D spikeCollider;
+    [SerializeField] private Collider2D playerHurtBoxCollider;
+
+    [Header("Player Reference")]
+    [SerializeField] private PlayerHealth playerHealth;
+
+    [Header("Damage Scaling")]
+    [SerializeField] private BossLevelScaling bossLevelScaling; // NEW
+    private int currentBaseDamage;
+    private float currentPhaseMultiplier;
+
+    private void Awake()
+    {
+
+        damageDealer = gameObject.AddComponent<BossDamageDealer>(); // Create like other attacks
+
+        // Identical scaling logic to BossComboAttackHitbox
+        if (bossLevelScaling != null)
+        {
+            UpdateScaledDamage();
+        }
+        else
+        {
+            damageDealer.config = damageConfig;
+            Debug.LogWarning("BossLevelScaling not found - using base damage values");
+        }
+    }
+
+    // Same scaling method as other attacks
+    private void UpdateScaledDamage()
+    {
+        DamageConfig scaledConfig = Instantiate(damageConfig);
+        currentPhaseMultiplier = bossLevelScaling.GetPhaseDamageMultiplier();
+
+        scaledConfig.normalDamageRange = new Vector2Int(
+            Mathf.RoundToInt(damageConfig.normalDamageRange.x * currentPhaseMultiplier),
+            Mathf.RoundToInt(damageConfig.normalDamageRange.y * currentPhaseMultiplier)
+        );
+
+        scaledConfig.criticalDamageRange = new Vector2Int(
+            Mathf.RoundToInt(damageConfig.criticalDamageRange.x * currentPhaseMultiplier),
+            Mathf.RoundToInt(damageConfig.criticalDamageRange.y * currentPhaseMultiplier)
+        );
+
+        damageDealer.config = scaledConfig;
+    }
 
     private void Start()
     {
-        GameObject playerHurtbox = GameObject.FindWithTag("PlayerHurtBox");
-        if (playerHurtbox != null)
+        FindPlayerReferences();
+    }
+
+    private void FindPlayerReferences()
+    {
+        // Only search if not assigned in Inspector
+        if (playerHurtBoxCollider == null)
         {
-            playerHurtBoxCollider = playerHurtbox.GetComponent<Collider2D>();
-            if (playerHurtBoxCollider == null)
-            {
-                Debug.LogError("Collider2D not found on PlayerHurtbox.", this);
-            }
+            GameObject playerHurtbox = GameObject.FindWithTag("PlayerHurtBox");
+            if (playerHurtbox != null)
+                playerHurtBoxCollider = playerHurtbox.GetComponent<Collider2D>();
         }
-        else
+
+        if (playerHealth == null)
         {
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null)
+                playerHealth = player.GetComponent<PlayerHealth>();
+        }
+
+        // Debug errors if still missing
+        if (playerHurtBoxCollider == null)
             Debug.LogError("PlayerHurtbox not found in scene.", this);
-        }
 
-        // Find the player's health component
-        GameObject player = GameObject.FindWithTag("Player");
-        if (player != null)
-        {
-            playerHealth = player.GetComponent<PlayerHealth>();
-            if (playerHealth == null)
-            {
-                Debug.LogError("PlayerHealth component not found on Player.", this);
-            }
-        }
-        else
-        {
-            Debug.LogError("Player not found in scene.", this);
-        }
-        damageDealer = gameObject.AddComponent<DamageDealer>(); // NEW
-        damageDealer.config = damageConfig; // NEW
-
+        if (playerHealth == null)
+            Debug.LogError("PlayerHealth component not found.", this);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Check if the collided object is the player's hurtbox
         if (other == playerHurtBoxCollider)
         {
             ApplyDamage();
@@ -56,10 +96,18 @@ public class Spike : MonoBehaviour
     {
         if (playerHealth != null && !playerHealth.IsPlayerInvulnerable())
         {
-            var (damage, isCritical) = damageDealer.CalculateDamage(); // NEW
-            playerHealth.TakeDamage(damage, isCritical); // MODIFIED
+            // Calculate the base damage using the DamageDealer
+            var (damage, isCritical) = damageDealer.CalculateDamage();
+
+            // Apply random variation to the damage
+            float randomVariation = Random.Range(-0.2f, 0.2f);
+            damage = Mathf.RoundToInt(damage * (1 + randomVariation));
+
+            // Apply the damage to the player
+            playerHealth.TakeDamage(damage, isCritical);
         }
     }
+
 
     public void SetColliderEnabled(bool enabled)
     {
@@ -69,7 +117,7 @@ public class Spike : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Collider2D is not assigned.", this);
+            Debug.LogError("Spike collider not assigned.", this);
         }
     }
 }

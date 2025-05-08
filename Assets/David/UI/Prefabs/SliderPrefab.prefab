@@ -290,8 +290,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 4231563538193946328}
   fillImage: {fileID: 6762129097012754306}
+  backgroundImage: {fileID: 6504738303500610464}
   fullHealthColor: {r: 1, g: 0, b: 0, a: 1}
   zeroHealthColor: {r: 0, g: 0, b: 0, a: 1}
+  visibilityDistance: 10
+  fadeSpeed: 3
   smallEnemyYOffset: 10
   mediumEnemyYOffset: 80
-  enemyHealth: {fileID: 0}

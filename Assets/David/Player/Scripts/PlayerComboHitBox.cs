@@ -24,6 +24,8 @@ public class PlayerComboHitbox : MonoBehaviour
     private PlayerAnimationController playerAnimation;
     private BloodSplashParticlesPool bloodSplashParticlesPool;
 
+    [SerializeField] private PlayerLevelSystem playerLevelSystem;
+
     // State
     private float comboStartTime;
     private float lastHitTime;
@@ -193,23 +195,41 @@ public class PlayerComboHitbox : MonoBehaviour
         }
     }
 
+
     private void ProcessAllHits()
     {
         int hitCount = 0;
-        int spawnCount = 0; // Track how many prefabs spawned
+        int totalHits = detectedHits.Count;
 
         foreach (var hit in detectedHits)
         {
-            var (damage, isCritical) = damageDealer.CalculateDamage();
+            // Get base damage
+            int damage = playerLevelSystem.GetScaledDamage("normal");
 
+            // Check if this is the final hit
+            bool isFinalHit = (hitCount == totalHits - 1);
+
+            // Apply damage modifiers
+            if (isFinalHit)
+            {
+                // Final hit gets 1.2x damage boost
+                damage = Mathf.RoundToInt(damage * 1.2f);
+            }
+            else
+            {
+                // Other hits get random reduction (40-70% of normal damage)
+                damage = Mathf.RoundToInt(damage * Random.Range(0.5f, 0.7f));
+            }
+
+            // Rest of your existing damage handling code
+            var (calculatedDamage, isCritical) = damageDealer.CalculateDamage();
             hit.damageable.TakeDamage(damage, isCritical, true, hitCount);
 
             CreateComboDamagePopUp(damage, hit.position, hitCount, isCritical, hit.isBoss);
 
-            if (spawnCount < 3) // Only instantiate up to 3 times
+            if (hitCount < 3)
             {
                 bloodSplashParticlesPool.PlayHitSplash(hit.position);
-                spawnCount++;
             }
 
             if (isCritical && cameraShake != null)
@@ -225,10 +245,8 @@ public class PlayerComboHitbox : MonoBehaviour
     {
         if (DamagePopUp.Instance == null) return;
 
-        // Calculate offset based on hit index
-        float xOffset = hitIndex * 0.5f; // Each number will be spaced 0.5 units apart
-        float yOffset = hitIndex * 0.3f;  // Each number will be slightly higher
-
+        float xOffset = hitIndex * 0.5f;
+        float yOffset = hitIndex * 0.3f;
         Vector3 popUpPosition = position + new Vector3(xOffset, yOffset, 0);
 
         DamagePopUp.Instance.CreateDamageText(

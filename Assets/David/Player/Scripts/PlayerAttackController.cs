@@ -659,7 +659,6 @@ public class PlayerAttackController : MonoBehaviour
             {
                 // Changed this to use the player's facing direction more reliably
                 bool isFacingRight = movementController.IsFacingRight(); // Or your preferred method to get facing
-                cp.damage = damage;
                 cp.Launch(isFacingRight);
             }
         }

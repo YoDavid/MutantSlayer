@@ -21,15 +21,35 @@ public class EnemyHealth : HealthSystem, IDamageable
     public enum EnemyType { Small, Medium }
     public EnemyType enemyType;
 
+    [SerializeField] private PlayerLevelSystem playerLevelSystem;
+
+    private EnemyLevelScaling enemyLevelScaling; // Reference to the EnemyLevelScaling component
+
     protected override void Awake()
     {
-        MaxHealth = overrideHealth ? customMaxHealth : config.maxHealth;
+        // Get the scaling component FIRST
+        enemyLevelScaling = GetComponent<EnemyLevelScaling>();
+
+        // Apply scaling BEFORE base.Awake() if scaling exists
+        if (enemyLevelScaling != null)
+        {
+            enemyLevelScaling.ApplyInitialScaling();
+        }
+        else
+        {
+            // Fallback to config values if no scaling
+            MaxHealth = overrideHealth ? customMaxHealth : config.maxHealth;
+        }
+
+        // Now run base HealthSystem initialization
         base.Awake();
 
+        // Initialize components
         animator = GetComponent<Animator>();
-        CurrentHealth = MaxHealth;
+        CurrentHealth = MaxHealth; // Ensure health is set to (potentially scaled) max value
         OnHealthChanged?.Invoke(CurrentHealth);
 
+        // Initialize other components
         GameObject audioObj = GameObject.Find("AudioManager");
         if (audioObj != null)
             audioManager = audioObj.GetComponent<AudioManager>();
@@ -44,7 +64,11 @@ public class EnemyHealth : HealthSystem, IDamageable
     {
         if (CurrentHealth <= 0) return;
 
+        // Log health before and after damage
+
         base.TakeDamage(damage, isCritical);
+
+        // Log after damage
 
         PlayHitSound();
 
@@ -60,9 +84,13 @@ public class EnemyHealth : HealthSystem, IDamageable
             );
         }
 
+        // Update health bar after taking damage
+        OnHealthChanged?.Invoke(CurrentHealth);  // Make sure this is called here
+
         if (CurrentHealth <= 0)
             Die();
     }
+
 
     private void PlayHitSound()
     {
@@ -115,9 +143,21 @@ public class EnemyHealth : HealthSystem, IDamageable
         if (bloodSplashPool != null)
             bloodSplashPool.PlayDeathSplash(transform.position);
 
+        // Add experience to player when enemy dies
+        if (enemyLevelScaling != null)
+        {
+            int expReward = enemyLevelScaling.GetExpReward(); // Get experience from EnemyLevelScaling
+            if (playerLevelSystem != null)
+            {
+                playerLevelSystem.AddExperience(expReward); // Add experience to player
+            }
+        }
+
         GameObject toDestroy = transform.parent != null ? transform.parent.gameObject : gameObject;
         Destroy(toDestroy, 0.1f);
 
         OnDeath?.Invoke();
     }
+
+
 }

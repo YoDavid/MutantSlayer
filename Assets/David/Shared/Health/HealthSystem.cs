@@ -52,13 +52,17 @@ public class HealthSystem : MonoBehaviour
     {
         if (CurrentHealth > 0) return;
 
-        Debug.Log("Die method called");
         if (bloodSplashPool != null)
         {
-            Debug.Log("Playing death splash...");
             bloodSplashPool.PlayDeathSplash(transform.position);
         }
         Destroy(gameObject);
         OnDeath?.Invoke();
+    }
+
+    public void SetHealth(int value)
+    {
+        CurrentHealth = value;
+        OnHealthChanged?.Invoke(CurrentHealth);
     }
 }

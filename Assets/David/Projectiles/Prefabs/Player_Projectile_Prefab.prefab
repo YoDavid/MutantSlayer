@@ -218,6 +218,7 @@ MonoBehaviour:
   isLargeEnough: 0
   destroyParticlePrefab: {fileID: 4501868321521990437, guid: 150c50bbfb6055145901d5631b71174e, type: 3}
   particleSpawnOffsetX: 5
+  playerLevelSystem: {fileID: 0}
 --- !u!114 &7407303479932635422
 MonoBehaviour:
   m_ObjectHideFlags: 0

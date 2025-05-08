@@ -94,6 +94,7 @@ MonoBehaviour:
   spikeCollider: {fileID: 5454673342240395970}
   playerHurtBoxCollider: {fileID: 0}
   playerHealth: {fileID: 0}
+  bossLevelScaling: {fileID: 7209014162880579764}
 --- !u!1 &1032584484628252408
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,7 +205,6 @@ GameObject:
   - component: {fileID: 1316333393574262417}
   - component: {fileID: 2923093684303152705}
   - component: {fileID: 5481050390583849895}
-  - component: {fileID: 7217149825412119910}
   m_Layer: 9
   m_Name: BossJumpAttackCollider
   m_TagString: Untagged
@@ -259,7 +259,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -1.8753462, y: -22.56551}
+  m_Offset: {x: -1.8753462, y: -21.57}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -284,7 +284,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 495132ddc32add946acedf738cef344c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageConfig: {fileID: 11400000, guid: 3735da783bc33c846b228722332daf2c, type: 2}
+  damageConfig: {fileID: 11400000, guid: ad1ab627c5e765049b27b467d0d09e9d, type: 2}
+  damageDealer: {fileID: 0}
   attackDuration: 0.5
   activationDelay: 0.2
   colliderShift: 33
@@ -292,19 +293,7 @@ MonoBehaviour:
   playerHurtBoxCollider: {fileID: 0}
   isPlayerInRange: 0
   rockParticlesPrefab: {fileID: 4647388484711977732, guid: b6a658d7087101d45bb61c72d5a81c0d, type: 3}
---- !u!114 &7217149825412119910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1783186342995658892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00a9a22ca324d9a4684ee667dea51a64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: 3735da783bc33c846b228722332daf2c, type: 2}
+  bossLevelScaling: {fileID: 7209014162880579764}
 --- !u!1 &2670860075386090815
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,6 +388,7 @@ MonoBehaviour:
   spikeCollider: {fileID: 5926461114710774606}
   playerHurtBoxCollider: {fileID: 0}
   playerHealth: {fileID: 0}
+  bossLevelScaling: {fileID: 7209014162880579764}
 --- !u!1 &3072289925094303243
 GameObject:
   m_ObjectHideFlags: 0
@@ -493,6 +483,7 @@ MonoBehaviour:
   spikeCollider: {fileID: 4833857639558121534}
   playerHurtBoxCollider: {fileID: 0}
   playerHealth: {fileID: 0}
+  bossLevelScaling: {fileID: 7209014162880579764}
 --- !u!1 &3221076603364857282
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,7 +509,7 @@ Transform:
   m_GameObject: {fileID: 3221076603364857282}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -28.9, z: 0}
+  m_LocalPosition: {x: 0, y: -25.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -618,6 +609,89 @@ MonoBehaviour:
   spikeCollider: {fileID: 5467630292579933626}
   playerHurtBoxCollider: {fileID: 0}
   playerHealth: {fileID: 0}
+  bossLevelScaling: {fileID: 7209014162880579764}
+--- !u!1 &4229739329879365733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1281044969165570424}
+  - component: {fileID: 1916163901790273965}
+  m_Layer: 9
+  m_Name: Light 2D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1281044969165570424
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4229739329879365733}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.1, y: -12.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4521181110832504628}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1916163901790273965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4229739329879365733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ComponentVersion: 1
+  m_LightType: 3
+  m_BlendStyleIndex: 0
+  m_FalloffIntensity: 1
+  m_Color: {r: 0.8976984, g: 0.5896226, b: 1, a: 1}
+  m_Intensity: 25
+  m_LightVolumeIntensity: 1
+  m_LightVolumeIntensityEnabled: 0
+  m_ApplyToSortingLayers: 05ba91ff
+  m_LightCookieSprite: {fileID: 21300000, guid: 13951ad66acba89449911649c17be502, type: 3}
+  m_DeprecatedPointLightCookieSprite: {fileID: 0}
+  m_LightOrder: 0
+  m_AlphaBlendOnOverlap: 0
+  m_OverlapOperation: 0
+  m_NormalMapDistance: 3
+  m_NormalMapQuality: 2
+  m_UseNormalMap: 0
+  m_ShadowIntensityEnabled: 1
+  m_ShadowIntensity: 0.75
+  m_ShadowVolumeIntensityEnabled: 0
+  m_ShadowVolumeIntensity: 0.75
+  m_LocalBounds:
+    m_Center: {x: 0, y: -0.00000011920929, z: 0}
+    m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
+  m_PointLightInnerAngle: 360
+  m_PointLightOuterAngle: 360
+  m_PointLightInnerRadius: 0
+  m_PointLightOuterRadius: 20
+  m_ShapeLightParametricSides: 5
+  m_ShapeLightParametricAngleOffset: 0
+  m_ShapeLightParametricRadius: 1
+  m_ShapeLightFalloffSize: 0.5
+  m_ShapeLightFalloffOffset: {x: 0, y: 0}
+  m_ShapePath:
+  - {x: -0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: 0.5, z: 0}
+  - {x: -0.5, y: 0.5, z: 0}
 --- !u!1 &4859083063150938264
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,7 +789,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -12.243673, y: -5.966129}
+  m_Offset: {x: -12.243673, y: -3.59}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -740,18 +814,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89135943236fa894da791beec3bd87e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageConfig: {fileID: 11400000, guid: 3735da783bc33c846b228722332daf2c, type: 2}
+  damageConfig: {fileID: 11400000, guid: ad1ab627c5e765049b27b467d0d09e9d, type: 2}
   attackDuration: 0.2
   attackTimings:
   - 0.6
   - 1.1
   - 1.9
   colliderShift: 33
-  attackCollider: {fileID: 0}
+  attackCollider: {fileID: 9077438128029339298}
   playerHealth: {fileID: 0}
   playerHurtBoxCollider: {fileID: 0}
   rockParticlesPrefab: {fileID: 4647388484711977732, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}
   fallingSpikeSpawner: {fileID: 0}
+  bossLevelScaling: {fileID: 7209014162880579764}
 --- !u!1 &6219196809401831557
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,6 +921,7 @@ MonoBehaviour:
   spikeCollider: {fileID: 1001154068694650579}
   playerHurtBoxCollider: {fileID: 0}
   playerHealth: {fileID: 0}
+  bossLevelScaling: {fileID: 7209014162880579764}
 --- !u!1 &7651502097482258285
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,6 +1016,7 @@ MonoBehaviour:
   spikeCollider: {fileID: 8521130210213133853}
   playerHurtBoxCollider: {fileID: 0}
   playerHealth: {fileID: 0}
+  bossLevelScaling: {fileID: 7209014162880579764}
 --- !u!1 &8384869770597996140
 GameObject:
   m_ObjectHideFlags: 0
@@ -1034,6 +1111,7 @@ MonoBehaviour:
   spikeCollider: {fileID: 8368853312625713057}
   playerHurtBoxCollider: {fileID: 0}
   playerHealth: {fileID: 0}
+  bossLevelScaling: {fileID: 7209014162880579764}
 --- !u!1 &8609223436559474416
 GameObject:
   m_ObjectHideFlags: 0
@@ -1128,6 +1206,7 @@ MonoBehaviour:
   spikeCollider: {fileID: 50305156013066621}
   playerHurtBoxCollider: {fileID: 0}
   playerHealth: {fileID: 0}
+  bossLevelScaling: {fileID: 7209014162880579764}
 --- !u!1 &8864536568879513787
 GameObject:
   m_ObjectHideFlags: 0
@@ -1145,6 +1224,9 @@ GameObject:
   - component: {fileID: 2726740229659970565}
   - component: {fileID: 4773310631470295469}
   - component: {fileID: 3474446333802971887}
+  - component: {fileID: 3931652011076089175}
+  - component: {fileID: 6636123184106579878}
+  - component: {fileID: 7209014162880579764}
   m_Layer: 9
   m_Name: MainBoss
   m_TagString: BossEnemy
@@ -1161,7 +1243,7 @@ Transform:
   m_GameObject: {fileID: 8864536568879513787}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 106.6, y: -4.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1170,6 +1252,7 @@ Transform:
   - {fileID: 1316333393574262417}
   - {fileID: 2623339895284347317}
   - {fileID: 5391930648154139053}
+  - {fileID: 1281044969165570424}
   m_Father: {fileID: 681801498797910565}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5692445213269353086
@@ -1192,7 +1275,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: f9a27b28d9ee9694893dd336a32e561f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1210,10 +1293,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 568015659
-  m_SortingLayer: 12
+  m_SortingLayerID: -7226875
+  m_SortingLayer: 10
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: f848983238a91d4458e8427f1103e2d0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4a4f7b9f00f17c14fa96c0cc7b12f0dc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -1277,18 +1360,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -1.7718344, y: -14.044537}
+  m_Offset: {x: -1.7718344, y: -14.379531}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 94.56, y: 59.60789}
+    oldSize: {x: 94.620766, y: 59.599995}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 26.6, y: 25.545528}
+  m_Size: {x: 26.6, y: 26.215517}
   m_EdgeRadius: 0
 --- !u!50 &6444275532621671161
 Rigidbody2D:
@@ -1334,10 +1417,10 @@ MonoBehaviour:
   desiredDistanceFromPlayer: 8
   isFacingLeft: 0
   attackRange: 8.68
-  rangedAttackRange: 25
-  aoeAttackRange: 18.8
-  walkingRange: 35
-  jumpingAttackRange: 35
+  rangedAttackRange: 44.4
+  aoeAttackRange: 21.4
+  walkingRange: 46.5
+  jumpingAttackRange: 45.4
   minAttackTime: 1
   maxAttackTime: 5
   attackCooldownTimer: 0
@@ -1402,9 +1485,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  rb: {fileID: 0}
-  animator: {fileID: 0}
-  bossAI: {fileID: 0}
+  rb: {fileID: 6444275532621671161}
+  animator: {fileID: 3822332763899041743}
+  bossAI: {fileID: 5005471992049819447}
   player: {fileID: 0}
   showGroundCheckGizmo: 1
 --- !u!114 &3474446333802971887
@@ -1420,9 +1503,80 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  blinkColor: {r: 1, g: 1, b: 1, a: 0.5019608}
-  blinkDuration: 0.1
-  blinkCount: 1
   popupOffset: {x: 0, y: -1.5, z: 0}
   bloodSplashPool: {fileID: 0}
   currentHealth: 0
+  levelScaling: {fileID: 7209014162880579764}
+--- !u!114 &3931652011076089175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8864536568879513787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0181f28a1218396488d2b676c33f0577, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flashColor: {r: 0.8027794, g: 0.8027794, b: 0.8027794, a: 1}
+  _flashTime: 0.25
+--- !u!114 &6636123184106579878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8864536568879513787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 1
+  m_ApplyToSortingLayers: 05ba91ff
+  m_ShapePath:
+  - {x: -47.310303, y: -29.800049, z: 0}
+  - {x: -47.310303, y: 29.800049, z: 0}
+  - {x: 47.310547, y: 29.800049, z: 0}
+  - {x: 47.310547, y: -29.800049, z: 0}
+  m_ShapePathHash: 0
+  m_Mesh: {fileID: 0}
+  m_InstanceId: 200352
+  m_LocalBounds:
+    m_Center: {x: 0.00012207031, y: 0, z: 0}
+    m_Extent: {x: 47.310425, y: 29.800049, z: 0}
+--- !u!114 &7209014162880579764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8864536568879513787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a47a48e083e302342a490ac30bf99d0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHealth: 650
+  baseDamage: 25
+  healthScaling: 0.25
+  damageScaling: 0.2
+  levelOffset: 2
+  phase2Threshold: 0.6
+  phase3Threshold: 0.3
+  phaseDamageMultipliers:
+  - 1
+  - 1.25
+  - 1.5
+  baseCritChance: 0.15
+  baseCritMultiplier: 2
+  critChancePerPhase: 0.05
+  critMultiplierPerPhase: 0.25
+  baseExpReward: 300
+  expScalingFactor: 1.75

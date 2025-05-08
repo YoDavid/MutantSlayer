@@ -92,8 +92,11 @@ public class ChargeProjectile : MonoBehaviour
     [Header("Particle Effects")]
     public GameObject destroyParticlePrefab;
     public float particleSpawnOffsetX = 0f;
-
     #endregion
+
+    [SerializeField] private PlayerLevelSystem playerLevelSystem;
+    [SerializeField] private EnemyHealth enemyHealth;
+    [SerializeField] private BossHealth bossHealth;
 
     #region Unity Lifecycle
     private void Awake()
@@ -102,6 +105,9 @@ public class ChargeProjectile : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider2D>();
         currentSpeed = baseSpeed;
         initialScale = transform.localScale;
+        playerLevelSystem = FindObjectOfType<PlayerLevelSystem>();
+        bossHealth = FindObjectOfType<BossHealth>();
+        enemyHealth = FindObjectOfType<EnemyHealth>();
     }
 
     private void Start()
@@ -198,23 +204,53 @@ public class ChargeProjectile : MonoBehaviour
             return;
 
         lastHitTime = Time.time;
-        ShowDamagePopup(enemy);
+        UpdateDamage();  // Ensure damage is up-to-date when hit
+
+   
+
+        if (enemyHealth != null)
+        {
+            // Check if the enemy is normal or a boss and handle accordingly
+            bool isEnemy = enemy.CompareTag("Enemy");
+            bool isBossEnemy = enemy.CompareTag("BossEnemy");
+
+            // Show the damage popup only if the enemy is not a normal "Enemy"
+            if (!isEnemy)
+            {
+               // ShowDamagePopup(enemy);
+            }
+
+            // Apply scaled damage to both normal enemies and BossEnemies
+            if (isEnemy)
+            {
+                enemyHealth.TakeDamage(damage, isCritical: isCritical);
+            }
+
+            if (isBossEnemy && bossHealth != null)  // Apply damage to BossHealth if it's a boss
+            {
+                bossHealth.TakeDamage(damage, isCritical: isCritical);
+            }
+        }
+
         PlayHitSound();
         ApplyHitSlowdown();
         ApplyHitTimeEffect();
         IncrementHitCount();
     }
 
+
+
     private void ShowDamagePopup(Collider2D enemy)
     {
         DamagePopUp.Instance?.CreateDamageText(
-            damage,
+            damage,  // This will now be the scaled damage
             enemy.transform.position,
             isPlayer: false,
             isBoss: enemy.CompareTag("BossEnemy"),
             isCritical: isCritical
         );
     }
+
 
     private void IncrementHitCount()
     {
@@ -354,4 +390,36 @@ public class ChargeProjectile : MonoBehaviour
     private bool IsGamePaused() => TimeManager.Instance?.IsPaused ?? false;
     private void RestoreNormalTime() => TimeManager.Instance?.ResetTimeScale();
     #endregion
+
+
+    private void UpdateDamage()
+    {
+        if (playerLevelSystem != null)
+        {
+            int baseDamage = playerLevelSystem.GetScaledDamage("projectile");
+
+            // Clamp calculatedSize between your min and max known scale values
+            float minSize = 0.1f; // whatever your smallest charge scale is
+            float maxSize = 0.3f; // whatever your largest charge scale is
+
+            float normalizedSize = Mathf.InverseLerp(minSize, maxSize, calculatedSize);
+            float sizeMultiplier = Mathf.Lerp(1f, 1.3f, normalizedSize); // scales from 1x to 1.3x
+
+            // Apply random variation (±20%)
+            float randomVariation = Random.Range(-0.2f, 0.2f);
+            float finalMultiplier = sizeMultiplier * (1f + randomVariation);
+
+            // Check if this is the final hit (maxHits-1 because hitCount starts at 0)
+            bool isFinalHit = (hitCount >= maxHits - 1);
+
+            if (isFinalHit)
+            {
+                // Final hit gets 1.2x multiplier (on top of other calculations)
+                finalMultiplier *= 1.2f;
+            }
+
+            damage = Mathf.RoundToInt(baseDamage * finalMultiplier);
+        }
+    }
+
 }

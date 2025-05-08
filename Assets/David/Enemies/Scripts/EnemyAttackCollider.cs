@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyAttackCollider : MonoBehaviour
 {
     public EnemyConfig enemyConfig; // Reference to config
-    public DamageConfig damageConfig; // NEW: For damage ranges
+    public DamageConfig damageConfig; // For damage ranges
 
     private Collider2D attackCollider;
     private float lastHitTime;
@@ -11,7 +11,10 @@ public class EnemyAttackCollider : MonoBehaviour
     private SpriteRenderer enemySprite;
     [SerializeField] private bool isFirstAttackActive = false;
     private Rigidbody2D playerRb;
-    private DamageDealer damageDealer; // NEW: Handles damage calculations
+    private DamageDealer damageDealer; // Handles damage calculations
+    [SerializeField] private PlayerLevelSystem playerLevelSystem;
+
+    private AudioSource attackAudioSource; // NEW: AudioSource for attack sounds
 
     private void Awake()
     {
@@ -20,9 +23,15 @@ public class EnemyAttackCollider : MonoBehaviour
         attackCollider.isTrigger = true;
         attackCollider.enabled = false;
 
-        // NEW: Initialize damage dealer
-        damageDealer = gameObject.AddComponent<DamageDealer>();
-        damageDealer.config = damageConfig;
+        // Check if the EnemyDamageDealer is attached, if not, add it.
+        damageDealer = GetComponent<EnemyDamageDealer>();
+        if (damageDealer == null)
+        {
+            damageDealer = gameObject.AddComponent<EnemyDamageDealer>();
+            Debug.Log("Added missing EnemyDamageDealer component.");
+        }
+
+        damageDealer.config = damageConfig; // Ensure the DamageConfig is assigned correctly
 
         GameObject playerHurtbox = GameObject.Find("PlayerHurtbox");
         if (playerHurtbox != null)
@@ -32,30 +41,75 @@ public class EnemyAttackCollider : MonoBehaviour
         }
     }
 
+
     public void EnableAttackCollider()
     {
         UpdateColliderPosition();
         attackCollider.enabled = true;
+        Debug.Log("Attack Collider Enabled");
     }
 
-    public void DisableAttackCollider() => attackCollider.enabled = false;
+    public void DisableAttackCollider()
+    {
+        attackCollider.enabled = false;
+        Debug.Log("Attack Collider Disabled");
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.name != "PlayerHurtbox") return;
-        if (playerHealth == null || Time.time < lastHitTime + enemyConfig.hitCooldown) return;
+        if (other.gameObject.name != "PlayerHurtbox")
+        {
+            Debug.Log("Trigger Entered: Not PlayerHurtbox");
+            return;
+        }
+
+        Debug.Log("Trigger Entered: PlayerHurtbox");
+
+        if (playerHealth == null || Time.time < lastHitTime + enemyConfig.hitCooldown)
+        {
+            Debug.Log("PlayerHealth is null or hitCooldown not passed.");
+            return;
+        }
+
         DealDamage();
     }
 
     private void DealDamage()
     {
         lastHitTime = Time.time;
-        if (playerHealth == null || playerHealth.IsPlayerInvulnerable()) return;
+        if (playerHealth == null || playerHealth.IsPlayerInvulnerable())
+        {
+            Debug.Log("PlayerHealth is null or player is invulnerable.");
+            return;
+        }
 
-        // NEW: Calculate damage with critical chance
-        var (damage, isCritical) = damageDealer.CalculateDamage();
-        AudioManager.Instance.PlaySmallEnemyAttack();
-        playerHealth.TakeDamage(damage, isCritical);
+        // Use the EnemyDamageDealer to calculate the damage
+        var damageDealer = GetComponent<EnemyDamageDealer>();
+        if (damageDealer != null)
+        {
+            // Pass the player's level to the damage dealer
+            damageDealer.SetLevel(playerLevelSystem.progression.level);
+
+            // Calculate base damage (and check for critical hit)
+            var (baseDamage, isCritical) = damageDealer.CalculateDamage();
+
+            // Apply random variation (±20%)
+            float randomVariation = Random.Range(-0.2f, 0.2f);
+            int finalDamage = Mathf.RoundToInt(baseDamage * (1f + randomVariation));
+
+            Debug.Log($"Calculated damage: {finalDamage} (Base: {baseDamage}, Variation: {randomVariation:P0}, Critical: {isCritical})");
+
+            // Play attack sound
+            PlayAttackSound();
+
+            // Apply damage to player health
+            playerHealth.TakeDamage(finalDamage, isCritical);
+            Debug.Log($"Damage Applied to Player: {finalDamage} (Critical: {isCritical})");
+        }
+        else
+        {
+            Debug.LogError("DamageDealer component missing!");
+        }
 
         // Worm-specific knockback (unchanged)
         if (enemyConfig.hasDualAttack && !isFirstAttackActive && playerRb != null)
@@ -66,7 +120,15 @@ public class EnemyAttackCollider : MonoBehaviour
                 enemyConfig.knockbackDirection.y
             );
             playerRb.AddForce(force * enemyConfig.knockbackForce, ForceMode2D.Impulse);
+            Debug.Log("Knockback applied with force: " + force);
         }
+    }
+
+    private void PlayAttackSound()
+    {
+            AudioManager.Instance.PlaySmallEnemyAttack(); // Preserving original call for small enemy attacks
+            Debug.Log("Playing enemy attack sound.");
+  
     }
 
     public void SetColliderOffset(bool isFirstAttack)

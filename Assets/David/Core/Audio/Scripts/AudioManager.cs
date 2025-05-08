@@ -27,7 +27,7 @@ public class AudioManager : MonoBehaviour
         [HideInInspector] public float originalVolume; // Store original volume for pause/unpause
     }
 
-    [SerializeField] private float musicFadeDuration = 0.5f;
+    [SerializeField] private float musicFadeDuration = 2f;
     [SerializeField] private bool isPaused = false;
 
     [Header("Audio Sources")]
@@ -50,7 +50,6 @@ public class AudioManager : MonoBehaviour
     private string currentMusic;
     private float musicOriginalVolume; // Store original music volume
 
-
     private void Awake()
     {
         if (Instance == null)
@@ -64,7 +63,6 @@ public class AudioManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
 
     private void InitializeAudioSystem()
     {
@@ -125,7 +123,6 @@ public class AudioManager : MonoBehaviour
 
         if (paused)
         {
-            // Stop all sounds EXCEPT UI
             foreach (var category in categories)
             {
                 if (category.name != "UI") // Skip UI sounds
@@ -133,12 +130,19 @@ public class AudioManager : MonoBehaviour
                     category.source.Stop();
                 }
             }
-            musicSource.Pause(); // Pause music (optional)
+            // Reduce music volume when paused
+            musicSource.volume = 0.115f;
         }
         else
         {
-            // Unpause music (if needed)
-            musicSource.UnPause();
+            // Restore music volume when unpaused
+            musicSource.volume = 0.175f;
+
+            // If music is not playing, unpause it
+            if (!musicSource.isPlaying)
+            {
+                musicSource.UnPause(); // Unpause music if it's paused
+            }
         }
     }
 
@@ -161,16 +165,18 @@ public class AudioManager : MonoBehaviour
             if (!forceRestart && currentMusic == trackName) return;
 
             currentMusic = trackName;
+
             StartCoroutine(FadeMusic(track));
         }
     }
 
+
     private IEnumerator FadeMusic(Sound newTrack)
     {
-
         float startVolume = musicSource.volume;
         float elapsed = 0f;
 
+        // Fade out current track
         while (elapsed < musicFadeDuration)
         {
             musicSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / musicFadeDuration);
@@ -178,15 +184,16 @@ public class AudioManager : MonoBehaviour
             yield return null;
         }
 
-        musicSource.volume = 0f;
+        musicSource.volume = 0f; // Ensure it's fully faded out
 
+        // Switch to the new track
         musicSource.clip = newTrack.clip;
+        musicSource.pitch = newTrack.pitch;
         musicSource.loop = true;
         musicSource.Play();
 
-
+        // Fade in new track
         elapsed = 0f;
-
         while (elapsed < musicFadeDuration)
         {
             musicSource.volume = Mathf.Lerp(0f, newTrack.volume, elapsed / musicFadeDuration);
@@ -194,8 +201,9 @@ public class AudioManager : MonoBehaviour
             yield return null;
         }
 
-        musicSource.volume = newTrack.volume;
+        musicSource.volume = newTrack.volume;  // Ensure the new track is fully at the set volume
     }
+
 
     public void UpdateMusicByPosition(float xPosition)
     {
@@ -272,6 +280,74 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Stop all SFX immediately
+        StopAllSFX();
+
+        switch (scene.name)
+        {
+            case "Scene_MainMenu":
+                PlayMusic("music_main_menu");
+                break;
+            case "Scene_SlideShow":
+                PlayMusic("music_opening_slideshow");
+                break;
+            case "Scene_Game":
+                StartCoroutine(PlayGameMusicSequence());
+                break;
+            case "Scene_SlideShowEnding":
+                PlayMusic("music_ending_slideshow");
+                break;
+        }
+    }
+
+    private IEnumerator PlayGameMusicSequence()
+    {
+        while (true) // Infinite loop to alternate between bg and bgv2
+        {
+            // Play bg (non-looping)
+            if (musicDict.TryGetValue("music_game_bg", out Sound track1))
+            {
+                currentMusic = "music_game_bg";
+                musicSource.loop = false; // Disable looping (we control it manually)
+                yield return StartCoroutine(FadeMusic(track1));
+
+                while (musicSource.isPlaying)
+                    yield return null;
+            }
+
+            if (musicDict.TryGetValue("music_game_bgv2", out Sound track2))
+            {
+                currentMusic = "music_game_bgv2";
+                musicSource.loop = false; // Disable looping (we control it manually)
+                yield return StartCoroutine(FadeMusic(track2));
+
+                // Wait for bgv2 to finish
+                while (musicSource.isPlaying)
+                    yield return null;
+            }
+        }
+    }
+
+    private void StopAllSFX()
+    {
+        // Stop all SFX sources
+        foreach (var category in categories)
+        {
+            category.source.Stop();
+        }
+    }
 
 
     // ====================== UI Sounds ======================
@@ -285,6 +361,11 @@ public class AudioManager : MonoBehaviour
     #region UI - Buttons
     public void PlayButtonClick() => PlaySFX("UI", "sfx_ui_button_click");
     public void PlayButtonHover() => PlaySFX("UI", "sfx_ui_button_hover");
+    #endregion
+
+    #region UI - SlideShow
+    public void PlayKeyboardSound() => PlaySFX("UI", "sfx_ui_keyboard_sound");
+    public void PlayKeyboardSound(float volume) => PlaySFX("UI", "sfx_ui_keyboard_sound", volume);
     #endregion
 
 
@@ -317,6 +398,8 @@ public class AudioManager : MonoBehaviour
     #region Player - Combat: Combo Slashes
     public void PlayComboSlashLoop() => PlaySFX("PlayerOthers", "sfx_player_combo_slash_loop");
     public void PlayComboFinalHit() => PlaySFX("Player", "sfx_player_combo_final_hit");
+    public void PlayEarlyComboExit() => PlaySFX("Player", "sfx_player_attack_early_exit");
+
     #endregion
 
     #region Player - Combat: Attack Hits
@@ -401,8 +484,12 @@ public class AudioManager : MonoBehaviour
 
     // ====================== Music ======================
     #region Music - Themes
-    public void PlayMainMenuTheme() => PlayMusic("music_theme_main_menu");
-    public void PlaySlideshowTheme() => PlayMusic("music_theme_slideshow");
+    public void PlayMusicMainMenu() => PlayMusic("music_main_menu");
+    public void PlayMusicOpeningSlideshow() => PlayMusic("music_opening_slideshow");
+    public void PlayMusicGameBackground() => PlayMusic("music_game_bg");
+    public void PlayMusicGameBackgroundV2() => PlayMusic("music_game_bgv2");
+    public void PlayMusicBossBattle() => PlayMusic("music_boss_battle");
+    public void PlayMusicEndingSlideshow() => PlayMusic("music_ending_slideshow");
     #endregion
 
 }

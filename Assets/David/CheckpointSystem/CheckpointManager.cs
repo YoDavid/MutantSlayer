@@ -16,6 +16,7 @@ public class CheckpointManager : MonoBehaviour
     private float _savedStamina;
     private int _savedHealing;
     private string _savedScene;
+    private LevelProgression _savedLevelProgression; // Add this
 
     private void Awake()
     {
@@ -39,7 +40,15 @@ public class CheckpointManager : MonoBehaviour
         _savedHealing = data.healing;
         _savedScene = SceneManager.GetActiveScene().name;
 
-        Debug.Log($"Checkpoint saved - Health: {_savedHealth}, Stamina: {_savedStamina}, Healing: {_savedHealing}");
+        // Save level progression if it exists
+        if (data.levelProgression != null)
+        {
+            if (_savedLevelProgression == null)
+                _savedLevelProgression = new LevelProgression();
+
+            // Copy the data to avoid reference issues
+            CopyLevelProgression(data.levelProgression, _savedLevelProgression);
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -48,6 +57,27 @@ public class CheckpointManager : MonoBehaviour
         {
             StartCoroutine(DelayedRespawn());
         }
+    }
+
+    private void CopyLevelProgression(LevelProgression source, LevelProgression destination)
+    {
+        destination.level = source.level;
+        destination.currentExp = source.currentExp;
+        destination.expToNextLevel = source.expToNextLevel;
+
+        // Copy all other progression fields...
+        destination.baseHealth = source.baseHealth;
+        destination.baseNormalDamage = source.baseNormalDamage;
+        destination.baseProjectileDamage = source.baseProjectileDamage;
+        destination.baseCritChance = source.baseCritChance;
+        destination.baseCritMultiplier = source.baseCritMultiplier;
+
+        destination.healthPerLevel = source.healthPerLevel;
+        destination.normalDamagePerLevel = source.normalDamagePerLevel;
+        destination.projectileDamagePerLevel = source.projectileDamagePerLevel;
+        destination.critChancePer5Levels = source.critChancePer5Levels;
+        destination.critMultiplierPer3Levels = source.critMultiplierPer3Levels;
+        destination.expGrowthFactor = source.expGrowthFactor;
     }
 
     private IEnumerator DelayedRespawn()
@@ -68,16 +98,26 @@ public class CheckpointManager : MonoBehaviour
             player.SetHealth(_savedHealth);
             player.Revive();
 
+            // Restore stamina
             var staminaBar = FindObjectOfType<UIPlayerStaminaBar>();
             if (staminaBar != null)
             {
                 staminaBar.SetStamina(_savedStamina);
             }
 
+            // Restore healing items
             var healingController = FindObjectOfType<UIHealingController>();
             if (healingController != null)
             {
                 ResetHealingItems(healingController);
+            }
+
+            // Restore level progression
+            var levelSystem = player.GetComponent<PlayerLevelSystem>();
+            if (levelSystem != null && _savedLevelProgression != null)
+            {
+                CopyLevelProgression(_savedLevelProgression, levelSystem.progression);
+                levelSystem.InitializeStats(); // Re-initialize stats with saved progression
             }
 
             var camera = FindObjectOfType<CameraDeadZoneFollow>();
@@ -115,6 +155,7 @@ public class CheckpointManager : MonoBehaviour
         _savedHealth = 0;
         _savedStamina = 0f;
         _savedHealing = 0;
+        _savedLevelProgression = null;
 
         Debug.Log("Checkpoint data reset.");
     }

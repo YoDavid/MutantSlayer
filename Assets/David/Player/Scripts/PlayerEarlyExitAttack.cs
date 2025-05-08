@@ -22,7 +22,7 @@ public class PlayerEarlyExitAttack : MonoBehaviour
 
     private float leftMouseButtonHoldTime = 0f;
     [SerializeField] private float minHoldTime = 0.25f; // Minimum time to trigger early exit
-
+    [SerializeField] private PlayerLevelSystem playerLevelSystem;
 
 
     private void Awake()
@@ -103,8 +103,7 @@ public class PlayerEarlyExitAttack : MonoBehaviour
         }
 
         // Play sound effect
-        audioManager?.PlaySFX("Player", "sfx_player_attack_early_exit");
-
+        AudioManager.Instance.PlayEarlyComboExit();
         CleanUpAttack();
     }
 
@@ -123,21 +122,33 @@ public class PlayerEarlyExitAttack : MonoBehaviour
         var damageable = other.GetComponent<IDamageable>();
         if (damageable != null)
         {
-            var (damage, isCritical) = damageDealer.CalculateDamage();
-            damageable.TakeDamage(damage, isCritical, false, 0); // Hit index is 0 for single hit
+            // Get base scaled damage
+            int damage = playerLevelSystem.GetScaledDamage("early_exit"); // Changed to "early_exit" type
 
-            CreateHitEffects(other.transform.position, isCritical, isBoss);
+            // Apply random variation (±20%)
+            float randomVariation = Random.Range(-0.2f, 0.7f);
+            damage = Mathf.RoundToInt(damage * (1f + randomVariation));
+
+            // Calculate critical hit
+            bool isCritical = UnityEngine.Random.value <= playerLevelSystem.GetCritChance();
+            if (isCritical)
+            {
+                damage = Mathf.RoundToInt(damage * playerLevelSystem.GetCritMultiplier());
+            }
+
+            damageable.TakeDamage(damage, isCritical, false, 0);
+           
             cameraShake?.NormalHitShakeCamera();
         }
     }
 
-    private void CreateHitEffects(Vector3 position, bool isCritical, bool isBoss)
+    private void CreateHitEffects(Vector3 position, bool isCritical, bool isBoss, int finalDamage)
     {
-        // Create damage popup
+        // Create damage popup with the exact damage dealt
         DamagePopUp.Instance?.CreateDamageText(
-            damageDealer.CalculateDamage().damage,
+            finalDamage, // Use the calculated damage including random variation
             position,
-            true, isBoss, isCritical, false, 0); // Not a combo hit
+            true, isBoss, isCritical, false, 0);
 
         // Spawn hit particles
         if (hitParticlePrefab != null)
@@ -147,6 +158,7 @@ public class PlayerEarlyExitAttack : MonoBehaviour
                 Quaternion.identity);
         }
     }
+
 
     private void CleanUpAttack()
     {

@@ -4,12 +4,14 @@ public class PauseMenuController : BaseMenuController
 {
     [Header("Pause Settings")]
     [SerializeField] private GameObject optionsMenu;
+    [SerializeField] private UIManager uiManager;
 
     public bool IsVisible { get; private set; }
 
     protected override void Start()
     {
         base.Start();
+        canUseButtons = true;
     }
 
     public void SetVisible(bool visible)
@@ -19,21 +21,35 @@ public class PauseMenuController : BaseMenuController
 
         if (visible)
         {
-            TimeManager.Instance?.PauseGame();
             SelectButton(0);
             AudioManager.Instance.PlayMenuOpen();
+            TimeManager.Instance?.PauseGame();
             if (optionsMenu) optionsMenu.SetActive(false);
         }
         else
         {
             TimeManager.Instance?.ResumeGame();
             AudioManager.Instance.PlayMenuClose();
+            uiManager.SetHUDVisible(true);
         }
     }
 
-    public void OnResumePressed() => SetVisible(false);
+    public void OnResumePressed()
+    {
+        SetVisible(false);
+        TimeManager.Instance?.ResumeGame();
+        AudioManager.Instance.PlayMenuClose();
+        uiManager.SetHUDVisible(true);
+        uiManager.SetPlayerInputEnabled(enabled);
+        canUseButtons = false;
+    }
 
-    public void OnOptionsPressed() => optionsMenu.SetActive(true);
+    public void OnOptionsPressed()
+    {
+        if (!optionsMenu) return;
+        optionsMenu.SetActive(true);
+    }
+
 
     public void OnMainMenuPressed()
     {

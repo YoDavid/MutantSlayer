@@ -8,8 +8,10 @@ public class MainMenu : BaseMenuController
 
     protected override void Start()
     {
-        base.Start(); 
+        base.Start();
+        canUseButtons = true; 
         AudioManager.Instance.PlayMusic("menu_theme");
+        FindObjectOfType<ForceMouseHidden>()?.UnlockAndShowMouse();
     }
 
     public void OnContinuePressed()

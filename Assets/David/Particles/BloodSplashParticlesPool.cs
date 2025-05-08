@@ -44,7 +44,6 @@ public class BloodSplashParticlesPool : MonoBehaviour
         if (!gameObject.activeInHierarchy)
             gameObject.SetActive(true);
 
-        Debug.Log("Death splash");
         PlaySplash(deathPool, deathSplashPrefab, position);
         AudioManager.Instance.PlayBloodParticlesDeathSound();
     }
@@ -54,7 +53,6 @@ public class BloodSplashParticlesPool : MonoBehaviour
         if (!gameObject.activeInHierarchy)
             gameObject.SetActive(true);
 
-        Debug.Log("Hit splash");
         PlaySplash(hitPool, hitSplashPrefab, position);
     }
 

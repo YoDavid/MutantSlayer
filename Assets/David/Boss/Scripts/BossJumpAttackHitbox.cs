@@ -4,8 +4,9 @@ using UnityEngine;
 public class BossJumpAttackHitbox : MonoBehaviour
 {
     [Header("Attack Settings")]
-    public DamageConfig damageConfig; 
-    private DamageDealer damageDealer;
+    public DamageConfig damageConfig;
+    [SerializeField] private BossDamageDealer damageDealer;
+
     [SerializeField] private float attackDuration = 0.5f;
     [SerializeField] private float activationDelay = 0.2f;
 
@@ -24,9 +25,44 @@ public class BossJumpAttackHitbox : MonoBehaviour
 
     [SerializeField] private GameObject rockParticlesPrefab;
 
+    [Header("Damage Scaling")]
+    [SerializeField] private BossLevelScaling bossLevelScaling;
+    private int currentBaseDamage;
+    private float currentPhaseMultiplier;
+
     private void Awake()
     {
         InitializeComponents();
+        damageDealer = gameObject.AddComponent<BossDamageDealer>(); // Create component like ComboAttack
+
+        // Identical scaling logic to ComboAttack
+        if (bossLevelScaling != null)
+        {
+            UpdateScaledDamage();
+        }
+        else
+        {
+            damageDealer.config = damageConfig;
+            Debug.LogWarning("BossLevelScaling not found - using base damage values");
+        }
+    }
+
+    private void UpdateScaledDamage()
+    {
+        DamageConfig scaledConfig = Instantiate(damageConfig);
+        currentPhaseMultiplier = bossLevelScaling.GetPhaseDamageMultiplier();
+
+        scaledConfig.normalDamageRange = new Vector2Int(
+            Mathf.RoundToInt(damageConfig.normalDamageRange.x * currentPhaseMultiplier),
+            Mathf.RoundToInt(damageConfig.normalDamageRange.y * currentPhaseMultiplier)
+        );
+
+        scaledConfig.criticalDamageRange = new Vector2Int(
+            Mathf.RoundToInt(damageConfig.criticalDamageRange.x * currentPhaseMultiplier),
+            Mathf.RoundToInt(damageConfig.criticalDamageRange.y * currentPhaseMultiplier)
+        );
+
+        damageDealer.config = scaledConfig;
     }
 
     private void Start()
@@ -39,8 +75,6 @@ public class BossJumpAttackHitbox : MonoBehaviour
     {
         attackCollider = GetComponent<Collider2D>();
         cameraShake = FindAnyObjectByType<CameraShake>();
-        damageDealer = gameObject.AddComponent<DamageDealer>();
-        damageDealer.config = damageConfig;
     }
 
     private void SetupCollider()
@@ -123,10 +157,25 @@ public class BossJumpAttackHitbox : MonoBehaviour
     {
         if (isPlayerInRange && !playerHealth.IsPlayerInvulnerable())
         {
+            // Calculate the base damage using the DamageDealer
             var (damage, isCritical) = damageDealer.CalculateDamage();
 
+            // Apply random variation to the damage between -0.1 and +0.7
+            float randomVariation = Random.Range(-0.1f, 0.7f);
+            damage = Mathf.RoundToInt(damage * (1 + randomVariation));
+
+            // Apply the damage to the player
             playerHealth.TakeDamage(damage, isCritical);
-            cameraShake.ShakeCameraJumpSmashAttack();
+
+            // NEW: Critical hit differentiation
+            if (isCritical)
+            {
+                cameraShake?.CriticalHitShakeCamera(); // Stronger shake for crits
+            }
+            else
+            {
+                cameraShake?.ShakeCameraJumpSmashAttack(); // Standard shake
+            }
         }
     }
 

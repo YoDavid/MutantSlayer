@@ -6,7 +6,7 @@ public class BossComboAttackHitbox : MonoBehaviour
 {
     [Header("Attack Settings")]
     public DamageConfig damageConfig;
-    private DamageDealer damageDealer; 
+    private BossDamageDealer damageDealer;
     [SerializeField] private float attackDuration;
     [SerializeField] private float[] attackTimings;
 
@@ -26,12 +26,50 @@ public class BossComboAttackHitbox : MonoBehaviour
     [SerializeField] private GameObject rockParticlesPrefab;
     [SerializeField] private FallingSpikeSpawner fallingSpikeSpawner;
 
+    [Header("Damage Scaling")]
+    [SerializeField] private BossLevelScaling bossLevelScaling;
+    private int currentBaseDamage;
+    private float currentPhaseMultiplier;
+
     private void Awake()
     {
         InitializeComponents();
-        damageDealer = gameObject.AddComponent<DamageDealer>(); // NEW
-        damageDealer.config = damageConfig; // NEW
+        damageDealer = gameObject.AddComponent<BossDamageDealer>();
+
+        // Initialize damage config with scaling
+        if (bossLevelScaling != null)
+        {
+            UpdateScaledDamage();
+        }
+        else
+        {
+            damageDealer.config = damageConfig; // Let BossDamageDealer handle scaling
+            Debug.LogWarning("BossLevelScaling not found - using base damage values");
+        }
+
         fallingSpikeSpawner = FindAnyObjectByType<FallingSpikeSpawner>();
+    }
+
+    private void UpdateScaledDamage()
+    {
+        // Create a new instance of DamageConfig to avoid modifying the original asset
+        DamageConfig scaledConfig = Instantiate(damageConfig);
+
+        currentBaseDamage = bossLevelScaling.GetBaseDamage();
+        currentPhaseMultiplier = bossLevelScaling.GetPhaseDamageMultiplier();
+
+        // Apply scaling to damage ranges (using Vector2Int as in your config)
+        scaledConfig.normalDamageRange = new Vector2Int(
+            Mathf.RoundToInt(damageConfig.normalDamageRange.x * currentPhaseMultiplier),
+            Mathf.RoundToInt(damageConfig.normalDamageRange.y * currentPhaseMultiplier)
+        );
+
+        scaledConfig.criticalDamageRange = new Vector2Int(
+            Mathf.RoundToInt(damageConfig.criticalDamageRange.x * currentPhaseMultiplier),
+            Mathf.RoundToInt(damageConfig.criticalDamageRange.y * currentPhaseMultiplier)
+        );
+
+        damageDealer.config = scaledConfig;
     }
 
     private void Start()
@@ -131,11 +169,27 @@ public class BossComboAttackHitbox : MonoBehaviour
     {
         if (isPlayerInRange && !playerHealth.IsPlayerInvulnerable())
         {
-            var (damage, isCritical) = damageDealer.CalculateDamage(); // NEW
-            playerHealth.TakeDamage(damage, isCritical); // MODIFIED
-            cameraShake?.ShakeCameraComboAttack(); // Moved here from ActivateComboWithIntervals
+            // Damage is now automatically scaled through the DamageDealer
+            var (damage, isCritical) = damageDealer.CalculateDamage();
+
+            // Apply random variation to the damage
+            float randomVariation = Random.Range(-0.2f, 0.2f);
+            damage = Mathf.RoundToInt(damage * (1 + randomVariation));
+
+            playerHealth.TakeDamage(damage, isCritical);
+
+            // Apply critical effects if needed
+            if (isCritical)
+            {
+                cameraShake?.CriticalHitShakeCamera(); // Stronger shake for crits
+            }
+            else
+            {
+                cameraShake?.ShakeCameraComboAttack();
+            }
         }
     }
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -171,5 +225,14 @@ public class BossComboAttackHitbox : MonoBehaviour
                 ? new Vector2(originalOffset.x + colliderShift, originalOffset.y)
                 : originalOffset;
         }
+    }
+
+    public (int damage, bool isCritical) GetCurrentDamageValues()
+    {
+        if (damageDealer != null)
+        {
+            return damageDealer.CalculateDamage();
+        }
+        return (10, false); // Fallback values
     }
 }

@@ -1307,12 +1307,20 @@ MonoBehaviour:
     originalVolume: 0
   musicSource: {fileID: 5609026769129953427}
   musicTracks:
-  - name: music_theme_main_menu
-    clip: {fileID: 8300000, guid: 65da4fa06cf15cf43bcb14aa1eb0eb5b, type: 3}
+  - name: music_main_menu
+    clip: {fileID: 8300000, guid: d8783d6e63a317444ba692aea3ac9b3c, type: 3}
     volume: 0.4
     pitch: 1
-  - name: music_theme_slideshow
-    clip: {fileID: 8300000, guid: 1002f91584b48344b90fd207b77dba32, type: 3}
+  - name: music_opening_slideshow
+    clip: {fileID: 8300000, guid: 49e3f97db4c5bd34ba0387f4eac3aaa4, type: 3}
+    volume: 0.25
+    pitch: 1
+  - name: music_game_bg
+    clip: {fileID: 8300000, guid: 422fdde44b5eaa844a97175a1fcf9be0, type: 3}
+    volume: 0.175
+    pitch: 1
+  - name: music_boss_battle
+    clip: {fileID: 8300000, guid: e937b2a435d034341843024e881eb32a, type: 3}
     volume: 1
     pitch: 1
 --- !u!1 &6168855116091384192
