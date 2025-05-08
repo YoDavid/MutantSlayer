@@ -25,8 +25,10 @@ public class BossMusicTrigger : MonoBehaviour
                 triggerCollider.isTrigger = true;
             }
         }
+    }
 
-        // Try to find AudioManager if not assigned
+    private void Start()
+    {
         if (audioManager == null)
         {
             audioManager = FindObjectOfType<AudioManager>();
