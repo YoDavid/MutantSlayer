@@ -145,7 +145,6 @@ GameObject:
   - component: {fileID: 8002824957288676789}
   - component: {fileID: 7349595776294256227}
   - component: {fileID: 7063153322878008837}
-  - component: {fileID: 3521089099272297170}
   - component: {fileID: 4391671272915259826}
   - component: {fileID: 1848901660129016378}
   m_Layer: 9
@@ -417,26 +416,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _flashColor: {r: 1.0592737, g: 1.0592737, b: 1.0592737, a: 1}
   _flashTime: 0.25
---- !u!114 &3521089099272297170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7234279108582347050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5f48183e6abe0e4eb25f36979bd94f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseHealth: 50
-  baseDamage: 5
-  healthScaling: 0.2
-  damageScaling: 0.15
-  enemyLevel: 1
-  baseExpReward: 100
-  expScalingFactor: 1.5
-  playerLevelSystem: {fileID: 0}
 --- !u!114 &4391671272915259826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,7 +442,7 @@ MonoBehaviour:
   - {x: 30.737549, y: -17.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 1089522
+  m_InstanceId: 201942
   m_LocalBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 30.737549, y: 17.5, z: 0}
@@ -479,11 +458,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5f48183e6abe0e4eb25f36979bd94f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseHealth: 50
-  baseDamage: 5
-  healthScaling: 0.2
-  damageScaling: 0.15
+  baseHealth: 110
+  baseDamage: 65
+  healthScaling: 0.5
+  damageScaling: 0.4
   enemyLevel: 1
-  baseExpReward: 100
+  baseExpReward: 50
   expScalingFactor: 1.5
   playerLevelSystem: {fileID: 0}

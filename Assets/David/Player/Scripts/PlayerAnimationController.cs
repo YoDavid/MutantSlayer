@@ -20,6 +20,7 @@ public class PlayerAnimationController : MonoBehaviour
     private bool isHealing = false;
     private float healingTimer = 0f;
     [SerializeField] private float healingDuration = 1f; // 1 second
+    private bool isLevelingUp = false;
 
 
     private void Awake()
@@ -57,6 +58,8 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetAttackState(int attackCount)
     {
+        if (isLevelingUp) return;
+
         if (attackCount > 0)
         {
             animator.SetInteger("AttackCount", attackCount);
@@ -192,6 +195,8 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void TriggerHealingAnimation()
     {
+        if (isLevelingUp) return;
+
         animator.SetBool("IsHealing", true);
         isHealing = true;
         healingTimer = healingDuration;
@@ -200,8 +205,11 @@ public class PlayerAnimationController : MonoBehaviour
         attackController.SetAttackEnabled(false);
     }
 
+
     public void SetRangedAttackStart(bool value)
     {
+        if (isLevelingUp) return;
+
         if (value && !animator.GetBool("IsGrounded"))
         {
             value = false;
@@ -217,6 +225,8 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetRangedAttackLoop(bool value)
     {
+        if (isLevelingUp) return;
+
         if (value && !animator.GetBool("IsGrounded"))
         {
             value = false;
@@ -232,12 +242,15 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetRangedAttack()
     {
+        if (isLevelingUp) return;
+
         animator.SetBool("RangedAttackStart", false);
         animator.SetBool("RangedAttackLoop", false);
         animator.SetBool("RangedAttackAttack", true);
 
         AudioManager.Instance.StopSound("Player", "player_charging_range_attack");
     }
+
 
     public void ResetRangedAttack()
     {
@@ -255,6 +268,8 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetComboAttackStart(bool value)
     {
+        if (isLevelingUp) return;
+
         animator.SetBool("ComboAttackStart", value);
 
         if (value)
@@ -266,6 +281,8 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetIsComboAttacking(bool value)
     {
+        if (isLevelingUp) return;
+
         animator.SetBool("IsComboAttacking", value);
 
         if (value)
@@ -277,6 +294,8 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void StopComboAttack()
     {
+        if (isLevelingUp) return;
+
         animator.SetBool("ComboAttackStart", false);
         animator.SetBool("IsComboAttacking", false);
         movementController.SetMovementEnabled(true);
@@ -285,6 +304,8 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void SetEarlyComboExit(bool value)
     {
+        if (isLevelingUp) return;
+
         animator.SetBool("EarlyComboExit", value);
 
         if (value)
@@ -302,4 +323,15 @@ public class PlayerAnimationController : MonoBehaviour
         attackController.SetAttackEnabled(true);
     }
 
+    public void SetLevelingUp(float duration = 0.5f)
+    {
+        isLevelingUp = true;
+        StartCoroutine(ResetLevelingUp(duration));
+    }
+
+    private IEnumerator ResetLevelingUp(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        isLevelingUp = false;
+    }
 }

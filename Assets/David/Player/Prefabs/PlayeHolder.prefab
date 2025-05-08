@@ -1107,7 +1107,7 @@ MonoBehaviour:
   - {x: 21.119995, y: -17.509766, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 1089578
+  m_InstanceId: 200852
   m_LocalBounds:
     m_Center: {x: -0.8800049, y: 0, z: 0}
     m_Extent: {x: 22, y: 17.509766, z: 0}
@@ -1124,15 +1124,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progression:
-    level: 100
+    level: 10
     currentExp: 0
     expToNextLevel: 100
-    baseHealth: 100
+    baseHealth: 50
     baseNormalDamage: 10
-    baseProjectileDamage: 8
+    baseProjectileDamage: 30
     baseCritChance: 0.1
     baseCritMultiplier: 1.5
-    healthPerLevel: 20
+    healthPerLevel: 10
     normalDamagePerLevel: 2
     projectileDamagePerLevel: 1.5
     critChancePer5Levels: 0.05

@@ -5,7 +5,7 @@ public class SpitProjectile : MonoBehaviour
 {
     [Header("Damage Settings")]
     public DamageConfig damageConfig;
-    private BossDamageDealer damageDealer; // Changed to BossDamageDealer
+    private BossDamageDealer damageDealer;
 
     [Header("Projectile Settings")]
     [SerializeField] private float speed = 50f;
@@ -19,58 +19,40 @@ public class SpitProjectile : MonoBehaviour
 
     [Header("Damage Scaling")]
     [SerializeField] private BossLevelScaling bossLevelScaling;
-    private int currentBaseDamage;
     private float currentPhaseMultiplier;
 
     private float moveDirection;
     private SpriteRenderer spriteRenderer;
 
+    [Header("Damage Reference")]
+    [SerializeField] private BossComboAttackHitbox bossHitbox;
+    private int currentDamage;
+    private bool isCritical;
+
     private void Awake()
     {
         InitializeComponents();
-
-        // Check if a BossDamageDealer already exists before adding a new one
-        damageDealer = GetComponent<BossDamageDealer>();
-        if (damageDealer == null)
+        bossHitbox = FindAnyObjectByType<BossComboAttackHitbox>();
+        // Get current damage values from boss hitbox
+        if (bossHitbox != null)
         {
-            damageDealer = gameObject.AddComponent<BossDamageDealer>();
-        }
-
-        bossLevelScaling = FindAnyObjectByType<BossLevelScaling>();
-        if (bossLevelScaling != null)
-        {
-            UpdateScaledDamage();
+            (currentDamage, isCritical) = bossHitbox.GetCurrentDamageValues();
         }
         else
         {
-            damageDealer.config = damageConfig;
-            Debug.LogWarning("BossLevelScaling not found - using base damage values");
-        }
-    }
-    private void InitializeComponents()
-    {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        transform.localScale = initialScale;
-
-        // Only find references if not assigned in Inspector
-        if (playerHealth == null)
-        {
-            GameObject player = GameObject.FindWithTag("Player");
-            if (player != null) playerHealth = player.GetComponent<PlayerHealth>();
-        }
-
-        if (playerHurtBoxCollider == null)
-        {
-            GameObject hurtBox = GameObject.FindWithTag("PlayerHurtBox");
-            if (hurtBox != null) playerHurtBoxCollider = hurtBox.GetComponent<Collider2D>();
+            Debug.LogError("Boss hitbox reference missing!");
+            currentDamage = 10; // Fallback value
+            isCritical = false;
         }
     }
 
     private void UpdateScaledDamage()
     {
+        // Create scaled copy of damage config (like combo attack does)
         DamageConfig scaledConfig = Instantiate(damageConfig);
         currentPhaseMultiplier = bossLevelScaling.GetPhaseDamageMultiplier();
 
+        // Apply scaling to damage ranges
         scaledConfig.normalDamageRange = new Vector2Int(
             Mathf.RoundToInt(damageConfig.normalDamageRange.x * currentPhaseMultiplier),
             Mathf.RoundToInt(damageConfig.normalDamageRange.y * currentPhaseMultiplier)
@@ -84,14 +66,28 @@ public class SpitProjectile : MonoBehaviour
         damageDealer.config = scaledConfig;
     }
 
+    private void InitializeComponents()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        transform.localScale = initialScale;
+
+        if (playerHealth == null)
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null) playerHealth = player.GetComponent<PlayerHealth>();
+        }
+
+        if (playerHurtBoxCollider == null)
+        {
+            GameObject hurtBox = GameObject.FindWithTag("PlayerHurtBox");
+            if (hurtBox != null) playerHurtBoxCollider = hurtBox.GetComponent<Collider2D>();
+        }
+    }
+
     private void Start()
     {
         StartCoroutine(GrowProjectile());
         StartCoroutine(DestroyAfterLifetime());
-
-        // Validate references
-        if (playerHealth == null) Debug.LogError("PlayerHealth reference missing", this);
-        if (playerHurtBoxCollider == null) Debug.LogError("PlayerHurtBox reference missing", this);
     }
 
     private void Update()
@@ -130,9 +126,8 @@ public class SpitProjectile : MonoBehaviour
     {
         if (playerHealth != null && !playerHealth.IsPlayerInvulnerable())
         {
-            var (damage, isCritical) = damageDealer.CalculateDamage();
-            playerHealth.TakeDamage(damage, isCritical);
-
+            playerHealth.TakeDamage(currentDamage, isCritical);
+            Debug.Log($"Spit dealt {currentDamage} damage (Critical: {isCritical})");
         }
     }
 

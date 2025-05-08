@@ -1547,7 +1547,7 @@ MonoBehaviour:
   - {x: 47.310547, y: -29.800049, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 1090048
+  m_InstanceId: 200352
   m_LocalBounds:
     m_Center: {x: 0.00012207031, y: 0, z: 0}
     m_Extent: {x: 47.310425, y: 29.800049, z: 0}
@@ -1563,7 +1563,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a47a48e083e302342a490ac30bf99d0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseHealth: 500
+  baseHealth: 650
   baseDamage: 25
   healthScaling: 0.25
   damageScaling: 0.2

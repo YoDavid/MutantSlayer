@@ -161,5 +161,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9911aae6ff5949c40840a0a802ce2c99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  damage: 30
   breakEffectPrefab: {fileID: 4647388484711977732, guid: 7bca980284c85d047a769adcf1c5ea3e, type: 3}

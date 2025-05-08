@@ -220,4 +220,13 @@ public class BossComboAttackHitbox : MonoBehaviour
                 : originalOffset;
         }
     }
+
+    public (int damage, bool isCritical) GetCurrentDamageValues()
+    {
+        if (damageDealer != null)
+        {
+            return damageDealer.CalculateDamage();
+        }
+        return (10, false); // Fallback values
+    }
 }

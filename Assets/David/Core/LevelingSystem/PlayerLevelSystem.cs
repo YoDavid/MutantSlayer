@@ -64,31 +64,26 @@ public class PlayerLevelSystem : MonoBehaviour
         progression.currentExp -= progression.expToNextLevel;
         progression.expToNextLevel = Mathf.RoundToInt(progression.expToNextLevel * progression.expGrowthFactor);
 
-        // Increase stats
         playerHealth.MaxHealth = progression.baseHealth + Mathf.RoundToInt((progression.level - 1) * progression.healthPerLevel);
         playerHealth.RestoreFullHealth();
-        // Improve crit stats periodically
+
         if (progression.level % 3 == 0)
-        {
             progression.baseCritMultiplier += progression.critMultiplierPer3Levels;
-        }
+
         if (progression.level % 5 == 0)
-        {
             progression.baseCritChance += progression.critChancePer5Levels;
-        }
 
-        // Trigger the level up event
         OnLevelUp?.Invoke();
-        Debug.Log($"Player after leveled up - Level: {progression.level}, Health: {playerHealth.CurrentHealth}/{playerHealth.MaxHealth}");
-
-        // Play level up effects
         PlayLevelUpEffects();
+
+        // Prevent player from doing anything briefly after level up
+        GetComponent<PlayerAnimationController>()?.SetLevelingUp();
     }
+
 
     private void PlayLevelUpEffects()
     {
         // Add your visual/audio effects here
-        Debug.Log($"Level Up! Now level {progression.level}");
         // Example: AudioManager.Instance.PlayLevelUpSound();
         // Example: Instantiate level up particles
     }

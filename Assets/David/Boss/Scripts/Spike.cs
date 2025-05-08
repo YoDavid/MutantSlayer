@@ -20,6 +20,7 @@ public class Spike : MonoBehaviour
 
     private void Awake()
     {
+
         damageDealer = gameObject.AddComponent<BossDamageDealer>(); // Create like other attacks
 
         // Identical scaling logic to BossComboAttackHitbox

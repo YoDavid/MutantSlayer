@@ -95,6 +95,8 @@ public class ChargeProjectile : MonoBehaviour
     #endregion
 
     [SerializeField] private PlayerLevelSystem playerLevelSystem;
+    [SerializeField] private EnemyHealth enemyHealth;
+    [SerializeField] private BossHealth bossHealth;
 
     #region Unity Lifecycle
     private void Awake()
@@ -104,6 +106,8 @@ public class ChargeProjectile : MonoBehaviour
         currentSpeed = baseSpeed;
         initialScale = transform.localScale;
         playerLevelSystem = FindObjectOfType<PlayerLevelSystem>();
+        bossHealth = FindObjectOfType<BossHealth>();
+        enemyHealth = FindObjectOfType<EnemyHealth>();
     }
 
     private void Start()
@@ -202,16 +206,30 @@ public class ChargeProjectile : MonoBehaviour
         lastHitTime = Time.time;
         UpdateDamage();  // Ensure damage is up-to-date when hit
 
-        EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
+   
+
         if (enemyHealth != null)
         {
-            // Add debug log for damage
-            Debug.Log($"[ChargeProjectile] Dealing {damage} damage to {enemy.gameObject.name}");
+            // Check if the enemy is normal or a boss and handle accordingly
+            bool isEnemy = enemy.CompareTag("Enemy");
+            bool isBossEnemy = enemy.CompareTag("BossEnemy");
 
-            // Show the scaled damage instead of the default damage value
-            //ShowDamagePopup(enemy);
+            // Show the damage popup only if the enemy is not a normal "Enemy"
+            if (!isEnemy)
+            {
+               // ShowDamagePopup(enemy);
+            }
 
-            enemyHealth.TakeDamage(damage);  // Apply scaled damage to the enemy
+            // Apply scaled damage to both normal enemies and BossEnemies
+            if (isEnemy)
+            {
+                enemyHealth.TakeDamage(damage, isCritical: isCritical);
+            }
+
+            if (isBossEnemy && bossHealth != null)  // Apply damage to BossHealth if it's a boss
+            {
+                bossHealth.TakeDamage(damage, isCritical: isCritical);
+            }
         }
 
         PlayHitSound();
@@ -219,6 +237,7 @@ public class ChargeProjectile : MonoBehaviour
         ApplyHitTimeEffect();
         IncrementHitCount();
     }
+
 
 
     private void ShowDamagePopup(Collider2D enemy)
