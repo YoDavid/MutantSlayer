@@ -381,11 +381,19 @@ public class PlayerAttackController : MonoBehaviour
     #endregion
 
     #region Ranged Attack Methods
+    #region Ranged Attack Methods
     private void HandleRangedAttackInput()
     {
         bool isRightMouseHeld = Input.GetMouseButton(1);
         bool isRightMouseReleased = Input.GetMouseButtonUp(1);
         bool isRightMousePressed = Input.GetMouseButtonDown(1);
+
+        // Full reset if we become airborne during any part of the ranged attack
+        if (!IsGrounded() && (isCharging || hasFiredChargeAttack || animationController.animator.GetBool("RangedAttackLoop")))
+        {
+            ResetRangedAttack();
+            return;
+        }
 
         // If right mouse is not held and we're in the loop state, exit it
         if (!isRightMouseHeld && animationController.animator.GetBool("RangedAttackLoop"))
@@ -395,37 +403,29 @@ public class PlayerAttackController : MonoBehaviour
             StopElectricityLoop();
         }
 
-        // Reset charge start time if we're airborne and trying to charge
-        if (!IsGrounded() && isRightMousePressed)
-        {
-            chargeStartTime = 0f;
-            return;
-        }
-
-        // Full reset if we become airborne during any part of the ranged attack
-        if (!IsGrounded() && (isCharging || hasFiredChargeAttack || animationController.animator.GetBool("RangedAttackLoop")))
-        {
-            ResetRangedAttack();
-            return;
-        }
-
-        // If we need fresh input and button is still held, wait for release
-        if (requireNewRangedInput && isRightMouseHeld)
-        {
-            return;
-        }
-
-        // Clear the requirement if button was released
-        if (requireNewRangedInput && !isRightMouseHeld)
-        {
-            requireNewRangedInput = false;
-        }
-
-        // Only start new charge if we have fresh input and are grounded
-        if (isRightMousePressed && !requireNewRangedInput && IsGrounded())
+        // Track the time when the right mouse button is pressed
+        if (isRightMousePressed)
         {
             chargeStartTime = Time.time;
-            wasRangedInterrupted = false; // Reset interruption flag on new press
+        }
+
+        // If right mouse is released, check if it was held long enough
+        if (isRightMouseReleased)
+        {
+            float holdDuration = Time.time - chargeStartTime;
+            if (holdDuration >= 0.5f)
+            {
+                // Trigger the action if the button was held long enough
+                if (!hasFiredChargeAttack)
+                {
+                    TriggerRangedAttackSequence();
+                }
+            }
+            else
+            {
+                // If the button was not held long enough, you can reset or handle the short press case
+                Debug.Log("Right mouse button was not held long enough.");
+            }
         }
 
         // Handle charging only with fresh input and while grounded
@@ -475,16 +475,6 @@ public class PlayerAttackController : MonoBehaviour
         // Handle button release
         if (isRightMouseReleased)
         {
-            // Only trigger ranged attack sequence if RangedAttackStart bool is true
-            if (isCharging && !hasFiredChargeAttack && animationController.animator.GetBool("RangedAttackStart"))
-            {
-                TriggerRangedAttackSequence();
-            }
-            else if (hasFiredChargeAttack)
-            {
-                CleanUpRangedAttack();
-            }
-
             // Ensure loop state is turned off when button is released
             if (animationController.animator.GetBool("RangedAttackLoop"))
             {
@@ -494,6 +484,7 @@ public class PlayerAttackController : MonoBehaviour
             }
         }
     }
+    #endregion
 
 
 
