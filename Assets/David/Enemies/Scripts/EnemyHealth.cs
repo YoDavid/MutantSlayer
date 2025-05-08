@@ -8,13 +8,10 @@ public class EnemyHealth : HealthSystem, IDamageable
     [SerializeField] private bool overrideHealth = false;
     [SerializeField] private int customMaxHealth = 30;
 
-
-    // Components
     private AudioManager audioManager;
     private Animator animator;
     private DamageFlash damageFlash;
 
-    // Audio triggers
     private bool screamedAt75 = false;
     private bool screamedAt50 = false;
     private bool screamedAt25 = false;
@@ -24,7 +21,7 @@ public class EnemyHealth : HealthSystem, IDamageable
 
     [SerializeField] private PlayerLevelSystem playerLevelSystem;
 
-    private EnemyLevelScaling enemyLevelScaling; 
+    private EnemyLevelScaling enemyLevelScaling;
 
     protected override void Awake()
     {
@@ -49,13 +46,11 @@ public class EnemyHealth : HealthSystem, IDamageable
         if (audioObj != null)
             audioManager = audioObj.GetComponent<AudioManager>();
 
-
         damageFlash = GetComponent<DamageFlash>();
     }
 
     private void Start()
     {
-
         if (bloodSplashPool == null)
             bloodSplashPool = FindObjectOfType<BloodSplashParticlesPool>();
     }
@@ -64,32 +59,37 @@ public class EnemyHealth : HealthSystem, IDamageable
     {
         if (CurrentHealth <= 0) return;
 
-        // Log health before and after damage
-
         base.TakeDamage(damage, isCritical);
 
-        // Log after damage
-
         PlayHitSound();
+        damageFlash.CallDamageFlash();
 
-        if (!isCombo && DamagePopUp.Instance != null)
-        {
-            damageFlash.CallDamageFlash();
-            DamagePopUp.Instance.CreateDamageText(
-                damage,
-                transform.position + Vector3.up * 1.5f,
-                isPlayer: false,
-                isBoss: false,
-                isCritical: isCritical
-            );
-        }
+        ShowDamagePopup(damage, transform.position, isCritical, isCombo, comboCount);
 
-        OnHealthChanged?.Invoke(CurrentHealth); 
+        OnHealthChanged?.Invoke(CurrentHealth);
 
         if (CurrentHealth <= 0)
             Die();
     }
 
+    private void ShowDamagePopup(int damage, Vector3 position, bool isCritical, bool isCombo = false, int comboIndex = 0)
+    {
+        if (DamagePopUp.Instance == null) return;
+
+        Vector3 offset = isCombo
+            ? new Vector3(comboIndex * 0.5f, comboIndex * 0.3f, 0)
+            : Vector3.up * 1.5f;
+
+        DamagePopUp.Instance.CreateDamageText(
+            damage,
+            position + offset,
+            isPlayer: false,
+            isBoss: false,
+            isCritical: isCritical,
+            isCombo: isCombo,
+            comboIndex: comboIndex
+        );
+    }
 
     private void PlayHitSound()
     {
@@ -144,10 +144,10 @@ public class EnemyHealth : HealthSystem, IDamageable
 
         if (enemyLevelScaling != null)
         {
-            int expReward = enemyLevelScaling.GetExpReward(); // Get experience from EnemyLevelScaling
+            int expReward = enemyLevelScaling.GetExpReward();
             if (playerLevelSystem != null)
             {
-                playerLevelSystem.AddExperience(expReward); // Add experience to player
+                playerLevelSystem.AddExperience(expReward);
             }
         }
 
@@ -156,6 +156,4 @@ public class EnemyHealth : HealthSystem, IDamageable
 
         OnDeath?.Invoke();
     }
-
-
 }

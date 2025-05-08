@@ -40,6 +40,11 @@ public class EnemyAttackCollider : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        playerLevelSystem = FindAnyObjectByType<PlayerLevelSystem>();
+    }
+
 
     public void EnableAttackCollider()
     {

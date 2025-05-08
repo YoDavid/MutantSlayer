@@ -189,7 +189,7 @@ MonoBehaviour:
   maxSpeed: 50
   hitSpeed: 10
   maxLifetime: 5
-  damage: 10
+  damage: 50
   isCritical: 0
   adjustColliderDirection: 1
   rightFacingOffset: {x: 0, y: 0}
@@ -219,6 +219,8 @@ MonoBehaviour:
   destroyParticlePrefab: {fileID: 4501868321521990437, guid: 150c50bbfb6055145901d5631b71174e, type: 3}
   particleSpawnOffsetX: 5
   playerLevelSystem: {fileID: 0}
+  enemyHealth: {fileID: 0}
+  bossHealth: {fileID: 0}
 --- !u!114 &7407303479932635422
 MonoBehaviour:
   m_ObjectHideFlags: 0
