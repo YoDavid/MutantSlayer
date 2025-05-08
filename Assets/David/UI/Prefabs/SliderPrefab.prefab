@@ -295,5 +295,11 @@ MonoBehaviour:
   zeroHealthColor: {r: 0, g: 0, b: 0, a: 1}
   visibilityDistance: 10
   fadeSpeed: 3
-  smallEnemyYOffset: 10
+  smallEnemyYOffset: 50
   mediumEnemyYOffset: 80
+  rectTransform: {fileID: 0}
+  mainCamera: {fileID: 0}
+  playerTransform: {fileID: 0}
+  currentYOffset: 0
+  currentAlpha: 0
+  needsFade: 0

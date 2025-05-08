@@ -9,6 +9,8 @@ public class EnemyHealthBarSpawner : MonoBehaviour
     private void Start()
     {
         SpawnHealthBarForEnemy();
+        Debug.Log("EnemyHealthBarSpawner script started.");
+
     }
     private void SpawnHealthBarForEnemy()
     {

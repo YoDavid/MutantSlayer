@@ -8,6 +8,7 @@ public class EnemyHealth : HealthSystem, IDamageable
     [SerializeField] private bool overrideHealth = false;
     [SerializeField] private int customMaxHealth = 30;
 
+
     // Components
     private AudioManager audioManager;
     private Animator animator;

@@ -17,12 +17,12 @@ public class UIEnemyHealthBar : MonoBehaviour
     [SerializeField] private float mediumEnemyYOffset = 70f;
 
     // Private references
-    private RectTransform rectTransform;
-    private Camera mainCamera;
-    private Transform playerTransform;
-    private float currentYOffset;
-    private float currentAlpha = 0f;
-    private bool needsFade = false;
+    [SerializeField] private RectTransform rectTransform;
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private Transform playerTransform;
+    [SerializeField] private float currentYOffset;
+    [SerializeField] private float currentAlpha = 0f;
+    [SerializeField] private bool needsFade = false;
 
     // Public references
     public EnemyHealth enemyHealth { get; set; }
@@ -39,6 +39,8 @@ public class UIEnemyHealthBar : MonoBehaviour
 
         // Get the scaling component from the SAME enemy
         enemyLevelScaling = enemyHealth.GetComponent<EnemyLevelScaling>();
+
+        playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
 
         // Set Y-offset based on enemy type
         currentYOffset = enemyHealth.enemyType switch
